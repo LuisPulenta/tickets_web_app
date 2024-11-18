@@ -5,29 +5,18 @@ class Background extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: buildBoxDecoration(),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: const Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30),
-              child: Image(
-                image: AssetImage("bg.png"),
-                width: 400,
-              ),
-            ),
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 900),
+      child: const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: Image(
+            image: AssetImage("bg.png"),
+            fit: BoxFit.contain,
+            width: 600,
           ),
         ),
       ),
-    );
-  }
-
-//-------------------------------------------------------------
-  BoxDecoration buildBoxDecoration() {
-    return const BoxDecoration(
-      image: DecorationImage(image: AssetImage("bg.png"), fit: BoxFit.cover),
     );
   }
 }

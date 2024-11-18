@@ -9,15 +9,23 @@ class CustomTitle extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(
               height: 20,
             ),
-            Image.asset(
-              "logo.png",
-              width: 50,
-              height: 50,
+            Container(
+              height: 80,
+              width: 460,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Image.asset(
+                "logo.png",
+                width: 320,
+                height: 50,
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -25,7 +33,7 @@ class CustomTitle extends StatelessWidget {
             FittedBox(
               fit: BoxFit.contain,
               child: Text(
-                "Tickets",
+                "KP Tickets",
                 style: GoogleFonts.montserratAlternates(
                     fontSize: 60,
                     color: Colors.white,
