@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/auth_provider.dart';
+import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/router/router.dart';
 import 'package:tickets_web_app/services/local_storage.dart';
 import 'package:tickets_web_app/services/navigation_services.dart';
@@ -22,7 +23,14 @@ class AppState extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(lazy: false, create: (_) => AuthProvider()),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => AuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (_) => SideMenuProvider(),
+        ),
       ],
       child: const MyApp(),
     );

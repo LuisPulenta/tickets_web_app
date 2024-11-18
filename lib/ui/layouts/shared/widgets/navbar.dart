@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/navbar_avatar.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/notifications_indicator.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/search_text.dart';
@@ -8,6 +9,7 @@ class Navbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Container(
       width: double.infinity,
       height: 50,
@@ -15,18 +17,22 @@ class Navbar extends StatelessWidget {
       child: Row(
         children: [
           //TODO: Icono Menu
-          IconButton(
-            icon: const Icon(Icons.menu_outlined),
-            onPressed: () {},
-          ),
+          if (size.width <= 700)
+            IconButton(
+              icon: const Icon(Icons.menu_outlined),
+              onPressed: () {
+                SideMenuProvider.openMenu();
+              },
+            ),
           const SizedBox(
             width: 5,
           ),
           //Search input
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 250),
-            child: const SearchText(),
-          ),
+          if (size.width >= 390)
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 250),
+              child: const SearchText(),
+            ),
           const Spacer(),
           const NotificationsIndicator(),
           const SizedBox(
