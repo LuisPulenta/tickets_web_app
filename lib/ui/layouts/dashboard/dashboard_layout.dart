@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tickets_web_app/ui/layouts/shared/sidebar.dart';
+import 'package:tickets_web_app/ui/layouts/shared/widgets/navbar.dart';
 
 class DashboardLayout extends StatelessWidget {
   final Widget child;
@@ -8,23 +10,21 @@ class DashboardLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('DashboardLayout'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            const Text(
-              'Dashboard',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold),
+      backgroundColor: const Color(0xffEDF1F2),
+      body: Row(
+        children: [
+          const Sidebar(),
+          Expanded(
+            child: Column(
+              children: [
+                const Navbar(),
+                Expanded(
+                  child: child,
+                ),
+              ],
             ),
-            Expanded(child: child),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
