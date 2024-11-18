@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
 
 class LoginFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();

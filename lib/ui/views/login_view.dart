@@ -33,7 +33,7 @@ class LoginView extends StatelessWidget {
                           if (value == null || value.isEmpty) {
                             return "Ingrese su correo";
                           }
-                          if (!EmailValidator.validate(value ?? '')) {
+                          if (!EmailValidator.validate(value)) {
                             return "El correo no tiene formato válido";
                           }
                           return null;

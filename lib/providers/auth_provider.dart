@@ -20,7 +20,7 @@ class AuthProvider extends ChangeNotifier {
     //TODO: Petición HTTP
     _token = 'abcdefgh12345678';
     LocalStorage.prefs.setString('token', _token!);
-    print(LocalStorage.prefs.getString('token'));
+    //print(LocalStorage.prefs.getString('token'));
 
     //TODO: Navegar al Dashboard
     authStatus = AuthStatus.authenticated;
