@@ -11,7 +11,7 @@ class CompaniesView extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       children: [
         Text(
-          "Icons",
+          "Empresas",
           style: CustomLabels.h1,
         ),
         const SizedBox(

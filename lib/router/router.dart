@@ -11,10 +11,12 @@ class Flurorouter {
   //Auth Router
   static String loginRoute = '/auth/login';
   static String registerRoute = '/auth/register';
-  static String companiesRoute = '/dashboard/companies';
 
   //Dashboard Router
   static String dashboardRoute = '/dashboard';
+  static String companiesRoute = '/dashboard/companies';
+  static String usersRoute = '/dashboard/users';
+  static String ticketsRoute = '/dashboard/tickets';
 
   static void configureRoutes() {
     router.define(
@@ -36,6 +38,18 @@ class Flurorouter {
     router.define(
       companiesRoute,
       handler: DashboardHandlers.companies,
+      transitionType: TransitionType.fadeIn,
+    );
+
+    router.define(
+      usersRoute,
+      handler: DashboardHandlers.users,
+      transitionType: TransitionType.fadeIn,
+    );
+
+    router.define(
+      ticketsRoute,
+      handler: DashboardHandlers.tickets,
       transitionType: TransitionType.fadeIn,
     );
 
