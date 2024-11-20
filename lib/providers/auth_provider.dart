@@ -19,13 +19,13 @@ class AuthProvider extends ChangeNotifier {
 
   //----------------------------------------------------------------
   login(String email, String password) {
-    //TODO: Petición HTTP
+    //Petición HTTP
     _token = 'abcdefgh12345678';
     LocalStorage.prefs.setString('token', _token!);
     NavigationServices.replaceTo(Flurorouter.dashboardRoute);
     //print(LocalStorage.prefs.getString('token'));
 
-    //TODO: Navegar al Dashboard
+    //Navegar al Dashboard
     authStatus = AuthStatus.authenticated;
     notifyListeners();
   }
@@ -40,7 +40,7 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
 
-    //TODO: ir al backend y comprobar si el JWT es válido
+    //ir al backend y comprobar si el JWT es válido
 
     await Future.delayed(const Duration(milliseconds: 1000));
     authStatus = AuthStatus.authenticated;

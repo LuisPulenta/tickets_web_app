@@ -4,7 +4,6 @@ import 'package:tickets_web_app/providers/auth_provider.dart';
 import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/router/router.dart';
 import 'package:tickets_web_app/services/navigation_services.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/logo.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/menu_item.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/text_separator.dart';
@@ -20,7 +19,6 @@ class Sidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sideMenuProvider = Provider.of<SideMenuProvider>(context);
-    final authProvider = Provider.of<AuthProvider>(context!);
     return Container(
       width: 200,
       height: double.infinity,

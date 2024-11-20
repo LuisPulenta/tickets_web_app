@@ -17,7 +17,6 @@ class _DashboardLayoutState extends State<DashboardLayout>
 //----------------------------------------------------------------
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     SideMenuProvider.menuController = AnimationController(
       vsync: this,

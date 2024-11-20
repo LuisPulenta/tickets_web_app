@@ -16,7 +16,7 @@ class Navbar extends StatelessWidget {
       decoration: buildBoxDecoration(),
       child: Row(
         children: [
-          //TODO: Icono Menu
+          //Icono Menu
           if (size.width <= 700)
             IconButton(
               icon: const Icon(Icons.menu_outlined),
