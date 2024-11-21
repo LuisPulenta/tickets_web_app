@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/models/http/company.dart';
+import 'package:intl/intl.dart';
 
 class CompaniesDTS extends DataTableSource {
   final List<Company> companies;
@@ -10,17 +11,54 @@ class CompaniesDTS extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final company = companies[index];
+
+    final image = FadeInImage.assetNetwork(
+      placeholder: 'loader.gif',
+      image: company.photoFullPath!,
+      width: 35,
+      height: 35,
+    );
+
     return DataRow.byIndex(
       index: index,
       cells: [
         DataCell(
+          SizedBox(width: 160, height: 80, child: image),
+        ),
+        DataCell(
           Text(company.id.toString()),
         ),
         DataCell(
-          Text(company.name),
+          Text(company.name,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 12, 5, 228),
+                  fontWeight: FontWeight.bold)),
         ),
         DataCell(
-          Text(company.users != null ? company.users.toString() : ''),
+          Text(company.createUser, style: const TextStyle(fontSize: 12)),
+        ),
+        DataCell(
+          Text(
+              DateFormat('dd/MM/yyyy')
+                  .format(DateTime.parse(company.createDate.toString())),
+              style: const TextStyle(fontSize: 12)),
+        ),
+        DataCell(
+          Text(company.lastChangeUser, style: const TextStyle(fontSize: 12)),
+        ),
+        DataCell(
+          Text(
+              DateFormat('dd/MM/yyyy')
+                  .format(DateTime.parse(company.lastChangeDate.toString())),
+              style: const TextStyle(fontSize: 12)),
+        ),
+        DataCell(
+          Text(company.usersNumber.toString(),
+              style: const TextStyle(fontSize: 12)),
+        ),
+        DataCell(
+          Text(company.active ? "Sí" : 'No',
+              style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
           Row(

@@ -1,3 +1,4 @@
+import 'package:tickets_web_app/models/http/company.dart';
 import 'package:tickets_web_app/models/http/user.dart';
 
 class Token {
@@ -6,7 +7,18 @@ class Token {
   User user = User(
       firstName: '',
       lastName: '',
-      companyId: 0,
+      company: Company(
+          id: 0,
+          name: '',
+          createDate: DateTime.now(),
+          createUser: '',
+          lastChangeDate: DateTime.now(),
+          lastChangeUser: '',
+          active: false,
+          photo: '',
+          photoFullPath: '',
+          users: [],
+          usersNumber: 0),
       userType: 0,
       fullName: '',
       id: '',

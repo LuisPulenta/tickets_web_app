@@ -1,8 +1,18 @@
+import 'dart:convert';
+
+import 'package:tickets_web_app/models/http/company.dart';
+
+List<User> userFromJson(String str) =>
+    List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
+
+String userToJson(List<User> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
 class User {
   String firstName;
   String lastName;
   int userType;
-  int companyId;
+  Company? company;
   String fullName;
   String id;
   String userName;
@@ -14,7 +24,7 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.userType,
-    required this.companyId,
+    required this.company,
     required this.fullName,
     required this.id,
     required this.userName,
@@ -27,7 +37,7 @@ class User {
         firstName: json["firstName"],
         lastName: json["lastName"],
         userType: json["userType"],
-        companyId: json["companyId"],
+        company: json["company"],
         fullName: json["fullName"],
         id: json["id"],
         userName: json["userName"],
@@ -40,7 +50,7 @@ class User {
         "firstName": firstName,
         "lastName": lastName,
         "userType": userType,
-        "companyId": companyId,
+        "company": company,
         "fullName": fullName,
         "id": id,
         "userName": userName,

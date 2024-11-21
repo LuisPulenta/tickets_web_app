@@ -44,9 +44,15 @@ class _CompaniesViewState extends State<CompaniesView> {
         children: [
           PaginatedDataTable(
             columns: const [
+              DataColumn(label: Text("Logo")),
               DataColumn(label: Text("ID")),
               DataColumn(label: Text("Nombre")),
+              DataColumn(label: Text("Usuario Alta")),
+              DataColumn(label: Text("Fecha Alta")),
+              DataColumn(label: Text("Usuario Ult. Modif.")),
+              DataColumn(label: Text("Fecha Ult. Modif.")),
               DataColumn(label: Text("Usuarios")),
+              DataColumn(label: Text("Activa")),
               DataColumn(label: Text("Acciones")),
             ],
             source: CompaniesDTS(companies, context),
