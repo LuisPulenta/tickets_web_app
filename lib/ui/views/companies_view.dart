@@ -1,59 +1,82 @@
-import 'package:flutter/material.dart';
-import 'package:tickets_web_app/ui/cards/white_card.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
+import 'dart:convert';
 
-class CompaniesView extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tickets_web_app/datatables/companies_datasource.dart';
+import 'package:tickets_web_app/models/http/company.dart';
+import 'package:tickets_web_app/models/http/token.dart';
+import 'package:tickets_web_app/providers/companies_provider.dart';
+import 'package:tickets_web_app/services/local_storage.dart';
+import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
+import 'package:tickets_web_app/ui/labels/custom_labels.dart';
+import 'package:tickets_web_app/ui/modals/company_modal.dart';
+
+class CompaniesView extends StatefulWidget {
   const CompaniesView({Key? key}) : super(key: key);
 
   @override
+  State<CompaniesView> createState() => _CompaniesViewState();
+}
+
+class _CompaniesViewState extends State<CompaniesView> {
+  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+
+  //-------------------- initState ----------------------------
+
+  @override
+  void initState() {
+    super.initState();
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    var token = Token.fromJson(decodedJson);
+
+    Provider.of<CompaniesProvider>(context, listen: false).getCompanies(token);
+  }
+
+//-------------------- Pantalla ----------------------------
+  @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: const ClampingScrollPhysics(),
-      children: [
-        Text(
-          "Empresas",
-          style: CustomLabels.h1,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Wrap(
-          crossAxisAlignment: WrapCrossAlignment.start,
-          direction: Axis.horizontal,
-          children: const [
-            WhiteCard(
-              title: "ac_unit_outlined",
-              width: 170,
-              child: Center(child: Icon(Icons.ac_unit_outlined)),
+    List<Company> companies = Provider.of<CompaniesProvider>(context).companies;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ListView(
+        physics: const ClampingScrollPhysics(),
+        children: [
+          PaginatedDataTable(
+            columns: const [
+              DataColumn(label: Text("ID")),
+              DataColumn(label: Text("Nombre")),
+              DataColumn(label: Text("Usuarios")),
+              DataColumn(label: Text("Acciones")),
+            ],
+            source: CompaniesDTS(companies, context),
+            header: const Text(
+              "Empresas",
+              maxLines: 1,
             ),
-            WhiteCard(
-              title: "abc_outlined",
-              width: 170,
-              child: Center(child: Icon(Icons.abc_outlined)),
-            ),
-            WhiteCard(
-              title: "access_alarm_outlined",
-              width: 170,
-              child: Center(child: Icon(Icons.access_alarm_outlined)),
-            ),
-            WhiteCard(
-              title: "home_outlined",
-              width: 170,
-              child: Center(child: Icon(Icons.home_outlined)),
-            ),
-            WhiteCard(
-              title: "person_outline",
-              width: 170,
-              child: Center(child: Icon(Icons.person_outline)),
-            ),
-            WhiteCard(
-              title: "settings_outlined",
-              width: 170,
-              child: Center(child: Icon(Icons.settings_outlined)),
-            ),
-          ],
-        )
-      ],
+            rowsPerPage: _rowsPerPage,
+            onRowsPerPageChanged: (value) {
+              _rowsPerPage = value ?? 10;
+              setState(() {});
+            },
+            actions: [
+              CustomIconButton(
+                icon: Icons.add_outlined,
+                text: "Nueva Empresa",
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (_) => const CompanyModal(
+                      company: null,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

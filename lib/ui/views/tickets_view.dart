@@ -7,21 +7,24 @@ class TicketsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: const ClampingScrollPhysics(),
-      children: [
-        Text(
-          "Tickets",
-          style: CustomLabels.h1,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        const WhiteCard(
-          title: "TicketsView",
-          child: Text('Hola Mundo'),
-        ),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ListView(
+        physics: const ClampingScrollPhysics(),
+        children: [
+          Text(
+            "Tickets",
+            style: CustomLabels.h1,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          const WhiteCard(
+            title: "TicketsView",
+            child: Text('Hola Mundo'),
+          ),
+        ],
+      ),
     );
   }
 }

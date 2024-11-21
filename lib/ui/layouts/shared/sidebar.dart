@@ -40,21 +40,21 @@ class Sidebar extends StatelessWidget {
           const TextSeparator(text: 'Empresas y Usuarios'),
           MenuItem(
             text: 'Empresas',
-            icon: Icons.compass_calibration_outlined,
+            icon: Icons.storefront,
             isActive:
                 sideMenuProvider.currentPage == Flurorouter.companiesRoute,
             onPressed: () => navigateTo(Flurorouter.companiesRoute),
           ),
           MenuItem(
             text: 'Usuarios',
-            icon: Icons.person,
+            icon: Icons.groups,
             isActive: sideMenuProvider.currentPage == Flurorouter.usersRoute,
             onPressed: () => navigateTo(Flurorouter.usersRoute),
           ),
           const TextSeparator(text: 'Tickets'),
           MenuItem(
             text: 'Tickets',
-            icon: Icons.settings,
+            icon: Icons.local_activity_outlined,
             isActive: sideMenuProvider.currentPage == Flurorouter.ticketsRoute,
             onPressed: () => navigateTo(Flurorouter.ticketsRoute),
           ),

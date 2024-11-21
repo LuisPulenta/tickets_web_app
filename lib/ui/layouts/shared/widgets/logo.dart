@@ -11,15 +11,21 @@ class Logo extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.bubble_chart_outlined,
-            color: Color(0xff7a6bf5),
+          CircleAvatar(
+            radius: 45,
+            backgroundColor: Colors.white,
+            child: Image.asset(
+              'bg.png',
+              width: 60,
+              height: 60,
+              fit: BoxFit.contain,
+            ),
           ),
           const SizedBox(width: 10),
-          Text("Admin",
+          Text("Tickets",
               style: GoogleFonts.montserratAlternates(
                   fontSize: 20,
-                  fontWeight: FontWeight.w200,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white))
         ],
       ),
