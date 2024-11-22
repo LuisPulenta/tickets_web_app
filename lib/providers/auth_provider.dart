@@ -72,18 +72,23 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-
-    if (userBody != null) {
-      var decodedJson = jsonDecode(userBody);
-      user = User.fromJson(decodedJson);
-    }
-
     //ir al backend y comprobar si el JWT es válido
-
-    await Future.delayed(const Duration(milliseconds: 1000));
-    authStatus = AuthStatus.authenticated;
-    notifyListeners();
-    return true;
+    try {
+      if (userBody != null) {
+        var decodedJson = jsonDecode(userBody);
+        var token2 = Token.fromJson(decodedJson);
+        if (DateTime.parse(token2.expiration).isAfter(DateTime.now())) {
+          authStatus = AuthStatus.authenticated;
+          user = token2.user;
+        }
+      }
+      return true;
+    } catch (e) {
+      print(e);
+      authStatus = AuthStatus.notAuthenticated;
+      notifyListeners();
+      return false;
+    }
   }
 
   //---------------------------------------------------------------

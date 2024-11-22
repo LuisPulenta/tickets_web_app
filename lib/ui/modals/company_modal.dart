@@ -43,6 +43,7 @@ class _CompanyModalState extends State<CompanyModal> {
         Provider.of<CompaniesProvider>(context, listen: false);
 
     return Container(
+      padding: const EdgeInsets.all(20),
       height: 500,
       width: 300,
       decoration: buildBoxDecoration(),

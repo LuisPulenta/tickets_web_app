@@ -35,21 +35,13 @@ class CompaniesDTS extends DataTableSource {
                   fontWeight: FontWeight.bold)),
         ),
         DataCell(
-          Text(company.createUser, style: const TextStyle(fontSize: 12)),
-        ),
-        DataCell(
           Text(
-              DateFormat('dd/MM/yyyy')
-                  .format(DateTime.parse(company.createDate.toString())),
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.createDate.toString()))}-${company.createUser}',
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
-          Text(company.lastChangeUser, style: const TextStyle(fontSize: 12)),
-        ),
-        DataCell(
           Text(
-              DateFormat('dd/MM/yyyy')
-                  .format(DateTime.parse(company.lastChangeDate.toString())),
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.lastChangeDate.toString()))}-${company.lastChangeUser}',
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
