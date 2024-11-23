@@ -14,7 +14,7 @@ class Company {
   DateTime lastChangeDate;
   String lastChangeUser;
   bool active;
-  String photo;
+  String? photo;
   String photoFullPath;
   dynamic users;
   int usersNumber;
@@ -27,7 +27,7 @@ class Company {
     required this.lastChangeDate,
     required this.lastChangeUser,
     required this.active,
-    required this.photo,
+    this.photo = '',
     required this.photoFullPath,
     required this.users,
     required this.usersNumber,
@@ -41,7 +41,7 @@ class Company {
         lastChangeDate: DateTime.parse(json["lastChangeDate"]),
         lastChangeUser: json["lastChangeUser"],
         active: json["active"],
-        photo: json["photo"],
+        photo: json["photo"] ?? '',
         photoFullPath: json["photoFullPath"],
         users: json["users"],
         usersNumber: json["usersNumber"],

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/auth_provider.dart';
 import 'package:tickets_web_app/providers/companies_provider.dart';
 import 'package:tickets_web_app/providers/side_menu_provider.dart';
+import 'package:tickets_web_app/providers/users_provider.dart';
 import 'package:tickets_web_app/router/router.dart';
 import 'package:tickets_web_app/services/local_storage.dart';
 import 'package:tickets_web_app/services/navigation_services.dart';
@@ -35,6 +36,9 @@ class AppState extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => CompaniesProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UsersProvider(),
         ),
       ],
       child: const MyApp(),

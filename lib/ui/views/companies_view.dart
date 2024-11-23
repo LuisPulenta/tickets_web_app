@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/datatables/companies_datasource.dart';
@@ -8,7 +7,6 @@ import 'package:tickets_web_app/models/http/token.dart';
 import 'package:tickets_web_app/providers/companies_provider.dart';
 import 'package:tickets_web_app/services/local_storage.dart';
 import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
 import 'package:tickets_web_app/ui/modals/company_modal.dart';
 
 class CompaniesView extends StatefulWidget {

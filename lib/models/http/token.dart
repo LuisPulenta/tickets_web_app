@@ -1,4 +1,3 @@
-import 'package:tickets_web_app/models/http/company.dart';
 import 'package:tickets_web_app/models/http/user.dart';
 
 class Token {
@@ -7,39 +6,34 @@ class Token {
   User user = User(
       firstName: '',
       lastName: '',
-      company: Company(
-          id: 0,
-          name: '',
-          createDate: DateTime.now(),
-          createUser: '',
-          lastChangeDate: DateTime.now(),
-          lastChangeUser: '',
-          active: false,
-          photo: '',
-          photoFullPath: '',
-          users: [],
-          usersNumber: 0),
       userType: 0,
+      company: '',
+      createDate: '',
+      createUser: '',
+      lastChangeDate: '',
+      lastChangeUser: '',
+      active: false,
       fullName: '',
       id: '',
-      userName: '',
       email: '',
       emailConfirmed: false,
       phoneNumber: '');
 
-  Token({required this.token, required this.expiration, required this.user});
+  Token({
+    required this.token,
+    required this.expiration,
+    required this.user,
+  });
 
-  Token.fromJson(Map<String, dynamic> json) {
-    token = json['token'];
-    expiration = json['expiration'];
-    user = User.fromJson(json['user']);
-  }
+  factory Token.fromJson(Map<String, dynamic> json) => Token(
+        token: json["token"],
+        expiration: json["expiration"],
+        user: User.fromJson(json["user"]),
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['token'] = token;
-    data['expiration'] = expiration;
-    data['user'] = user.toJson();
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        "token": token,
+        "expiration": expiration,
+        "user": user.toJson(),
+      };
 }

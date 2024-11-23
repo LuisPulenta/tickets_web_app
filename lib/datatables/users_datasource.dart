@@ -1,56 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/models/http/company.dart';
 import 'package:intl/intl.dart';
+import 'package:tickets_web_app/models/http/user.dart';
 
-class CompaniesDTS extends DataTableSource {
-  final List<Company> companies;
+class UsersDTS extends DataTableSource {
+  final List<User> users;
   final BuildContext context;
 
-  CompaniesDTS(this.companies, this.context);
+  UsersDTS(this.users, this.context);
 
   @override
   DataRow getRow(int index) {
-    final company = companies[index];
-
-    final image = FadeInImage.assetNetwork(
-      placeholder: 'loader.gif',
-      image: company.photoFullPath,
-      width: 35,
-      height: 35,
-    );
+    final user = users[index];
 
     return DataRow.byIndex(
       index: index,
       cells: [
         DataCell(
-          SizedBox(width: 160, height: 80, child: image),
+          Text(user.id.toString()),
         ),
         DataCell(
-          Text(company.id.toString()),
-        ),
-        DataCell(
-          Text(company.name,
+          Text(user.company,
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),
                   fontWeight: FontWeight.bold)),
         ),
         DataCell(
-          Text(
-              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.createDate.toString()))}-${company.createUser}',
-              style: const TextStyle(fontSize: 12)),
+          Text('${user.lastName} ${user.firstName}',
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 12, 5, 228),
+                  fontWeight: FontWeight.bold)),
         ),
         DataCell(
-          Text(
-              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.lastChangeDate.toString()))}-${company.lastChangeUser}',
-              style: const TextStyle(fontSize: 12)),
-        ),
-        DataCell(
-          Text(company.usersNumber.toString(),
-              style: const TextStyle(fontSize: 12)),
-        ),
-        DataCell(
-          Text(company.active ? "Sí" : 'No',
-              style: const TextStyle(fontSize: 12)),
+          Text(user.active ? "Sí" : 'No', style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
           Row(
@@ -64,7 +45,7 @@ class CompaniesDTS extends DataTableSource {
                   final dialog = AlertDialog(
                     title: const Text("Atención!!"),
                     content: Text(
-                        "Está seguro de borrar la empresa ${company.name}?"),
+                        "Está seguro de borrar el Usuario ${user.lastName} ${user.firstName} ?"),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -98,7 +79,7 @@ class CompaniesDTS extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => companies.length;
+  int get rowCount => users.length;
 
   @override
   int get selectedRowCount => 0;

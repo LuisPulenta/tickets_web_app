@@ -1,33 +1,31 @@
-import 'dart:convert';
-
-import 'package:tickets_web_app/models/http/company.dart';
-
-List<User> userFromJson(String str) =>
-    List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
-
-String userToJson(List<User> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class User {
-  String firstName;
-  String lastName;
-  int userType;
-  Company? company;
-  String fullName;
-  String id;
-  String userName;
-  String email;
-  bool emailConfirmed;
-  String phoneNumber;
+  String firstName = '';
+  String lastName = '';
+  int userType = 0;
+  String company = '';
+  String createDate = '';
+  String createUser = '';
+  String lastChangeDate = '';
+  String lastChangeUser = '';
+  bool active = false;
+  String fullName = '';
+  String id = '';
+  String email = '';
+  bool emailConfirmed = false;
+  String phoneNumber = '';
 
   User({
     required this.firstName,
     required this.lastName,
     required this.userType,
     required this.company,
+    required this.createDate,
+    required this.createUser,
+    required this.lastChangeDate,
+    required this.lastChangeUser,
+    required this.active,
     required this.fullName,
     required this.id,
-    required this.userName,
     required this.email,
     required this.emailConfirmed,
     required this.phoneNumber,
@@ -38,9 +36,13 @@ class User {
         lastName: json["lastName"],
         userType: json["userType"],
         company: json["company"],
+        createDate: json["createDate"],
+        createUser: json["createUser"],
+        lastChangeDate: json["lastChangeDate"],
+        lastChangeUser: json["lastChangeUser"],
+        active: json["active"],
         fullName: json["fullName"],
         id: json["id"],
-        userName: json["userName"],
         email: json["email"],
         emailConfirmed: json["emailConfirmed"],
         phoneNumber: json["phoneNumber"],
@@ -51,9 +53,13 @@ class User {
         "lastName": lastName,
         "userType": userType,
         "company": company,
+        "createDate": createDate,
+        "createUser": createUser,
+        "lastChangeDate": lastChangeDate,
+        "lastChangeUser": lastChangeUser,
+        "active": active,
         "fullName": fullName,
         "id": id,
-        "userName": userName,
         "email": email,
         "emailConfirmed": emailConfirmed,
         "phoneNumber": phoneNumber,
