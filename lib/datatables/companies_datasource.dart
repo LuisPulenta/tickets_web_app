@@ -50,7 +50,9 @@ class CompaniesDTS extends DataTableSource {
         ),
         DataCell(
           Text(company.active ? "Sí" : 'No',
-              style: const TextStyle(fontSize: 12)),
+              style: TextStyle(
+                  fontSize: 12,
+                  color: company.active ? Colors.green : Colors.red)),
         ),
         DataCell(
           Row(

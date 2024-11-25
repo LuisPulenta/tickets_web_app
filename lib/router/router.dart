@@ -11,6 +11,7 @@ class Flurorouter {
   //Auth Router
   static String loginRoute = '/auth/login';
   static String registerRoute = '/auth/register';
+  static String recoverPasswordRoute = '/auth/recoverpassword';
 
   //Dashboard Router
   static String dashboardRoute = '/dashboard';
@@ -22,11 +23,19 @@ class Flurorouter {
     router.define(
       rootRoute,
       handler: AdminHandlers.login,
+      transitionType: TransitionType.none,
     );
 
     router.define(
       loginRoute,
       handler: AdminHandlers.login,
+      transitionType: TransitionType.none,
+    );
+
+    router.define(
+      recoverPasswordRoute,
+      handler: AdminHandlers.recoverPassword,
+      transitionType: TransitionType.none,
     );
 
     router.define(

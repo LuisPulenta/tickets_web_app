@@ -18,23 +18,34 @@ class CompaniesProvider extends ChangeNotifier {
       return;
     }
     companies = response.result;
+
+    companies.sort((a, b) {
+      return a.name
+          .toString()
+          .toLowerCase()
+          .compareTo(b.name.toString().toLowerCase());
+    });
+
     notifyListeners();
   }
 
   //---------------------------------------------------------------------
-  Future newCompany(String name, Token token) async {
+  Future newCompany(String name, Token token, String userLogged) async {
     Map<String, dynamic> request = {
-      'name': name,
+      'Name': name,
+      'CreateUser': userLogged,
+      'LastChangeUser': userLogged,
+      'Photo': null
     };
 
     try {
       Response response = await ApiHelper.post('/companies', request, token);
-
-      //final newCompany = Company.fromJson(response.result);
-
-      getCompanies(token);
-      // companies.add(newCompany);
-      // notifyListeners();
+      if (response.isSuccess) {
+        getCompanies(token);
+        NotificationsService.showSnackbar("Empresa guardada con éxito");
+      } else {
+        NotificationsService.showSnackbarError('$name ya existe!!');
+      }
     } catch (e) {
       NotificationsService.showSnackbarError(
           'Se ha producido un error al crear la Empresa');

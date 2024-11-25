@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/auth_provider.dart';
 import 'package:tickets_web_app/providers/companies_provider.dart';
+import 'package:tickets_web_app/providers/company_form_provider.dart';
 import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/providers/users_provider.dart';
 import 'package:tickets_web_app/router/router.dart';
@@ -39,6 +40,9 @@ class AppState extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => UsersProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CompanyFormProvider(),
         ),
       ],
       child: const MyApp(),

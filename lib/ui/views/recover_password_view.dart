@@ -9,8 +9,8 @@ import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
 import 'package:tickets_web_app/ui/buttons/link_text.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({Key? key}) : super(key: key);
+class RecoverPasswordView extends StatelessWidget {
+  const RecoverPasswordView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class LoginView extends StatelessWidget {
                   key: loginFormProvider.formKey,
                   child: Column(
                     children: [
-                      Text('Login',
+                      Text('Recuperar Contraseña',
                           style: GoogleFonts.montserratAlternates(
                               fontSize: 26,
                               color: Colors.white.withOpacity(0.8))),
@@ -63,34 +63,8 @@ class LoginView extends StatelessWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        onFieldSubmitted: (_) =>
-                            onFormSubmit(loginFormProvider, authProvider),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Ingrese su contraseña";
-                          }
-                          if (value.length < 6) {
-                            return "La contraseña debe tener al menos 6 caracteres";
-                          }
-                          return null;
-                        },
-                        style: const TextStyle(color: Colors.white),
-                        onChanged: (value) {
-                          loginFormProvider.password = value;
-                        },
-                        decoration: CustomInput.loginInputDecoration(
-                          hint: "**********",
-                          label: "Contraseña",
-                          icon: Icons.lock_outline_rounded,
-                        ),
-                        obscureText: true,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
                       CustomOutlinedButton(
-                        text: "Ingresar",
+                        text: "Recuperar Contraseña",
                         onPressed: () {
                           onFormSubmit(loginFormProvider, authProvider);
                         },
@@ -99,10 +73,10 @@ class LoginView extends StatelessWidget {
                         height: 20,
                       ),
                       LinkText(
-                        text: "Olvidé mi contraseña",
+                        text: "Volver al Login",
                         onPressed: () {
                           Navigator.pushReplacementNamed(
-                              context, Flurorouter.recoverPasswordRoute);
+                              context, Flurorouter.loginRoute);
                         },
                       ),
                       const SizedBox(

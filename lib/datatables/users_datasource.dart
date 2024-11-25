@@ -16,9 +16,6 @@ class UsersDTS extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-          Text(user.id.toString()),
-        ),
-        DataCell(
           Text(user.company,
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),
@@ -31,7 +28,19 @@ class UsersDTS extends DataTableSource {
                   fontWeight: FontWeight.bold)),
         ),
         DataCell(
-          Text(user.active ? "Sí" : 'No', style: const TextStyle(fontSize: 12)),
+          Text(user.email),
+        ),
+        DataCell(
+          Text(user.emailConfirmed ? "Sí" : 'No',
+              style: TextStyle(
+                  fontSize: 12,
+                  color: user.emailConfirmed ? Colors.green : Colors.red)),
+        ),
+        DataCell(
+          Text(user.active ? "Sí" : 'No',
+              style: TextStyle(
+                  fontSize: 12,
+                  color: user.active ? Colors.green : Colors.red)),
         ),
         DataCell(
           Row(

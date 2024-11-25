@@ -44,9 +44,10 @@ class _UsersViewState extends State<UsersView> {
         children: [
           PaginatedDataTable(
             columns: const [
-              DataColumn(label: Text("ID")),
               DataColumn(label: Text("Empresa")),
               DataColumn(label: Text("Nombre y Apellido")),
+              DataColumn(label: Text("Email")),
+              DataColumn(label: Text("Email Confirm.")),
               DataColumn(label: Text("Activo")),
               DataColumn(label: Text("Acciones")),
             ],

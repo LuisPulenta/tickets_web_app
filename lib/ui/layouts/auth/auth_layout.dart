@@ -50,9 +50,6 @@ class _DesktopBody extends StatelessWidget {
             child: Column(
               children: [
                 const CustomTitle(),
-                const SizedBox(
-                  height: 50,
-                ),
                 Expanded(child: child),
               ],
             ),
@@ -86,7 +83,6 @@ class _MobileBody extends StatelessWidget {
           ),
           const SizedBox(
             width: double.infinity,
-            height: 400,
             child: Background(),
           ),
         ],

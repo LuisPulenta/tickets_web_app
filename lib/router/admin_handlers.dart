@@ -13,4 +13,13 @@ class AdminHandlers {
       return const DashboardView();
     }
   });
+
+  static Handler recoverPassword = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    if (authProvider.authStatus == AuthStatus.notAuthenticated) {
+      return const RecoverPasswordView();
+    } else {
+      return const DashboardView();
+    }
+  });
 }
