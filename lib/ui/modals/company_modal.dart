@@ -1,7 +1,8 @@
+import 'dart:ui' as ui;
 import 'dart:convert';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/models/http/company.dart';
 import 'package:tickets_web_app/models/http/token.dart';
@@ -46,10 +47,6 @@ class _CompanyModalState extends State<CompanyModal> {
 //---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final companiesProvider =
-        Provider.of<CompaniesProvider>(context, listen: false);
-
     final userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
 
@@ -126,12 +123,6 @@ class _CompanyModalState extends State<CompanyModal> {
               child: CustomOutlinedButton(
                 onPressed: () async {
                   onFormSubmit(companyFormProvider, token, userLogged);
-
-                  // if (companyFormProvider.name == '') {
-                  //   NotificationsService.showSnackbarError(
-                  //       "Debe ingresar un Nombre de Empresa");
-                  //   return;
-                  // }
                 },
                 text: "Guardar",
                 color: Colors.white,
@@ -184,19 +175,30 @@ class _CompanyModalState extends State<CompanyModal> {
 }
 
 //-------------------------------------------------------
-class _AvatarContainer extends StatelessWidget {
+class _AvatarContainer extends StatefulWidget {
   const _AvatarContainer();
+
+  @override
+  State<_AvatarContainer> createState() => _AvatarContainerState();
+}
+
+class _AvatarContainerState extends State<_AvatarContainer> {
+  PlatformFile? file;
 
   @override
   Widget build(BuildContext context) {
     final companyFormProvider = Provider.of<CompanyFormProvider>(context);
-    final photo = companyFormProvider.photo!;
+    final photo = companyFormProvider.photo;
 
-    final image = (photo == null)
-        ? const Image(
-            image: AssetImage('no-image.jpg'),
+    Widget image = (file != null)
+        ? Image.memory(
+            Uint8List.fromList(file!.bytes!),
+            width: 250,
+            height: 160,
           )
-        : FadeInImage.assetNetwork(placeholder: 'loader.gif', image: photo!);
+        : const Image(
+            image: AssetImage('no-image.jpg'),
+          );
 
     return Stack(
       children: [
@@ -219,12 +221,18 @@ class _AvatarContainer extends StatelessWidget {
                     width: 180,
                     height: 110,
                     child: Stack(
-                      children: const [
+                      children: [
                         Center(
-                          child: Image(
-                            image: AssetImage('logo.png'),
-                          ),
+                          child: image,
                         ),
+
+//*********************************************************************************
+//*********************************************************************************
+//*********************************************************************************
+
+//*********************************************************************************
+//*********************************************************************************
+//*********************************************************************************
                       ],
                     ),
                   ),
@@ -262,7 +270,8 @@ class _AvatarContainer extends StatelessWidget {
                 if (result != null) {
                   NotificationsService.showBusyIndicator(context);
 
-                  PlatformFile file = result.files.first;
+                  file = result.files.first;
+                  setState(() {});
 
                   // Provider.of<UsersProvider>(context,
                   //         listen: false)

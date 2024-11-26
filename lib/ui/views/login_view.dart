@@ -36,7 +36,7 @@ class LoginView extends StatelessWidget {
                               fontSize: 26,
                               color: Colors.white.withOpacity(0.8))),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       TextFormField(
                         onFieldSubmitted: (_) =>
@@ -61,7 +61,7 @@ class LoginView extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       TextFormField(
                         onFieldSubmitted: (_) =>
@@ -87,7 +87,7 @@ class LoginView extends StatelessWidget {
                         obscureText: true,
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       CustomOutlinedButton(
                         text: "Ingresar",
@@ -106,7 +106,7 @@ class LoginView extends StatelessWidget {
                         },
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                     ],
                   ),
