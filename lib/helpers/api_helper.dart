@@ -43,7 +43,7 @@ class ApiHelper {
           message:
               'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
     }
-    var url = Uri.parse('${Constants.apiUrl}$controller$id');
+    var url = Uri.parse('${Constants.apiUrl}$controller/$id');
     var response = await http.put(
       url,
       headers: {

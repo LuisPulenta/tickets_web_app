@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +25,7 @@ class CompanyModal extends StatefulWidget {
 }
 
 class _CompanyModalState extends State<CompanyModal> {
+//---------------------------------------------------------------------------
   int? id;
   late Token token;
   late CompanyFormProvider companyFormProvider;
@@ -37,6 +37,12 @@ class _CompanyModalState extends State<CompanyModal> {
     final userBody = LocalStorage.prefs.getString('userBody');
     companyFormProvider =
         Provider.of<CompanyFormProvider>(context, listen: false);
+
+    companyFormProvider.photoChanged = false;
+    companyFormProvider.base64Image = widget.company?.photoFullPath ?? '';
+    companyFormProvider.active = widget.company?.active ?? false;
+    companyFormProvider.id = widget.company?.id ?? 0;
+
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
 
@@ -112,6 +118,21 @@ class _CompanyModalState extends State<CompanyModal> {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
+                companyFormProvider.id > 0 ? const Spacer() : Container(),
+                companyFormProvider.id > 0
+                    ? Expanded(
+                        child: SwitchListTile(
+                            title: const Text(
+                              'Activa:',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            value: companyFormProvider.active,
+                            onChanged: (value) {
+                              companyFormProvider.active = value;
+                              setState(() {});
+                            }),
+                      )
+                    : Container(),
                 const Spacer(),
                 const _AvatarContainer(),
                 const Spacer(),
@@ -140,20 +161,30 @@ class _CompanyModalState extends State<CompanyModal> {
     final isValid = companyFormProvider.validateForm();
     if (isValid) {
       try {
-        if (id == null) {
-          //Nueva Empresa
-          if (id == null) {
-            final companiesProvider =
-                Provider.of<CompaniesProvider>(context, listen: false);
-            await companiesProvider
-                .newCompany(companyFormProvider.name, token, userLogged)
-                .then((value) => Navigator.of(context).pop());
-          } else {
-            //Editar Empresa
-            //await companyProvider.updateCompany(nombre, token, userLogged);
-            NotificationsService.showSnackbar("Cambios guardados con éxito");
-          }
-        } else {}
+        //Nueva Empresa
+        if (id == null || id == 0) {
+          final companiesProvider =
+              Provider.of<CompaniesProvider>(context, listen: false);
+          await companiesProvider
+              .newCompany(companyFormProvider.name,
+                  companyFormProvider.base64Image, token, userLogged)
+              .then((value) => Navigator.of(context).pop());
+        } else {
+          //Editar Empresa
+          final companiesProvider =
+              Provider.of<CompaniesProvider>(context, listen: false);
+          await companiesProvider
+              .updateCompany(
+                  companyFormProvider.id,
+                  companyFormProvider.name,
+                  companyFormProvider.photoChanged
+                      ? companyFormProvider.base64Image
+                      : '',
+                  token,
+                  userLogged,
+                  companyFormProvider.active)
+              .then((value) => Navigator.of(context).pop());
+        }
       } catch (e) {
         NotificationsService.showSnackbarError("No se pudo guardar la Empresa");
       }
@@ -190,15 +221,18 @@ class _AvatarContainerState extends State<_AvatarContainer> {
     final companyFormProvider = Provider.of<CompanyFormProvider>(context);
     final photo = companyFormProvider.photo;
 
-    Widget image = (file != null)
-        ? Image.memory(
-            Uint8List.fromList(file!.bytes!),
-            width: 250,
-            height: 160,
-          )
-        : const Image(
-            image: AssetImage('no-image.jpg'),
-          );
+    Widget image = (companyFormProvider.base64Image != '' &&
+            !companyFormProvider.photoChanged)
+        ? Image.network(companyFormProvider.base64Image)
+        : (file != null)
+            ? Image.memory(
+                Uint8List.fromList(file!.bytes!),
+                width: 250,
+                height: 160,
+              )
+            : const Image(
+                image: AssetImage('no-image.jpg'),
+              );
 
     return Stack(
       children: [
@@ -225,14 +259,6 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                         Center(
                           child: image,
                         ),
-
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
                       ],
                     ),
                   ),
@@ -271,11 +297,14 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                   NotificationsService.showBusyIndicator(context);
 
                   file = result.files.first;
-                  setState(() {});
+                  companyFormProvider.photoChanged = true;
 
-                  // Provider.of<UsersProvider>(context,
-                  //         listen: false)
-                  //     .refreshUser(newUser);
+                  if (companyFormProvider.photoChanged) {
+                    List<int> imageBytes = file!.bytes!;
+                    companyFormProvider.base64Image = base64Encode(imageBytes);
+                  }
+
+                  setState(() {});
 
                   Navigator.of(context).pop();
                 } else {

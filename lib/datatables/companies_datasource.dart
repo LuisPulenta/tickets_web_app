@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/models/http/company.dart';
 import 'package:intl/intl.dart';
+import 'package:tickets_web_app/ui/modals/company_modal.dart';
 
 class CompaniesDTS extends DataTableSource {
   final List<Company> companies;
@@ -58,7 +59,15 @@ class CompaniesDTS extends DataTableSource {
           Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (_) => CompanyModal(
+                      company: company,
+                    ),
+                  );
+                },
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),
               IconButton(

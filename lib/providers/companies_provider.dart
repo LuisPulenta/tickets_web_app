@@ -30,12 +30,13 @@ class CompaniesProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
-  Future newCompany(String name, Token token, String userLogged) async {
+  Future newCompany(
+      String name, String base64Image, Token token, String userLogged) async {
     Map<String, dynamic> request = {
       'Name': name,
       'CreateUser': userLogged,
       'LastChangeUser': userLogged,
-      'Photo': null
+      'ImageArray': base64Image != '' ? base64Image : null
     };
 
     try {
@@ -49,6 +50,32 @@ class CompaniesProvider extends ChangeNotifier {
     } catch (e) {
       NotificationsService.showSnackbarError(
           'Se ha producido un error al crear la Empresa');
+    }
+  }
+
+  //---------------------------------------------------------------------
+  Future updateCompany(int id, String name, String base64Image, Token token,
+      String userLogged, bool active) async {
+    Map<String, dynamic> request = {
+      'Id': id,
+      'Name': name,
+      'LastChangeUser': userLogged,
+      'Active': active,
+      'ImageArray': base64Image != '' ? base64Image : null
+    };
+
+    try {
+      Response response =
+          await ApiHelper.put('/companies', id.toString(), request, token);
+      if (response.isSuccess) {
+        getCompanies(token);
+        NotificationsService.showSnackbar("Cambios guardados con éxito");
+      } else {
+        NotificationsService.showSnackbarError('$name ya existe!!');
+      }
+    } catch (e) {
+      NotificationsService.showSnackbarError(
+          'Se ha producido un error al guardar los cambios');
     }
   }
 }
