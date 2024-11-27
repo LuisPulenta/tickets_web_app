@@ -8,6 +8,7 @@ class Token {
       lastName: '',
       userType: 0,
       company: '',
+      companyId: 0,
       createDate: '',
       createUser: '',
       lastChangeDate: '',

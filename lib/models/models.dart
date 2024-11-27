@@ -1,3 +1,4 @@
+export 'package:tickets_web_app/models/user_type.dart';
 export 'package:tickets_web_app/models/response.dart';
 export 'package:tickets_web_app/models/auth_response.dart';
 export 'package:tickets_web_app/models/company.dart';

@@ -157,7 +157,7 @@ class _CompanyModalState extends State<CompanyModal> {
     if (isValid) {
       try {
         //Nueva Empresa
-        if (id == null || id == 0) {
+        if (companyFormProvider.id == 0) {
           final companiesProvider =
               Provider.of<CompaniesProvider>(context, listen: false);
           await companiesProvider

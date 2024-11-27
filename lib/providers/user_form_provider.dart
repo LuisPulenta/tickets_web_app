@@ -8,10 +8,9 @@ class UserFormProvider extends ChangeNotifier {
   String firstName = '';
   String lastName = '';
   String phoneNumber = '';
-  int idCompany = 0;
+  int companyId = 0;
   String company = '';
   int idUserType = 0;
-  String userType = '';
   bool active = false;
 
   //----------------------------------------------------------------

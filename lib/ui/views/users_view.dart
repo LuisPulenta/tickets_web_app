@@ -41,12 +41,27 @@ class _UsersViewState extends State<UsersView> {
         children: [
           PaginatedDataTable(
             columns: const [
-              DataColumn(label: Text("Empresa")),
-              DataColumn(label: Text("Nombre y Apellido")),
-              DataColumn(label: Text("Email")),
-              DataColumn(label: Text("Email Confirm.")),
-              DataColumn(label: Text("Activo")),
-              DataColumn(label: Text("Acciones")),
+              DataColumn(
+                  label: Text("Empresa",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text("Nombre y Apellido",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text("Email",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text("Email Confirm.",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text("Teléfono",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text("Activo",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
+                  label: Text("Acciones",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
             ],
             source: UsersDTS(users, context),
             header: const Text(

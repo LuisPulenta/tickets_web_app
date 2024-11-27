@@ -37,6 +37,9 @@ class UsersDTS extends DataTableSource {
                   color: user.emailConfirmed ? Colors.green : Colors.red)),
         ),
         DataCell(
+          Text(user.phoneNumber),
+        ),
+        DataCell(
           Text(user.active ? "Sí" : 'No',
               style: TextStyle(
                   fontSize: 12,

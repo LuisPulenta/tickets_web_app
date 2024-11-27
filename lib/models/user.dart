@@ -3,6 +3,7 @@ class User {
   String lastName = '';
   int userType = 0;
   String company = '';
+  int companyId = 0;
   String createDate = '';
   String createUser = '';
   String lastChangeDate = '';
@@ -19,6 +20,7 @@ class User {
     required this.lastName,
     required this.userType,
     required this.company,
+    required this.companyId,
     required this.createDate,
     required this.createUser,
     required this.lastChangeDate,
@@ -36,6 +38,7 @@ class User {
         lastName: json["lastName"],
         userType: json["userType"],
         company: json["company"],
+        companyId: json["companyId"],
         createDate: json["createDate"],
         createUser: json["createUser"],
         lastChangeDate: json["lastChangeDate"],
@@ -53,6 +56,7 @@ class User {
         "lastName": lastName,
         "userType": userType,
         "company": company,
+        "companyId": companyId,
         "createDate": createDate,
         "createUser": createUser,
         "lastChangeDate": lastChangeDate,
