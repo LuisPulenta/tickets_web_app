@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tickets_web_app/models/http/user.dart';
+import 'package:tickets_web_app/models/models.dart';
 
 class UsersDTS extends DataTableSource {
   final List<User> users;

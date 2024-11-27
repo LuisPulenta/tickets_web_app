@@ -2,14 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/datatables/users_datasource.dart';
-import 'package:tickets_web_app/models/http/token.dart';
-import 'package:tickets_web_app/models/http/user.dart';
+import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/users_provider.dart';
 import 'package:tickets_web_app/services/local_storage.dart';
 import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
 import 'package:tickets_web_app/ui/modals/user_modal.dart';
-
-import '../../providers/companies_provider.dart';
 
 class UsersView extends StatefulWidget {
   const UsersView({Key? key}) : super(key: key);

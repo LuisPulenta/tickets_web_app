@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tickets_web_app/models/http/user.dart';
+import 'package:tickets_web_app/models/user.dart';
 
 AuthResponse authResponseFromJson(String str) =>
     AuthResponse.fromJson(json.decode(str));

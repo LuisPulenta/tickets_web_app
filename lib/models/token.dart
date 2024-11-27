@@ -1,4 +1,4 @@
-import 'package:tickets_web_app/models/http/user.dart';
+import 'package:tickets_web_app/models/models.dart';
 
 class Token {
   String token = '';

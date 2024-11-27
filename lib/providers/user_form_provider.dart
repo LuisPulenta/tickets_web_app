@@ -1,0 +1,25 @@
+import 'package:flutter/material.dart';
+
+class UserFormProvider extends ChangeNotifier {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  String id = '';
+  String email = '';
+  String firstName = '';
+  String lastName = '';
+  String phoneNumber = '';
+  int idCompany = 0;
+  String company = '';
+  int idUserType = 0;
+  String userType = '';
+  bool active = false;
+
+  //----------------------------------------------------------------
+  bool validateForm() {
+    if (formKey.currentState!.validate()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}

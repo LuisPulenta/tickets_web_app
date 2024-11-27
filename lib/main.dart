@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/providers/companies_provider.dart';
-import 'package:tickets_web_app/providers/company_form_provider.dart';
-import 'package:tickets_web_app/providers/side_menu_provider.dart';
-import 'package:tickets_web_app/providers/users_provider.dart';
+import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/router/router.dart';
-import 'package:tickets_web_app/services/local_storage.dart';
-import 'package:tickets_web_app/services/navigation_services.dart';
-import 'package:tickets_web_app/services/notifications_service.dart';
-import 'package:tickets_web_app/ui/layouts/auth/auth_layout.dart';
-import 'package:tickets_web_app/ui/layouts/dashboard/dashboard_layout.dart';
-import 'package:tickets_web_app/ui/layouts/splash/splash_layout.dart';
+import 'package:tickets_web_app/services/services.dart';
+import 'package:tickets_web_app/ui/layouts/layouts.dart';
 
 void main() async {
   await LocalStorage.configurePrefs();
@@ -43,6 +35,9 @@ class AppState extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => CompanyFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserFormProvider(),
         ),
       ],
       child: const MyApp(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/http/user.dart';
+import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/auth_provider.dart';
 import 'package:tickets_web_app/ui/cards/white_card.dart';
 import 'package:tickets_web_app/ui/labels/custom_labels.dart';

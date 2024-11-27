@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/http/token.dart';
-import 'package:tickets_web_app/models/http/user.dart';
-import 'package:tickets_web_app/providers/companies_provider.dart';
-import 'package:tickets_web_app/providers/users_provider.dart';
+import 'package:tickets_web_app/models/models.dart';
+import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/services/local_storage.dart';
 import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
@@ -20,10 +18,11 @@ class UserModal extends StatefulWidget {
 }
 
 class _UserModalState extends State<UserModal> {
-  String firstName = '';
-  String lastName = '';
+  //---------------------------------------------------------------------------
   String? id;
   late Token token;
+  late UserFormProvider userFormProvider;
+  late User user;
 
 //---------------------------------------------------------------------------
   @override
@@ -33,9 +32,50 @@ class _UserModalState extends State<UserModal> {
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
 
-    id = widget.user?.id;
-    firstName = widget.user!.firstName;
-    lastName = widget.user!.lastName;
+    userFormProvider = Provider.of<UserFormProvider>(context, listen: false);
+
+    if (widget.user == null) {
+      user = User(
+          firstName: '',
+          lastName: '',
+          userType: 0,
+          company: '',
+          createDate: '',
+          createUser: '',
+          lastChangeDate: '',
+          lastChangeUser: '',
+          active: false,
+          fullName: '',
+          id: '',
+          email: '',
+          emailConfirmed: false,
+          phoneNumber: '');
+    } else {
+      user = User(
+        firstName: widget.user!.firstName,
+        lastName: widget.user!.lastName,
+        userType: widget.user!.userType,
+        company: widget.user!.company,
+        createDate: widget.user!.createDate,
+        createUser: widget.user!.createUser,
+        lastChangeDate: widget.user!.lastChangeDate,
+        lastChangeUser: widget.user!.lastChangeDate,
+        active: widget.user!.active,
+        fullName: widget.user!.fullName,
+        id: widget.user!.id,
+        email: widget.user!.email,
+        emailConfirmed: widget.user!.emailConfirmed,
+        phoneNumber: widget.user!.phoneNumber,
+      );
+    }
+
+    userFormProvider.id = user.id;
+    userFormProvider.firstName = user.firstName;
+    userFormProvider.lastName = user.lastName;
+    userFormProvider.active = user.active;
+    userFormProvider.phoneNumber = user.phoneNumber;
+    userFormProvider.company = user.company;
+    userFormProvider.userType = user.userType.toString();
   }
 
 //---------------------------------------------------------------------------
@@ -54,9 +94,9 @@ class _UserModalState extends State<UserModal> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.user!.id == 0
+                userFormProvider.id == ''
                     ? 'Nuevo Usuario'
-                    : '${widget.user!.lastName} ${widget.user!.firstName}',
+                    : '${userFormProvider.lastName} ${userFormProvider.firstName}',
                 style: CustomLabels.h1.copyWith(color: Colors.white),
               ),
               IconButton(
@@ -76,37 +116,133 @@ class _UserModalState extends State<UserModal> {
             height: 20,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Spacer(),
+              const Expanded(
+                flex: 1,
+                child: Spacer(),
+              ),
               Expanded(
+                flex: 2,
                 child: TextFormField(
-                  initialValue: widget.user?.firstName ?? '',
+                  initialValue: userFormProvider.firstName,
                   onChanged: (value) {
-                    firstName = value;
+                    userFormProvider.firstName = value;
                   },
                   decoration: CustomInput.loginInputDecoration(
-                    hint: 'Nombre del Usuario',
-                    label: 'Nombre del Usuario',
-                    icon: Icons.category_outlined,
+                    hint: 'Email',
+                    label: 'Email',
+                    icon: Icons.email_outlined,
                   ),
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
-              const Spacer(),
+              const SizedBox(
+                width: 15,
+              ),
               Expanded(
+                flex: 2,
                 child: TextFormField(
-                  initialValue: widget.user?.lastName ?? '',
+                  initialValue: userFormProvider.firstName,
                   onChanged: (value) {
-                    lastName = value;
+                    userFormProvider.firstName = value;
+                  },
+                  decoration: CustomInput.loginInputDecoration(
+                    hint: 'Nombre del Usuario',
+                    label: 'Nombre del Usuario',
+                    icon: Icons.person,
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                flex: 2,
+                child: TextFormField(
+                  initialValue: userFormProvider.lastName,
+                  onChanged: (value) {
+                    userFormProvider.lastName = value;
                   },
                   decoration: CustomInput.loginInputDecoration(
                     hint: 'Apellido del Usuario',
                     label: 'Apellido del Usuario',
-                    icon: Icons.category_outlined,
+                    icon: Icons.person,
                   ),
                   style: const TextStyle(color: Colors.white),
                 ),
+              ),
+              const Expanded(
+                flex: 1,
+                child: Spacer(),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Expanded(
+                flex: 1,
+                child: Spacer(),
+              ),
+              Expanded(
+                flex: 2,
+                child: TextFormField(
+                  initialValue: userFormProvider.firstName,
+                  onChanged: (value) {
+                    userFormProvider.firstName = value;
+                  },
+                  decoration: CustomInput.loginInputDecoration(
+                    hint: 'Teléfono',
+                    label: 'Teléfono',
+                    icon: Icons.phone_outlined,
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                flex: 2,
+                child: TextFormField(
+                  initialValue: userFormProvider.firstName,
+                  onChanged: (value) {
+                    userFormProvider.firstName = value;
+                  },
+                  decoration: CustomInput.loginInputDecoration(
+                    hint: 'Empresa',
+                    label: 'Empresa',
+                    icon: Icons.storefront,
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                width: 15,
+              ),
+              Expanded(
+                flex: 2,
+                child: TextFormField(
+                  initialValue: userFormProvider.lastName,
+                  onChanged: (value) {
+                    userFormProvider.lastName = value;
+                  },
+                  decoration: CustomInput.loginInputDecoration(
+                    hint: 'Tipo de Usuario',
+                    label: 'Tipo de Usuario',
+                    icon: Icons.supervised_user_circle_rounded,
+                  ),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+              const Expanded(
+                flex: 1,
+                child: Spacer(),
               ),
             ],
           ),
@@ -116,7 +252,7 @@ class _UserModalState extends State<UserModal> {
             child: CustomOutlinedButton(
               onPressed: () async {
                 if (id == null) {
-                  await userProvider.newUser(firstName, token);
+                  await userProvider.newUser(userFormProvider.firstName, token);
                 } else {}
 
                 Navigator.of(context).pop();

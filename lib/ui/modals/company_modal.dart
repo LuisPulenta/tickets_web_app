@@ -3,13 +3,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/http/company.dart';
-import 'package:tickets_web_app/models/http/token.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/providers/companies_provider.dart';
-import 'package:tickets_web_app/providers/company_form_provider.dart';
-import 'package:tickets_web_app/services/local_storage.dart';
-import 'package:tickets_web_app/services/notifications_service.dart';
+import 'package:tickets_web_app/models/company.dart';
+import 'package:tickets_web_app/models/token.dart';
+import 'package:tickets_web_app/providers/providers.dart';
+import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
 import 'package:tickets_web_app/ui/cards/white_card.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
@@ -35,19 +32,17 @@ class _CompanyModalState extends State<CompanyModal> {
   void initState() {
     super.initState();
     final userBody = LocalStorage.prefs.getString('userBody');
-    companyFormProvider =
-        Provider.of<CompanyFormProvider>(context, listen: false);
-
-    companyFormProvider.photoChanged = false;
-    companyFormProvider.base64Image = widget.company?.photoFullPath ?? '';
-    companyFormProvider.active = widget.company?.active ?? false;
-    companyFormProvider.id = widget.company?.id ?? 0;
-
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
 
-    id = widget.company?.id;
+    companyFormProvider =
+        Provider.of<CompanyFormProvider>(context, listen: false);
+
+    companyFormProvider.id = widget.company?.id ?? 0;
     companyFormProvider.name = widget.company?.name ?? '';
+    companyFormProvider.photoChanged = false;
+    companyFormProvider.base64Image = widget.company?.photoFullPath ?? '';
+    companyFormProvider.active = widget.company?.active ?? false;
   }
 
 //---------------------------------------------------------------------------
@@ -219,7 +214,6 @@ class _AvatarContainerState extends State<_AvatarContainer> {
   @override
   Widget build(BuildContext context) {
     final companyFormProvider = Provider.of<CompanyFormProvider>(context);
-    final photo = companyFormProvider.photo;
 
     Widget image = (companyFormProvider.base64Image != '' &&
             !companyFormProvider.photoChanged)
@@ -307,9 +301,7 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                   setState(() {});
 
                   Navigator.of(context).pop();
-                } else {
-                  print("User canceled the picker");
-                }
+                } else {}
               },
             ),
           ),

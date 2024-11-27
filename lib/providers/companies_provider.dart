@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/http/company.dart';
-import 'package:tickets_web_app/models/http/response.dart';
-import 'package:tickets_web_app/models/http/token.dart';
+import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/services/notifications_service.dart';
 
 class CompaniesProvider extends ChangeNotifier {

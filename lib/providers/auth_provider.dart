@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/helpers/constants.dart';
-import 'package:tickets_web_app/models/http/token.dart';
-import 'package:tickets_web_app/models/http/user.dart';
+import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/router/router.dart';
 import 'package:tickets_web_app/services/local_storage.dart';
 import 'package:tickets_web_app/services/navigation_services.dart';

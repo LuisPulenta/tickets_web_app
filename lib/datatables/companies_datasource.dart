@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/models/http/company.dart';
+
 import 'package:intl/intl.dart';
+import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/ui/modals/company_modal.dart';
 
 class CompaniesDTS extends DataTableSource {

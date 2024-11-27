@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:tickets_web_app/models/http/company.dart';
-import 'package:tickets_web_app/models/http/response.dart';
-import 'package:tickets_web_app/models/http/token.dart';
-import 'package:tickets_web_app/models/http/user.dart';
+import 'package:tickets_web_app/models/models.dart';
 import 'constants.dart';
 
 class ApiHelper {
