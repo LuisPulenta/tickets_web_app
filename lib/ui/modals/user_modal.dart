@@ -42,21 +42,38 @@ class _UserModalState extends State<UserModal> {
 
     if (widget.user == null) {
       user = User(
-          firstName: '',
-          lastName: '',
-          userType: -1,
-          company: '',
-          companyId: 0,
-          createDate: '',
-          createUser: '',
-          lastChangeDate: '',
-          lastChangeUser: '',
-          active: false,
-          fullName: '',
-          id: '',
-          email: '',
-          emailConfirmed: false,
-          phoneNumber: '');
+        // firstName: 'Gonzalo',
+        // lastName: 'Prieto',
+        // userType: 0,
+        // company: 'Rowing',
+        // companyId: 3,
+        // createDate: DateTime.now().toString(),
+        // createUser: 'Luis Núñez',
+        // lastChangeDate: DateTime.now().toString(),
+        // lastChangeUser: 'Luis Núñez',
+        // active: true,
+        // fullName: 'Luis Núñez',
+        // id: '',
+        // email: 'gprieto@yopmail.com',
+        // emailConfirmed: false,
+        // phoneNumber: '011 123 456',
+
+        firstName: '',
+        lastName: '',
+        userType: -1,
+        company: '',
+        companyId: 0,
+        createDate: '',
+        createUser: '',
+        lastChangeDate: '',
+        lastChangeUser: '',
+        active: false,
+        fullName: '',
+        id: '',
+        email: '',
+        emailConfirmed: false,
+        phoneNumber: '',
+      );
     } else {
       user = User(
         firstName: widget.user!.firstName,
@@ -81,6 +98,7 @@ class _UserModalState extends State<UserModal> {
     userFormProvider.firstName = user.firstName;
     userFormProvider.lastName = user.lastName;
     userFormProvider.active = user.active;
+    userFormProvider.email = user.email;
     userFormProvider.phoneNumber = user.phoneNumber;
     userFormProvider.company =
         widget.user == null ? 'Seleccione una Empresa...' : user.company;
@@ -91,8 +109,6 @@ class _UserModalState extends State<UserModal> {
 //---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UsersProvider>(context, listen: false);
-
     final userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
 
@@ -141,7 +157,7 @@ class _UserModalState extends State<UserModal> {
                 Expanded(
                   flex: 2,
                   child: TextFormField(
-                    initialValue: userFormProvider.firstName,
+                    initialValue: userFormProvider.email,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Ingrese Email del Usuario";
@@ -152,7 +168,7 @@ class _UserModalState extends State<UserModal> {
                       return null;
                     },
                     onChanged: (value) {
-                      userFormProvider.firstName = value;
+                      userFormProvider.email = value;
                     },
                     decoration: CustomInput.loginInputDecoration(
                       hint: 'Email',
@@ -235,10 +251,10 @@ class _UserModalState extends State<UserModal> {
                 Expanded(
                   flex: 2,
                   child: TextFormField(
-                    initialValue: userFormProvider.firstName,
+                    initialValue: userFormProvider.phoneNumber,
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
-                      userFormProvider.firstName = value;
+                      userFormProvider.phoneNumber = value;
                     },
                     decoration: CustomInput.loginInputDecoration(
                       hint: 'Teléfono',
@@ -286,7 +302,7 @@ class _UserModalState extends State<UserModal> {
   }
 
   //--------------------------------------------------------------------
-  Future<Null> _getCompanies() async {
+  Future<void> _getCompanies() async {
     Response response = await ApiHelper.getCompaniesCombo(token);
 
     if (!response.isSuccess) {
@@ -306,12 +322,20 @@ class _UserModalState extends State<UserModal> {
     if (isValid) {
       try {
         //Nuevo Usuario
-        if (id == null || id == 0) {
+        if (userFormProvider.id == '') {
           final usersProvider =
               Provider.of<UsersProvider>(context, listen: false);
-          // await usersProvider
-          //     .newUser(userFormProvider.firstName, token, userLogged)
-          //     .then((value) => Navigator.of(context).pop());
+          await usersProvider
+              .newUser(
+                  userFormProvider.firstName,
+                  userFormProvider.lastName,
+                  userFormProvider.email,
+                  userFormProvider.phoneNumber,
+                  userFormProvider.companyId,
+                  userFormProvider.idUserType,
+                  token,
+                  userLogged)
+              .then((value) => Navigator.of(context).pop());
         } else {
           //Editar User
           final usersProvider =
@@ -339,12 +363,12 @@ class _UserModalState extends State<UserModal> {
       child: Text('Seleccione una Empresa...'),
     ));
 
-    _companies.forEach((company) {
+    for (var company in _companies) {
       list.add(DropdownMenuItem(
         value: company.id,
         child: Text(company.name),
       ));
-    });
+    }
     return list;
   }
 
@@ -380,7 +404,7 @@ class _UserModalState extends State<UserModal> {
                 }
                 return null;
               },
-              dropdownColor: Color(0xff0f2041),
+              dropdownColor: const Color(0xff0f2041),
               isExpanded: true,
               isDense: true,
               style:
@@ -422,7 +446,7 @@ class _UserModalState extends State<UserModal> {
         }
         return null;
       },
-      dropdownColor: Color(0xff0f2041),
+      dropdownColor: const Color(0xff0f2041),
       isExpanded: true,
       isDense: true,
       style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 16),

@@ -19,22 +19,48 @@ class UsersProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
-  Future newUser(String name, Token token) async {
+  Future newUser(
+      String firstName,
+      String lastName,
+      String email,
+      String phoneNumber,
+      int companyId,
+      int idUserType,
+      Token token,
+      String userLogged) async {
     Map<String, dynamic> request = {
-      'name': name,
+      'Email': email,
+      'FirstName': firstName,
+      'LastName': lastName,
+      'PhoneNumber': phoneNumber,
+      'IdCompany': companyId,
+      'Company': '',
+      'IdUserType': idUserType,
+      'UserType': idUserType == 0 ? 'Admin' : 'User',
+      'CreateUser': userLogged,
+      'LastChangeUser': userLogged,
+      'Active': true,
+      'Password': '123456',
     };
 
     try {
-      Response response = await ApiHelper.post('/account', request, token);
+      Response response =
+          await ApiHelper.post('/account/createuser', request, token);
 
-      //final newCompany = Company.fromJson(response.result);
+      if (!response.isSuccess) {
+        NotificationsService.showSnackbarError(
+            'Se ha producido un error al crear el Usuario');
+        return;
+      }
+
+      NotificationsService.showSnackbar(
+          "Se ha enviado un correo con las instrucciones para activar el usuario.");
 
       getUsers(token);
-      // companies.add(newCompany);
-      // notifyListeners();
+      notifyListeners();
     } catch (e) {
       NotificationsService.showSnackbarError(
-          'Se ha producido un error al crear la Empresa');
+          'Se ha producido un error al crear el Usuario');
     }
   }
 }

@@ -40,6 +40,12 @@ class UsersDTS extends DataTableSource {
           Text(user.phoneNumber),
         ),
         DataCell(
+          Text(user.userType == 0 ? 'Administrador' : 'Usuario',
+              style: user.userType == 0
+                  ? const TextStyle(fontWeight: FontWeight.bold)
+                  : const TextStyle(fontWeight: FontWeight.normal)),
+        ),
+        DataCell(
           Text(user.active ? "Sí" : 'No',
               style: TextStyle(
                   fontSize: 12,

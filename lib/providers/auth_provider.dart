@@ -15,7 +15,6 @@ enum AuthStatus {
 }
 
 class AuthProvider extends ChangeNotifier {
-  String? _token;
   AuthStatus authStatus = AuthStatus.checking;
   User? user;
 
@@ -83,7 +82,7 @@ class AuthProvider extends ChangeNotifier {
       }
       return true;
     } catch (e) {
-      print(e);
+      //print(e);
       authStatus = AuthStatus.notAuthenticated;
       notifyListeners();
       return false;

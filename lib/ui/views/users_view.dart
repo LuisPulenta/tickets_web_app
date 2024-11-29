@@ -57,6 +57,9 @@ class _UsersViewState extends State<UsersView> {
                   label: Text("Teléfono",
                       style: TextStyle(fontWeight: FontWeight.bold))),
               DataColumn(
+                  label: Text("Tipo Usuario",
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(
                   label: Text("Activo",
                       style: TextStyle(fontWeight: FontWeight.bold))),
               DataColumn(
