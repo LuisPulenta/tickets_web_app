@@ -34,10 +34,10 @@ class Navbar extends StatelessWidget {
               child: const SearchText(),
             ),
           const Spacer(),
-          const NotificationsIndicator(),
-          const SizedBox(
-            width: 10,
-          ),
+          // const NotificationsIndicator(),
+          // const SizedBox(
+          //   width: 10,
+          // ),
           const NavbarAvatar(),
           const SizedBox(
             width: 10,

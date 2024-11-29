@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:tickets_web_app/helpers/api_helper.dart';
 import 'package:tickets_web_app/helpers/constants.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/router/router.dart';
@@ -17,6 +18,7 @@ enum AuthStatus {
 class AuthProvider extends ChangeNotifier {
   AuthStatus authStatus = AuthStatus.checking;
   User? user;
+  bool showLoader = false;
 
   AuthProvider() {
     isAuthenticated();
@@ -24,6 +26,9 @@ class AuthProvider extends ChangeNotifier {
 
   //----------------------------------------------------------------
   login(String email, String password) async {
+    showLoader = true;
+    notifyListeners();
+
     final data = {
       "userName": email,
       "password": password,
@@ -42,6 +47,8 @@ class AuthProvider extends ChangeNotifier {
 
     if (response.statusCode >= 400) {
       NotificationsService.showSnackbarError("Credenciales no válidas");
+      showLoader = false;
+      notifyListeners();
       return;
     }
 
@@ -51,10 +58,18 @@ class AuthProvider extends ChangeNotifier {
 
     user = token.user;
 
-    authStatus = AuthStatus.authenticated;
     LocalStorage.prefs.setString('token', token.token);
     LocalStorage.prefs.setString('userBody', body);
+
+    Response response2 = await ApiHelper.getCompany(user!.companyId);
+
+    Company company = response2.result;
+
+    authStatus = AuthStatus.authenticated;
+
+    LocalStorage.prefs.setString('companyLogo', company.photoFullPath);
     NavigationServices.replaceTo(Flurorouter.dashboardRoute);
+    showLoader = false;
     notifyListeners();
   }
 

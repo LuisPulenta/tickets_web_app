@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tickets_web_app/models/models.dart';
+import 'package:tickets_web_app/ui/modals/user_modal.dart';
 
 class UsersDTS extends DataTableSource {
   final List<User> users;
@@ -55,7 +56,15 @@ class UsersDTS extends DataTableSource {
           Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (_) => UserModal(
+                      user: user,
+                    ),
+                  );
+                },
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),
               IconButton(

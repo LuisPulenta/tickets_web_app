@@ -8,8 +8,8 @@ class CompaniesProvider extends ChangeNotifier {
   List<Company> companies = [];
 
   //---------------------------------------------------------------------
-  getCompanies(Token token) async {
-    Response response = await ApiHelper.getCompanies(token);
+  getCompanies() async {
+    Response response = await ApiHelper.getCompanies();
 
     if (!response.isSuccess) {
       NotificationsService.showSnackbarError('Se ha producido un error');
@@ -38,9 +38,9 @@ class CompaniesProvider extends ChangeNotifier {
     };
 
     try {
-      Response response = await ApiHelper.post('/companies', request, token);
+      Response response = await ApiHelper.post('/companies', request);
       if (response.isSuccess) {
-        getCompanies(token);
+        getCompanies();
         NotificationsService.showSnackbar("Empresa guardada con éxito");
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');
@@ -64,9 +64,9 @@ class CompaniesProvider extends ChangeNotifier {
 
     try {
       Response response =
-          await ApiHelper.put('/companies', id.toString(), request, token);
+          await ApiHelper.put('/companies', id.toString(), request);
       if (response.isSuccess) {
-        getCompanies(token);
+        getCompanies();
         NotificationsService.showSnackbar("Cambios guardados con éxito");
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');

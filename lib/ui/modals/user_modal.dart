@@ -157,6 +157,7 @@ class _UserModalState extends State<UserModal> {
                 Expanded(
                   flex: 2,
                   child: TextFormField(
+                    enabled: userFormProvider.id == '',
                     initialValue: userFormProvider.email,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -284,16 +285,42 @@ class _UserModalState extends State<UserModal> {
                 ),
               ],
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 30),
-              alignment: Alignment.center,
-              child: CustomOutlinedButton(
-                onPressed: () async {
-                  onFormSubmit(userFormProvider, token, userLogged);
-                },
-                text: "Guardar",
-                color: Colors.white,
-              ),
+            Row(
+              children: [
+                const Spacer(),
+                userFormProvider.id != ''
+                    ? Container(
+                        padding: const EdgeInsets.only(top: 30),
+                        width: 200,
+                        child: SwitchListTile(
+                            tileColor: Colors.red,
+                            title: const Text(
+                              'Activo:',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            value: userFormProvider.active,
+                            onChanged: (value) {
+                              userFormProvider.active = value;
+                              setState(() {});
+                            }),
+                      )
+                    : Container(),
+                const SizedBox(
+                  width: 50,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 30),
+                  alignment: Alignment.center,
+                  child: CustomOutlinedButton(
+                    onPressed: () async {
+                      onFormSubmit(userFormProvider, token, userLogged);
+                    },
+                    text: "Guardar",
+                    color: Colors.white,
+                  ),
+                ),
+                const Spacer(),
+              ],
             ),
           ],
         ),
@@ -303,7 +330,7 @@ class _UserModalState extends State<UserModal> {
 
   //--------------------------------------------------------------------
   Future<void> _getCompanies() async {
-    Response response = await ApiHelper.getCompaniesCombo(token);
+    Response response = await ApiHelper.getCompaniesCombo();
 
     if (!response.isSuccess) {
       NotificationsService.showSnackbarError("Error al cargar las Empresas");
@@ -340,14 +367,18 @@ class _UserModalState extends State<UserModal> {
           //Editar User
           final usersProvider =
               Provider.of<UsersProvider>(context, listen: false);
-          // await usersProvider
-          // .updateUser(
-          //     userFormProvider.id,
-          //     userFormProvider.firstName,
-          //     token,
-          //     userLogged,
-          //     userFormProvider.active)
-          // .then((value) => Navigator.of(context).pop());
+          await usersProvider
+              .updateUser(
+                  userFormProvider.id,
+                  userFormProvider.firstName,
+                  userFormProvider.lastName,
+                  userFormProvider.email,
+                  userFormProvider.phoneNumber,
+                  userFormProvider.companyId,
+                  userFormProvider.idUserType,
+                  userLogged,
+                  userFormProvider.active)
+              .then((value) => Navigator.of(context).pop());
         }
       } catch (e) {
         NotificationsService.showSnackbarError("No se pudo guardar el Usuario");

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tickets_web_app/providers/auth_provider.dart';
 import 'package:tickets_web_app/ui/layouts/auth/widgets/background.dart';
 import 'package:tickets_web_app/ui/layouts/auth/widgets/custom_title.dart';
 import 'package:tickets_web_app/ui/layouts/auth/widgets/links_bar.dart';
+import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
 
 class AuthLayout extends StatelessWidget {
   final Widget child;
@@ -11,11 +14,25 @@ class AuthLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool showLoader = Provider.of<AuthProvider>(context).showLoader;
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: ListView(children: [
         (size.width >= 1000)
-            ? _DesktopBody(child: child)
+            ? Stack(
+                children: [
+                  _DesktopBody(child: child),
+                  showLoader
+                      ? Positioned(
+                          left: size.width * 0.5 - 100,
+                          top: size.height * 0.5 - 50,
+                          child: const LoaderComponent(
+                            text: 'Por favor espere...',
+                          ))
+                      : Container(),
+                ],
+              )
             : _MobileBody(child: child),
 
         //Links
