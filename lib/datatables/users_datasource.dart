@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tickets_web_app/models/models.dart';
+import 'package:tickets_web_app/providers/auth_provider.dart';
 import 'package:tickets_web_app/ui/modals/user_modal.dart';
 
 class UsersDTS extends DataTableSource {
@@ -12,6 +14,7 @@ class UsersDTS extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final user = users[index];
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     return DataRow.byIndex(
       index: index,
@@ -55,7 +58,17 @@ class UsersDTS extends DataTableSource {
         DataCell(
           Row(
             children: [
+              user.emailConfirmed
+                  ? Container()
+                  : IconButton(
+                      tooltip: 'Reenviar Mail de Confirmación de Cuenta',
+                      onPressed: () {
+                        authProvider.resendEmail(user.email);
+                      },
+                      icon: const Icon(Icons.outgoing_mail, color: Colors.blue),
+                    ),
               IconButton(
+                tooltip: 'Editar Usuario',
                 onPressed: () {
                   showModalBottomSheet(
                     backgroundColor: Colors.transparent,
@@ -68,6 +81,7 @@ class UsersDTS extends DataTableSource {
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),
               IconButton(
+                tooltip: 'Borrar Usuario',
                 onPressed: () {
                   final dialog = AlertDialog(
                     title: const Text("Atención!!"),

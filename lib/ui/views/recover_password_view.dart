@@ -96,7 +96,7 @@ class RecoverPasswordView extends StatelessWidget {
       LoginFormProvider loginFormProvider, AuthProvider authProvider) {
     final isValid = loginFormProvider.validateForm();
     if (isValid) {
-      authProvider.login(loginFormProvider.email, loginFormProvider.password);
+      authProvider.recoverPassword(loginFormProvider.email);
     }
   }
 }

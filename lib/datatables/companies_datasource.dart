@@ -47,8 +47,10 @@ class CompaniesDTS extends DataTableSource {
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
-          Text(company.usersNumber.toString(),
-              style: const TextStyle(fontSize: 12)),
+          company.usersNumber != 0
+              ? Text(company.usersNumber.toString(),
+                  style: const TextStyle(fontSize: 12))
+              : Container(),
         ),
         DataCell(
           Text(company.active ? "Sí" : 'No',

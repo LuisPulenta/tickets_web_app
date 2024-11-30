@@ -25,10 +25,6 @@ class _UsersViewState extends State<UsersView> {
   @override
   void initState() {
     super.initState();
-    final userBody = LocalStorage.prefs.getString('userBody');
-    var decodedJson = jsonDecode(userBody!);
-    var token = Token.fromJson(decodedJson);
-
     Provider.of<UsersProvider>(context, listen: false).getUsers();
     showLoader = false;
     setState(() {});

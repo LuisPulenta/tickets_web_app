@@ -110,4 +110,72 @@ class AuthProvider extends ChangeNotifier {
     authStatus = AuthStatus.notAuthenticated;
     notifyListeners();
   }
+
+  //----------------------------------------------------------------
+  recoverPassword(String email) async {
+    showLoader = true;
+    notifyListeners();
+
+    final data = {
+      "Email": email,
+    };
+
+    var url = Uri.parse('${Constants.apiUrl}/Account/RecoverPassword');
+
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode >= 400) {
+      NotificationsService.showSnackbarError("Ese Email no está registrado");
+      showLoader = false;
+      notifyListeners();
+      return;
+    }
+
+    NavigationServices.replaceTo(Flurorouter.loginRoute);
+    NotificationsService.showSnackbar(
+        "Las instrucciones para el cambio de contraseña han sido enviadas al email $email");
+    showLoader = false;
+    notifyListeners();
+  }
+
+  //----------------------------------------------------------------
+  resendEmail(String email) async {
+    showLoader = true;
+    notifyListeners();
+
+    final data = {
+      "Email": email,
+    };
+
+    var url = Uri.parse('${Constants.apiUrl}/Account/ResendToken');
+
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode >= 400) {
+      NotificationsService.showSnackbarError("Ese Email no está registrado");
+      showLoader = false;
+      notifyListeners();
+      return;
+    }
+
+    NavigationServices.replaceTo(Flurorouter.loginRoute);
+    NotificationsService.showSnackbar(
+        "Las instrucciones para la confirmación de cuenta han sido enviadas al email $email");
+    showLoader = false;
+    notifyListeners();
+  }
 }

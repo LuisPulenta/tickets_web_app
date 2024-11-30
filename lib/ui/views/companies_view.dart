@@ -25,10 +25,6 @@ class _CompaniesViewState extends State<CompaniesView> {
   @override
   void initState() {
     super.initState();
-    final userBody = LocalStorage.prefs.getString('userBody');
-    var decodedJson = jsonDecode(userBody!);
-    var token = Token.fromJson(decodedJson);
-
     Provider.of<CompaniesProvider>(context, listen: false).getCompanies();
     showLoader = false;
     setState(() {});
