@@ -25,6 +25,7 @@ class _EditUserViewState extends State<EditUserView> {
   late EditUserFormProvider editUserFormProvider;
   late ChangePasswordFormProvider changePasswordFormProvider;
   late User user;
+  bool showChangePassword = false;
 
 //---------------------------------------------------------------------------
   @override
@@ -178,177 +179,191 @@ class _EditUserViewState extends State<EditUserView> {
                           const Spacer(),
                         ],
                       ),
-                      Row(
-                        children: [
-                          const Spacer(),
-                          Container(
-                            margin: const EdgeInsets.only(top: 30),
-                            alignment: Alignment.center,
-                            child: CustomOutlinedButton(
-                              onPressed: () async {
-                                onFormSubmit(
-                                    editUserFormProvider, token, userLogged);
-                              },
-                              text: "Cambiar Contraseña",
-                              color: const Color.fromARGB(255, 25, 15, 219),
-                              isFilled: true,
-                            ),
-                          ),
-                          const Spacer(),
-                        ],
-                      ),
+                      !showChangePassword
+                          ? Row(
+                              children: [
+                                const Spacer(),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 30),
+                                  alignment: Alignment.center,
+                                  child: CustomOutlinedButton(
+                                    onPressed: () async {
+                                      showChangePassword = true;
+                                      setState(() {});
+                                    },
+                                    text: "Cambiar Contraseña",
+                                    color:
+                                        const Color.fromARGB(255, 25, 15, 219),
+                                    isFilled: true,
+                                  ),
+                                ),
+                                const Spacer(),
+                              ],
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Divider(),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Cambiar Contraseña',
-                    style: GoogleFonts.roboto(
-                        fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const Divider(),
-                //**************************************************************************************
-                //**************************************************************************************
-                //**************************************************************************************
-                Form(
-                  autovalidateMode: AutovalidateMode.disabled,
-                  key: changePasswordFormProvider.formKey,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const Expanded(
-                            flex: 1,
-                            child: Spacer(),
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Ingrese Contraseña actual";
-                                }
-                                if (value.length < 6) {
-                                  return "Mínimo 6 caracteres";
-                                }
-
-                                return null;
-                              },
-                              onChanged: (value) {
-                                changePasswordFormProvider.oldpassword = value;
-                              },
-                              decoration: CustomInput.editInputDecoration(
-                                hint: 'Ingrese su Contraseña actual',
-                                label: 'Contraseña actual',
-                                icon: Icons.password,
-                              ),
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Ingrese Nueva Contraseña";
-                                }
-                                if (value.length < 6) {
-                                  return "Mínimo 6 caracteres";
-                                }
-                                if (changePasswordFormProvider
-                                        .confirmpassword !=
-                                    changePasswordFormProvider.newpassword) {
-                                  return 'La nueva contraseña y la confirmación no son iguales';
-                                }
-                                return null;
-                              },
-                              onChanged: (value) {
-                                changePasswordFormProvider.newpassword = value;
-                              },
-                              decoration: CustomInput.editInputDecoration(
-                                hint: 'Ingrese Nueva Contraseña',
-                                label: 'Nueva Contraseña',
-                                icon: Icons.password,
-                              ),
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                              obscureText: true,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Ingrese Confirmación de Contraseña";
-                                }
-                                if (value.length < 6) {
-                                  return "Mínimo 6 caracteres";
-                                }
-                                if (changePasswordFormProvider
-                                        .confirmpassword !=
-                                    changePasswordFormProvider.newpassword) {
-                                  return 'La nueva contraseña y la confirmación no son iguales';
-                                }
-                              },
-                              keyboardType: TextInputType.number,
-                              onChanged: (value) {
-                                changePasswordFormProvider.confirmpassword =
-                                    value;
-                              },
-                              decoration: CustomInput.editInputDecoration(
-                                hint: 'Confirme Nueva Contraseña',
-                                label: 'Confirme Nueva Contraseña',
-                                icon: Icons.password,
-                              ),
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          const Expanded(
-                            flex: 1,
-                            child: Spacer(),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
+                showChangePassword
+                    ? const SizedBox(
                         height: 15,
-                      ),
-                      Row(
-                        children: [
-                          const Spacer(),
-                          Container(
-                            margin: const EdgeInsets.only(top: 30),
-                            alignment: Alignment.center,
-                            child: CustomOutlinedButton(
-                              onPressed: () async {
-                                onForm2Submit(
-                                    changePasswordFormProvider, token);
-                              },
-                              text: "Guardar",
-                              color: const Color.fromARGB(255, 25, 15, 219),
-                              isFilled: true,
+                      )
+                    : Container(),
+                const Divider(),
+                showChangePassword
+                    ? Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          'Cambiar Contraseña',
+                          style: GoogleFonts.roboto(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    : Container(),
+                showChangePassword ? const Divider() : Container(),
+                //**************************************************************************************
+                //**************************************************************************************
+                //**************************************************************************************
+                showChangePassword
+                    ? Form(
+                        autovalidateMode: AutovalidateMode.disabled,
+                        key: changePasswordFormProvider.formKey,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Expanded(
+                                  flex: 1,
+                                  child: Spacer(),
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextFormField(
+                                    obscureText: true,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Ingrese Contraseña actual";
+                                      }
+                                      if (value.length < 6) {
+                                        return "Mínimo 6 caracteres";
+                                      }
+
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      changePasswordFormProvider.oldpassword =
+                                          value;
+                                    },
+                                    decoration: CustomInput.editInputDecoration(
+                                      hint: 'Ingrese su Contraseña actual',
+                                      label: 'Contraseña actual',
+                                      icon: Icons.password,
+                                    ),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextFormField(
+                                    obscureText: true,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Ingrese Nueva Contraseña";
+                                      }
+                                      if (value.length < 6) {
+                                        return "Mínimo 6 caracteres";
+                                      }
+                                      if (changePasswordFormProvider
+                                              .confirmpassword !=
+                                          changePasswordFormProvider
+                                              .newpassword) {
+                                        return 'La nueva contraseña y la confirmación no son iguales';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      changePasswordFormProvider.newpassword =
+                                          value;
+                                    },
+                                    decoration: CustomInput.editInputDecoration(
+                                      hint: 'Ingrese Nueva Contraseña',
+                                      label: 'Nueva Contraseña',
+                                      icon: Icons.password,
+                                    ),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: TextFormField(
+                                    obscureText: true,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Ingrese Confirmación de Contraseña";
+                                      }
+                                      if (value.length < 6) {
+                                        return "Mínimo 6 caracteres";
+                                      }
+                                      if (changePasswordFormProvider
+                                              .confirmpassword !=
+                                          changePasswordFormProvider
+                                              .newpassword) {
+                                        return 'La nueva contraseña y la confirmación no son iguales';
+                                      }
+                                    },
+                                    keyboardType: TextInputType.number,
+                                    onChanged: (value) {
+                                      changePasswordFormProvider
+                                          .confirmpassword = value;
+                                    },
+                                    decoration: CustomInput.editInputDecoration(
+                                      hint: 'Confirme Nueva Contraseña',
+                                      label: 'Confirme Nueva Contraseña',
+                                      icon: Icons.password,
+                                    ),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                                const Expanded(
+                                  flex: 1,
+                                  child: Spacer(),
+                                ),
+                              ],
                             ),
-                          ),
-                          const Spacer(),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                              children: [
+                                const Spacer(),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 30),
+                                  alignment: Alignment.center,
+                                  child: CustomOutlinedButton(
+                                    onPressed: () async {
+                                      onForm2Submit(
+                                          changePasswordFormProvider, token);
+                                    },
+                                    text: "Cambiar Contraseña",
+                                    color:
+                                        const Color.fromARGB(255, 25, 15, 219),
+                                    isFilled: true,
+                                  ),
+                                ),
+                                const Spacer(),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
