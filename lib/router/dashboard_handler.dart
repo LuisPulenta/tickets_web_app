@@ -54,4 +54,16 @@ class DashboardHandlers {
       return const LoginView();
     }
   });
+
+  static Handler editUser = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false)
+        .setCurrentPageUrl(Flurorouter.editUserRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const EditUserView();
+    } else {
+      return const LoginView();
+    }
+  });
 }

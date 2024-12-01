@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/auth_provider.dart';
+import 'package:tickets_web_app/router/router.dart';
 import 'package:tickets_web_app/services/services.dart';
+import 'package:tickets_web_app/ui/buttons/link_text.dart';
 
 class NavbarAvatar extends StatelessWidget {
   const NavbarAvatar({Key? key}) : super(key: key);
@@ -15,11 +17,10 @@ class NavbarAvatar extends StatelessWidget {
 
     return Row(
       children: [
-        Text(
-          userLogged,
-          style: const TextStyle(
-              color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+        LinkText(
+            text: userLogged,
+            onPressed: () =>
+                NavigationServices.navigateTo('/dashboard/editUser')),
         const SizedBox(
           width: 15,
         ),

@@ -178,4 +178,34 @@ class AuthProvider extends ChangeNotifier {
     showLoader = false;
     notifyListeners();
   }
+
+  //----------------------------------------------------------------
+  changePassword(
+    String oldpassword,
+    String newpassword,
+    String confirmpassword,
+  ) async {
+    showLoader = true;
+    notifyListeners();
+
+    final data = {
+      'OldPassword': oldpassword,
+      'NewPassword': newpassword,
+      'Confirm': confirmpassword,
+    };
+
+    Response response = await ApiHelper.post('/Account/ChangePassword', data);
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError("Error al cambiar la Contraseña");
+      showLoader = false;
+      notifyListeners();
+      return;
+    }
+
+    NavigationServices.replaceTo(Flurorouter.loginRoute);
+    NotificationsService.showSnackbar("Contraseña cambiada con éxito!!");
+    showLoader = false;
+    notifyListeners();
+  }
 }

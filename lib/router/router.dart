@@ -18,6 +18,7 @@ class Flurorouter {
   static String companiesRoute = '/dashboard/companies';
   static String usersRoute = '/dashboard/users';
   static String ticketsRoute = '/dashboard/tickets';
+  static String editUserRoute = '/dashboard/editUser';
 
   static void configureRoutes() {
     router.define(
@@ -35,6 +36,12 @@ class Flurorouter {
     router.define(
       recoverPasswordRoute,
       handler: AdminHandlers.recoverPassword,
+      transitionType: TransitionType.none,
+    );
+
+    router.define(
+      editUserRoute,
+      handler: DashboardHandlers.editUser,
       transitionType: TransitionType.none,
     );
 

@@ -22,7 +22,7 @@ class CustomOutlinedButton extends StatelessWidget {
       style: ButtonStyle(
         shape: MaterialStateProperty.all(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(5),
           ),
         ),
         side: MaterialStateProperty.all(
