@@ -58,6 +58,13 @@ class AuthProvider extends ChangeNotifier {
 
     user = token.user;
 
+    if (!user!.active) {
+      NotificationsService.showSnackbarError("Usuario no activo");
+      showLoader = false;
+      notifyListeners();
+      return;
+    }
+
     LocalStorage.prefs.setString('token', token.token);
     LocalStorage.prefs.setString('userBody', body);
 

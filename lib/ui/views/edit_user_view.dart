@@ -408,7 +408,8 @@ class _EditUserViewState extends State<EditUserView> {
                 editUserFormProvider.companyId,
                 editUserFormProvider.idUserType,
                 userLogged,
-                editUserFormProvider.active)
+                editUserFormProvider.active,
+                '')
             .then((value) => Navigator.of(context).pop());
       } catch (e) {
         NotificationsService.showSnackbarError("No se pudo guardar el Usuario");

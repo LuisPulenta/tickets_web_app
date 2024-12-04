@@ -6,13 +6,37 @@ import 'package:tickets_web_app/services/notifications_service.dart';
 
 class CompaniesProvider extends ChangeNotifier {
   List<Company> companies = [];
+  List<Company> originalCompanies = [];
+  bool ascending = true;
+  int? sortColumnIndex;
+  bool showLoader = false;
+  String search = '';
+  bool onlyActives = false;
+
+  //---------------------------------------------------------------
+  void sort<T>(Comparable<T> Function(Company user) getField) {
+    companies.sort((a, b) {
+      final aValue = getField(a);
+      final bValue = getField(b);
+      return ascending
+          ? Comparable.compare(aValue, bValue)
+          : Comparable.compare(bValue, aValue);
+    });
+    ascending = !ascending;
+    notifyListeners();
+  }
 
   //---------------------------------------------------------------------
   getCompanies() async {
+    showLoader = true;
+    notifyListeners();
+
     Response response = await ApiHelper.getCompanies();
 
     if (!response.isSuccess) {
       NotificationsService.showSnackbarError('Se ha producido un error');
+      showLoader = false;
+      notifyListeners();
       return;
     }
     companies = response.result;
@@ -24,12 +48,18 @@ class CompaniesProvider extends ChangeNotifier {
           .compareTo(b.name.toString().toLowerCase());
     });
 
+    originalCompanies = companies;
+
+    showLoader = false;
     notifyListeners();
   }
 
   //---------------------------------------------------------------------
   Future newCompany(
       String name, String base64Image, Token token, String userLogged) async {
+    showLoader = true;
+    notifyListeners();
+
     Map<String, dynamic> request = {
       'Name': name,
       'CreateUser': userLogged,
@@ -49,11 +79,16 @@ class CompaniesProvider extends ChangeNotifier {
       NotificationsService.showSnackbarError(
           'Se ha producido un error al crear la Empresa');
     }
+    showLoader = false;
+    notifyListeners();
   }
 
   //---------------------------------------------------------------------
   Future updateCompany(int id, String name, String base64Image, Token token,
       String userLogged, bool active) async {
+    showLoader = true;
+    notifyListeners();
+
     Map<String, dynamic> request = {
       'Id': id,
       'Name': name,
@@ -75,5 +110,54 @@ class CompaniesProvider extends ChangeNotifier {
       NotificationsService.showSnackbarError(
           'Se ha producido un error al guardar los cambios');
     }
+
+    showLoader = false;
+    notifyListeners();
+  }
+
+  //--------------------------------------------------------------------
+  Future deleteCompany(String id) async {
+    try {
+      showLoader = true;
+      notifyListeners();
+      Response response = await ApiHelper.delete('/companies', id);
+
+      if (!response.isSuccess) {
+        NotificationsService.showSnackbarError('No se puedo borrar la Empresa');
+        showLoader = false;
+        notifyListeners();
+        return;
+      }
+      getCompanies();
+      NotificationsService.showSnackbar("Empresa borrada con éxito");
+    } catch (e) {
+      throw ('Error al borrar la Categoría');
+    }
+    showLoader = false;
+    notifyListeners();
+  }
+
+  //--------------------------------------------------------------------
+  void filter() {
+    companies = originalCompanies;
+
+    List<Company> filteredList = [];
+    if (!onlyActives) {
+      for (var company in companies) {
+        if (company.name.toLowerCase().contains(search.toLowerCase())) {
+          filteredList.add(company);
+        }
+      }
+    } else {
+      for (var company in companies) {
+        if ((company.name.toLowerCase().contains(search.toLowerCase())) &&
+            company.active) {
+          filteredList.add(company);
+        }
+      }
+    }
+
+    companies = filteredList;
+    notifyListeners();
   }
 }

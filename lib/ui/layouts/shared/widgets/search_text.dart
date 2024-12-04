@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 
 class SearchText extends StatelessWidget {
-  const SearchText({Key? key}) : super(key: key);
+  final Function onSubmitted;
+  const SearchText({Key? key, required this.onSubmitted}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,6 +13,7 @@ class SearchText extends StatelessWidget {
       child: TextField(
         decoration: CustomInput.searchInputDecoration(
             hint: "Buscar...", icon: Icons.search_outlined),
+        onSubmitted: onSubmitted(),
       ),
     );
   }

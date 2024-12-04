@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/ui/layouts/shared/sidebar.dart';
+import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/navbar.dart';
 
 class DashboardLayout extends StatefulWidget {
@@ -24,8 +27,11 @@ class _DashboardLayoutState extends State<DashboardLayout>
     );
   }
 
+//----------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
+    bool showLoader = Provider.of<UsersProvider>(context).showLoader ||
+        Provider.of<CompaniesProvider>(context).showLoader;
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffEDF1F2),
@@ -52,30 +58,39 @@ class _DashboardLayoutState extends State<DashboardLayout>
           ),
           if (size.width < 700)
             AnimatedBuilder(
-                animation: SideMenuProvider.menuController,
-                builder: (context, _) => Stack(
-                      children: [
-                        if (SideMenuProvider.isOpen)
-                          AnimatedOpacity(
-                            opacity: SideMenuProvider.opacity.value,
-                            duration: const Duration(milliseconds: 200),
-                            child: GestureDetector(
-                              onTap: () {
-                                SideMenuProvider.closeMenu();
-                              },
-                              child: Container(
-                                width: size.width,
-                                height: size.height,
-                                color: Colors.black26,
-                              ),
-                            ),
-                          ),
-                        Transform.translate(
-                          offset: Offset(SideMenuProvider.movement.value, 0),
-                          child: const Sidebar(),
+              animation: SideMenuProvider.menuController,
+              builder: (context, _) => Stack(
+                children: [
+                  if (SideMenuProvider.isOpen)
+                    AnimatedOpacity(
+                      opacity: SideMenuProvider.opacity.value,
+                      duration: const Duration(milliseconds: 200),
+                      child: GestureDetector(
+                        onTap: () {
+                          SideMenuProvider.closeMenu();
+                        },
+                        child: Container(
+                          width: size.width,
+                          height: size.height,
+                          color: Colors.black26,
                         ),
-                      ],
-                    )),
+                      ),
+                    ),
+                  Transform.translate(
+                    offset: Offset(SideMenuProvider.movement.value, 0),
+                    child: const Sidebar(),
+                  ),
+                ],
+              ),
+            ),
+          showLoader
+              ? Positioned(
+                  left: size.width * 0.5 - 100,
+                  top: size.height * 0.5 - 50,
+                  child: const LoaderComponent(
+                    text: 'Por favor espere...',
+                  ))
+              : Container(),
         ],
       ),
     );

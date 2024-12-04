@@ -112,6 +112,9 @@ class _UserModalState extends State<UserModal> {
     final userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
 
+    final emailLogged =
+        Provider.of<AuthProvider>(context, listen: false).user!.email;
+
     return Container(
       padding: const EdgeInsets.all(20),
       height: 500,
@@ -313,7 +316,8 @@ class _UserModalState extends State<UserModal> {
                   alignment: Alignment.center,
                   child: CustomOutlinedButton(
                     onPressed: () async {
-                      onFormSubmit(userFormProvider, token, userLogged);
+                      onFormSubmit(
+                          userFormProvider, token, userLogged, emailLogged);
                     },
                     text: "Guardar",
                     color: Colors.white,
@@ -343,8 +347,8 @@ class _UserModalState extends State<UserModal> {
   }
 
   //--------------------------------------------------------------------
-  void onFormSubmit(
-      UserFormProvider userFormProvider, Token token, String userLogged) async {
+  void onFormSubmit(UserFormProvider userFormProvider, Token token,
+      String userLogged, String emailLogged) async {
     final isValid = userFormProvider.validateForm();
     if (isValid) {
       try {
@@ -377,7 +381,8 @@ class _UserModalState extends State<UserModal> {
                   userFormProvider.companyId,
                   userFormProvider.idUserType,
                   userLogged,
-                  userFormProvider.active)
+                  userFormProvider.active,
+                  emailLogged)
               .then((value) => Navigator.of(context).pop());
         }
       } catch (e) {

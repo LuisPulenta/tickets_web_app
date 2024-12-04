@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/navbar_avatar.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/notifications_indicator.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/search_text.dart';
 
 class Navbar extends StatelessWidget {
@@ -27,12 +26,7 @@ class Navbar extends StatelessWidget {
           const SizedBox(
             width: 5,
           ),
-          //Search input
-          if (size.width >= 390)
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 250),
-              child: const SearchText(),
-            ),
+
           const Spacer(),
           // const NotificationsIndicator(),
           // const SizedBox(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tickets_web_app/models/models.dart';
+import 'package:tickets_web_app/providers/companies_provider.dart';
 import 'package:tickets_web_app/ui/modals/company_modal.dart';
 
 class CompaniesDTS extends DataTableSource {
@@ -62,6 +64,7 @@ class CompaniesDTS extends DataTableSource {
           Row(
             children: [
               IconButton(
+                tooltip: 'Editar Empresa',
                 onPressed: () {
                   showModalBottomSheet(
                     backgroundColor: Colors.transparent,
@@ -73,34 +76,42 @@ class CompaniesDTS extends DataTableSource {
                 },
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),
-              IconButton(
-                onPressed: () {
-                  final dialog = AlertDialog(
-                    title: const Text("Atención!!"),
-                    content: Text(
-                        "Está seguro de borrar la empresa ${company.name}?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Si"),
+              company.usersNumber == 0
+                  ? IconButton(
+                      tooltip: 'Borrar Empresa',
+                      onPressed: () {
+                        final dialog = AlertDialog(
+                          title: const Text("Atención!!"),
+                          content: Text(
+                              "Está seguro de borrar la empresa ${company.name}?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                final companiesProvider =
+                                    Provider.of<CompaniesProvider>(context,
+                                        listen: false);
+                                await companiesProvider
+                                    .deleteCompany(company.id.toString());
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Si"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("No"),
+                            ),
+                          ],
+                        );
+                        showDialog(context: context, builder: (_) => dialog);
+                      },
+                      icon: const Icon(
+                        Icons.delete_outline_outlined,
+                        color: Colors.red,
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("No"),
-                      ),
-                    ],
-                  );
-                  showDialog(context: context, builder: (_) => dialog);
-                },
-                icon: const Icon(
-                  Icons.delete_outline_outlined,
-                  color: Colors.red,
-                ),
-              ),
+                    )
+                  : Container(),
             ],
           ),
         ),
