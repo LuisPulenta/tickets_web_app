@@ -12,17 +12,17 @@ class Logo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 45,
+            radius: 25,
             backgroundColor: Colors.white,
             child: Image.asset(
               'bg.png',
-              width: 60,
-              height: 60,
+              width: 35,
+              height: 35,
               fit: BoxFit.contain,
             ),
           ),
           const SizedBox(width: 10),
-          Text("Tickets",
+          Text("TicketsWeb",
               style: GoogleFonts.montserratAlternates(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

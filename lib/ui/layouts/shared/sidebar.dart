@@ -19,6 +19,8 @@ class Sidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sideMenuProvider = Provider.of<SideMenuProvider>(context);
+    final userType =
+        Provider.of<AuthProvider>(context, listen: false).user!.userType;
     return Container(
       width: 200,
       height: double.infinity,
@@ -31,26 +33,33 @@ class Sidebar extends StatelessWidget {
             height: 50,
           ),
           MenuItem(
-            text: 'Dashboard',
-            icon: Icons.compass_calibration_outlined,
+            text: 'Inicio',
+            icon: Icons.home,
             isActive:
                 sideMenuProvider.currentPage == Flurorouter.dashboardRoute,
             onPressed: () => navigateTo(Flurorouter.dashboardRoute),
           ),
-          const TextSeparator(text: 'Empresas y Usuarios'),
-          MenuItem(
-            text: 'Empresas',
-            icon: Icons.storefront,
-            isActive:
-                sideMenuProvider.currentPage == Flurorouter.companiesRoute,
-            onPressed: () => navigateTo(Flurorouter.companiesRoute),
-          ),
-          MenuItem(
-            text: 'Usuarios',
-            icon: Icons.groups,
-            isActive: sideMenuProvider.currentPage == Flurorouter.usersRoute,
-            onPressed: () => navigateTo(Flurorouter.usersRoute),
-          ),
+          userType == 0
+              ? const TextSeparator(text: 'Empresas y Usuarios')
+              : Container(),
+          userType == 0
+              ? MenuItem(
+                  text: 'Empresas',
+                  icon: Icons.storefront,
+                  isActive: sideMenuProvider.currentPage ==
+                      Flurorouter.companiesRoute,
+                  onPressed: () => navigateTo(Flurorouter.companiesRoute),
+                )
+              : Container(),
+          userType == 0
+              ? MenuItem(
+                  text: 'Usuarios',
+                  icon: Icons.groups,
+                  isActive:
+                      sideMenuProvider.currentPage == Flurorouter.usersRoute,
+                  onPressed: () => navigateTo(Flurorouter.usersRoute),
+                )
+              : Container(),
           const TextSeparator(text: 'Tickets'),
           MenuItem(
             text: 'Tickets',
