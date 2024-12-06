@@ -24,7 +24,7 @@ class _TicketsViewState extends State<TicketsView> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CompaniesProvider>(context, listen: false).getCompanies();
+    Provider.of<TicketCabsProvider>(context, listen: false).getTicketCabs();
     showLoader = false;
     setState(() {});
   }

@@ -13,7 +13,7 @@ class TicketCab {
   String company;
   String title;
   String description;
-  String ticketState;
+  int ticketState;
   DateTime stateDate;
   String stateUser;
 
@@ -31,25 +31,25 @@ class TicketCab {
 
   factory TicketCab.fromJson(Map<String, dynamic> json) => TicketCab(
         id: json["id"],
-        createDate: json["createDate"],
+        createDate: DateTime.parse(json["createDate"]),
         createUser: json["createUser"],
         company: json["company"],
         title: json["title"],
         description: json["description"],
-        ticketState: json["ticketState"] ?? '',
-        stateDate: json["stateDate"],
+        ticketState: json["ticketState"],
+        stateDate: DateTime.parse(json["stateDate"]),
         stateUser: json["stateUser"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "createDate": createDate,
+        "createDate": createDate.toIso8601String(),
         "createUser": createUser,
         "company": company,
         "title": title,
         "description": description,
         "ticketState": ticketState,
-        "stateDate": stateDate,
+        "stateDate": stateDate.toIso8601String(),
         "stateUser": stateUser,
       };
 }

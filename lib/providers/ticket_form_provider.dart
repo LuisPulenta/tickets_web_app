@@ -11,7 +11,7 @@ class TicketFormProvider extends ChangeNotifier {
       company: '',
       title: '',
       description: '',
-      ticketState: '',
+      ticketState: 0,
       stateDate: DateTime.now(),
       stateUser: '');
 

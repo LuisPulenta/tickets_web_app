@@ -43,6 +43,8 @@ class _TicketModalState extends State<TicketModal> {
   Widget build(BuildContext context) {
     final userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+    final companyLogged =
+        Provider.of<AuthProvider>(context, listen: false).user!.company;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -78,13 +80,12 @@ class _TicketModalState extends State<TicketModal> {
               height: 10,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Spacer(),
-                Expanded(
+                SizedBox(
+                  width: 600,
                   child: TextFormField(
-                    onFieldSubmitted: (_) =>
-                        onFormSubmit(ticketFormProvider, token, userLogged),
+                    onFieldSubmitted: (_) => onFormSubmit(
+                        ticketFormProvider, token, userLogged, companyLogged),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Ingrese Asunto";
@@ -106,18 +107,52 @@ class _TicketModalState extends State<TicketModal> {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-                ticketFormProvider.ticketCab.id > 0
-                    ? const Spacer()
-                    : Container(),
                 const Spacer(),
               ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 80,
+              child: TextFormField(
+                keyboardType: TextInputType.multiline,
+                minLines: null,
+                maxLines: null,
+                expands: true,
+                onFieldSubmitted: (_) => onFormSubmit(
+                    ticketFormProvider, token, userLogged, companyLogged),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Ingrese Descripción";
+                  }
+                  if (value.length < 3) {
+                    return "Mínimo 3 caracteres";
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  ticketFormProvider.ticketCab.description = value;
+                },
+                initialValue: widget.ticketCab?.description ?? '',
+                decoration: CustomInput.loginInputDecoration(
+                  hint: 'Descripción',
+                  label: 'Descripción',
+                  icon: Icons.comment,
+                ),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
             ),
             Container(
               margin: const EdgeInsets.only(top: 30),
               alignment: Alignment.center,
               child: CustomOutlinedButton(
                 onPressed: () async {
-                  onFormSubmit(ticketFormProvider, token, userLogged);
+                  onFormSubmit(
+                      ticketFormProvider, token, userLogged, companyLogged);
                 },
                 text: "Guardar",
                 color: Colors.white,
@@ -131,7 +166,7 @@ class _TicketModalState extends State<TicketModal> {
 
   //--------------------------------------------------------------------
   void onFormSubmit(TicketFormProvider ticketFormProvider, Token token,
-      String userLogged) async {
+      String userLogged, String companyLogged) async {
     final isValid = ticketFormProvider.validateForm();
     if (isValid) {
       try {
@@ -140,7 +175,8 @@ class _TicketModalState extends State<TicketModal> {
           final ticketsProvider =
               Provider.of<TicketCabsProvider>(context, listen: false);
           await ticketsProvider
-              .newTicketCab(ticketFormProvider.ticketCab, userLogged)
+              .newTicketCab(
+                  ticketFormProvider.ticketCab, userLogged, companyLogged)
               .then((value) => Navigator.of(context).pop());
         } else {
           //Editar Ticket

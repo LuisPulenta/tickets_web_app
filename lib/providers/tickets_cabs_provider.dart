@@ -51,14 +51,21 @@ class TicketCabsProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
-  Future newTicketCab(TicketCab ticketCab, String userLogged) async {
+  Future newTicketCab(
+      TicketCab ticketCab, String userLogged, String companyLogged) async {
     showLoader = true;
     notifyListeners();
 
     Map<String, dynamic> request = {
-      'Name': ticketCab.company,
+      'Id': 0,
+      'CreateDate': "2000-01-01",
       'CreateUser': userLogged,
-      'LastChangeUser': userLogged,
+      'Company': companyLogged,
+      'Title': ticketCab.title,
+      'Description': ticketCab.description,
+      'TicketState': 0,
+      'StateDate': "2000-01-01",
+      'StateUser': userLogged,
     };
 
     try {
