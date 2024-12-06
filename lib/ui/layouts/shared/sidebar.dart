@@ -30,7 +30,14 @@ class Sidebar extends StatelessWidget {
         children: [
           const Logo(),
           const SizedBox(
-            height: 50,
+            height: 25,
+          ),
+          const Divider(
+            thickness: 2,
+            color: Colors.white,
+          ),
+          const SizedBox(
+            height: 5,
           ),
           MenuItem(
             text: 'Inicio',

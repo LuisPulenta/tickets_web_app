@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/providers.dart';
+
 import 'package:tickets_web_app/router/router.dart';
 import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/layouts/layouts.dart';
@@ -44,6 +45,12 @@ class AppState extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ChangePasswordFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TicketCabsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TicketFormProvider(),
         ),
       ],
       child: const MyApp(),

@@ -6,7 +6,6 @@ import 'package:tickets_web_app/providers/companies_provider.dart';
 import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/search_text.dart';
 import 'package:tickets_web_app/ui/modals/company_modal.dart';
 
 class CompaniesView extends StatefulWidget {
