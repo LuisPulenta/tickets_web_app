@@ -1,33 +1,37 @@
 import 'dart:convert';
 
-List<Company> companyFromJson(String str) =>
-    List<Company>.from(json.decode(str).map((x) => Company.fromJson(x)));
+import 'package:tickets_web_app/models/models.dart';
 
-String companyToJson(List<Company> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+Company companyFromJson(String str) => Company.fromJson(json.decode(str));
+
+String companyToJson(Company data) => json.encode(data.toJson());
 
 class Company {
   int id;
   String name;
-  DateTime createDate;
-  String createUser;
-  DateTime lastChangeDate;
-  String lastChangeUser;
+  String createDate;
+  String createUserId;
+  String createUserName;
+  String lastChangeDate;
+  String lastChangeUserId;
+  String lastChangeUserName;
   bool active;
-  String? photo;
+  String photo;
   String photoFullPath;
-  dynamic users;
+  List<User>? users;
   int usersNumber;
 
   Company({
     required this.id,
     required this.name,
     required this.createDate,
-    required this.createUser,
+    required this.createUserId,
+    required this.createUserName,
     required this.lastChangeDate,
-    required this.lastChangeUser,
+    required this.lastChangeUserId,
+    required this.lastChangeUserName,
     required this.active,
-    this.photo = '',
+    required this.photo,
     required this.photoFullPath,
     required this.users,
     required this.usersNumber,
@@ -36,28 +40,36 @@ class Company {
   factory Company.fromJson(Map<String, dynamic> json) => Company(
         id: json["id"],
         name: json["name"],
-        createDate: DateTime.parse(json["createDate"]),
-        createUser: json["createUser"],
-        lastChangeDate: DateTime.parse(json["lastChangeDate"]),
-        lastChangeUser: json["lastChangeUser"],
+        createDate: json["createDate"],
+        createUserId: json["createUserId"],
+        createUserName: json["createUserName"],
+        lastChangeDate: json["lastChangeDate"],
+        lastChangeUserId: json["lastChangeUserId"],
+        lastChangeUserName: json["lastChangeUserName"],
         active: json["active"],
-        photo: json["photo"] ?? '',
+        photo: json["photo"],
         photoFullPath: json["photoFullPath"],
-        users: json["users"],
-        usersNumber: json["usersNumber"],
+        users: json["users"] != null
+            ? List<User>.from(json["users"].map((x) => User.fromJson(x)))
+            : [],
+        usersNumber: json["usersNumber"] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "createDate": createDate.toIso8601String(),
-        "createUser": createUser,
-        "lastChangeDate": lastChangeDate.toIso8601String(),
-        "lastChangeUser": lastChangeUser,
+        "createDate": createDate,
+        "createUserId": createUserId,
+        "createUserName": createUserName,
+        "lastChangeDate": lastChangeDate,
+        "lastChangeUserId": lastChangeUserId,
+        "lastChangeUserName": lastChangeUserName,
         "active": active,
         "photo": photo,
         "photoFullPath": photoFullPath,
-        "users": users,
+        "users": users != null
+            ? List<dynamic>.from(users!.map((x) => x.toJson()))
+            : [],
         "usersNumber": usersNumber,
       };
 }

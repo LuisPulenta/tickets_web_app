@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/router/router.dart';
 import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/buttons/link_text.dart';
 

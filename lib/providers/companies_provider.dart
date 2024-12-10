@@ -56,14 +56,14 @@ class CompaniesProvider extends ChangeNotifier {
 
   //---------------------------------------------------------------------
   Future newCompany(
-      String name, String base64Image, Token token, String userLogged) async {
+      String name, String base64Image, Token token, String userLoggedId) async {
     showLoader = true;
     notifyListeners();
 
     Map<String, dynamic> request = {
       'Name': name,
-      'CreateUser': userLogged,
-      'LastChangeUser': userLogged,
+      'CreateUserId': userLoggedId,
+      'LastChangeUserId': userLoggedId,
       'ImageArray': base64Image != '' ? base64Image : null
     };
 
@@ -85,14 +85,14 @@ class CompaniesProvider extends ChangeNotifier {
 
   //---------------------------------------------------------------------
   Future updateCompany(int id, String name, String base64Image, Token token,
-      String userLogged, bool active) async {
+      String userLoggedId, bool active) async {
     showLoader = true;
     notifyListeners();
 
     Map<String, dynamic> request = {
       'Id': id,
       'Name': name,
-      'LastChangeUser': userLogged,
+      'LastChangeUserId': userLoggedId,
       'Active': active,
       'ImageArray': base64Image != '' ? base64Image : null
     };

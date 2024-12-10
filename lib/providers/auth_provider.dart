@@ -67,6 +67,8 @@ class AuthProvider extends ChangeNotifier {
 
     LocalStorage.prefs.setString('token', token.token);
     LocalStorage.prefs.setString('userBody', body);
+    LocalStorage.prefs.setInt('userType', user!.userTypeId);
+    LocalStorage.prefs.setInt('userCompany', user!.companyId);
 
     Response response2 = await ApiHelper.getCompany(user!.companyId);
 

@@ -1,24 +1,15 @@
+import 'dart:convert';
+
 import 'package:tickets_web_app/models/models.dart';
 
+Token tokenFromJson(String str) => Token.fromJson(json.decode(str));
+
+String tokenToJson(Token data) => json.encode(data.toJson());
+
 class Token {
-  String token = '';
-  String expiration = '';
-  User user = User(
-      firstName: '',
-      lastName: '',
-      userType: 0,
-      company: '',
-      companyId: 0,
-      createDate: '',
-      createUser: '',
-      lastChangeDate: '',
-      lastChangeUser: '',
-      active: false,
-      fullName: '',
-      id: '',
-      email: '',
-      emailConfirmed: false,
-      phoneNumber: '');
+  String token;
+  String expiration;
+  User user;
 
   Token({
     required this.token,

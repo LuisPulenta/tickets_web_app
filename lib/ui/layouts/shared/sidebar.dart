@@ -20,7 +20,7 @@ class Sidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     final sideMenuProvider = Provider.of<SideMenuProvider>(context);
     final userType =
-        Provider.of<AuthProvider>(context, listen: false).user!.userType;
+        Provider.of<AuthProvider>(context, listen: false).user!.userTypeId;
     return Container(
       width: 200,
       height: double.infinity,
@@ -58,7 +58,7 @@ class Sidebar extends StatelessWidget {
                   onPressed: () => navigateTo(Flurorouter.companiesRoute),
                 )
               : Container(),
-          userType == 0
+          userType == 0 || userType == 1
               ? MenuItem(
                   text: 'Usuarios',
                   icon: Icons.groups,

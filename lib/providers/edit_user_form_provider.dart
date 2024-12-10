@@ -9,7 +9,6 @@ class EditUserFormProvider extends ChangeNotifier {
   String lastName = '';
   String phoneNumber = '';
   int companyId = 0;
-  String company = '';
   int idUserType = -1;
   bool active = false;
 

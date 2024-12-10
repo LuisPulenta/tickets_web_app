@@ -52,7 +52,7 @@ class UsersProvider extends ChangeNotifier {
       int companyId,
       int idUserType,
       Token token,
-      String userLogged) async {
+      String userLoggedId) async {
     showLoader = true;
     notifyListeners();
     Map<String, dynamic> request = {
@@ -61,11 +61,9 @@ class UsersProvider extends ChangeNotifier {
       'LastName': lastName,
       'PhoneNumber': phoneNumber,
       'IdCompany': companyId,
-      'Company': '',
       'IdUserType': idUserType,
-      'UserType': idUserType == 0 ? 'Admin' : 'User',
-      'CreateUser': userLogged,
-      'LastChangeUser': userLogged,
+      'CreateUserId': userLoggedId,
+      'LastChangeUserId': userLoggedId,
       'Active': true,
       'Password': '123456',
     };
@@ -104,7 +102,7 @@ class UsersProvider extends ChangeNotifier {
     String phoneNumber,
     int companyId,
     int idUserType,
-    String userLogged,
+    String userLoggedId,
     bool active,
     String emailLogged,
   ) async {
@@ -126,11 +124,9 @@ class UsersProvider extends ChangeNotifier {
       'LastName': lastName,
       'PhoneNumber': phoneNumber,
       'IdCompany': companyId,
-      'Company': '',
       'IdUserType': idUserType,
-      'UserType': idUserType == 0 ? 'Admin' : 'User',
-      'CreateUser': userLogged,
-      'LastChangeUser': userLogged,
+      'CreateUserId': '',
+      'LastChangeUserId': userLoggedId,
       'Active': active,
     };
 
@@ -159,7 +155,7 @@ class UsersProvider extends ChangeNotifier {
       for (var user in users) {
         if (user.firstName.toLowerCase().contains(search.toLowerCase()) ||
             user.lastName.toLowerCase().contains(search.toLowerCase()) ||
-            user.company.toLowerCase().contains(search.toLowerCase())) {
+            user.companyName.toLowerCase().contains(search.toLowerCase())) {
           filteredList.add(user);
         }
       }
@@ -167,7 +163,9 @@ class UsersProvider extends ChangeNotifier {
       for (var user in users) {
         if ((user.firstName.toLowerCase().contains(search.toLowerCase()) ||
                 user.lastName.toLowerCase().contains(search.toLowerCase()) ||
-                user.company.toLowerCase().contains(search.toLowerCase())) &&
+                user.companyName
+                    .toLowerCase()
+                    .contains(search.toLowerCase())) &&
             user.active) {
           filteredList.add(user);
         }

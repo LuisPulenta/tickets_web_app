@@ -40,12 +40,12 @@ class CompaniesDTS extends DataTableSource {
         ),
         DataCell(
           Text(
-              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.createDate.toString()))}-${company.createUser}',
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.createDate.toString()))}-${company.createUserName}',
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
           Text(
-              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.lastChangeDate.toString()))}-${company.lastChangeUser}',
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.lastChangeDate.toString()))}-${company.lastChangeUserName}',
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(

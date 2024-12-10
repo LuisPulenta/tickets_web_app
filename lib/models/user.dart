@@ -1,71 +1,83 @@
 class User {
-  String firstName = '';
-  String lastName = '';
-  int userType = 0;
-  String company = '';
-  int companyId = 0;
-  String createDate = '';
-  String createUser = '';
-  String lastChangeDate = '';
-  String lastChangeUser = '';
-  bool active = false;
-  String fullName = '';
-  String id = '';
-  String email = '';
-  bool emailConfirmed = false;
-  String phoneNumber = '';
+  String id;
+  String firstName;
+  String lastName;
+  int userTypeId;
+  String userTypeName;
+  String email;
+  bool emailConfirm;
+  String phoneNumber;
+  int companyId;
+  String companyName;
+  String createDate;
+  String createUserId;
+  String createUserName;
+  String lastChangeDate;
+  String lastChangeUserId;
+  String lastChangeUserName;
+  bool active;
+  String fullName;
 
   User({
+    required this.id,
     required this.firstName,
     required this.lastName,
-    required this.userType,
-    required this.company,
+    required this.userTypeId,
+    required this.userTypeName,
+    required this.email,
+    required this.emailConfirm,
+    required this.phoneNumber,
     required this.companyId,
+    required this.companyName,
     required this.createDate,
-    required this.createUser,
+    required this.createUserId,
+    required this.createUserName,
     required this.lastChangeDate,
-    required this.lastChangeUser,
+    required this.lastChangeUserId,
+    required this.lastChangeUserName,
     required this.active,
     required this.fullName,
-    required this.id,
-    required this.email,
-    required this.emailConfirmed,
-    required this.phoneNumber,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
+        id: json["id"],
         firstName: json["firstName"],
         lastName: json["lastName"],
-        userType: json["userType"],
-        company: json["company"],
+        userTypeId: json["userTypeId"],
+        userTypeName: json["userTypeName"],
+        email: json["email"],
+        emailConfirm: json["emailConfirm"],
+        phoneNumber: json["phoneNumber"],
         companyId: json["companyId"],
+        companyName: json["companyName"],
         createDate: json["createDate"],
-        createUser: json["createUser"],
+        createUserId: json["createUserId"],
+        createUserName: json["createUserName"],
         lastChangeDate: json["lastChangeDate"],
-        lastChangeUser: json["lastChangeUser"],
+        lastChangeUserId: json["lastChangeUserId"],
+        lastChangeUserName: json["lastChangeUserName"],
         active: json["active"],
         fullName: json["fullName"],
-        id: json["id"],
-        email: json["email"],
-        emailConfirmed: json["emailConfirmed"],
-        phoneNumber: json["phoneNumber"],
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "firstName": firstName,
         "lastName": lastName,
-        "userType": userType,
-        "company": company,
+        "userTypeId": userTypeId,
+        "userTypeName": userTypeName,
+        "email": email,
+        "emailConfirm": emailConfirm,
+        "phoneNumber": phoneNumber,
         "companyId": companyId,
+        "companyName": companyName,
         "createDate": createDate,
-        "createUser": createUser,
+        "createUserId": createUserId,
+        "createUserName": createUserName,
         "lastChangeDate": lastChangeDate,
-        "lastChangeUser": lastChangeUser,
+        "lastChangeUserId": lastChangeUserId,
+        "lastChangeUserName": lastChangeUserName,
         "active": active,
         "fullName": fullName,
-        "id": id,
-        "email": email,
-        "emailConfirmed": emailConfirmed,
-        "phoneNumber": phoneNumber,
       };
 }

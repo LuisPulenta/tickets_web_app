@@ -44,7 +44,7 @@ class _TicketModalState extends State<TicketModal> {
     final userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
     final companyLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.company;
+        Provider.of<AuthProvider>(context, listen: false).user!.companyName;
 
     return Container(
       padding: const EdgeInsets.all(20),

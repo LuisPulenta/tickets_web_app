@@ -228,21 +228,40 @@ class ApiHelper {
     Token token = Token.fromJson(
         jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
 
+    int userType = LocalStorage.prefs.getInt('userType') ?? 99;
+    int userCompany = LocalStorage.prefs.getInt('userCompany') ?? 99;
+
     if (!_validateToken(token)) {
       return Response(
           isSuccess: false,
           message:
               'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
     }
-    var url = Uri.parse('${Constants.apiUrl}/Account');
-    var response = await http.get(
-      url,
-      headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'authorization': 'bearer ${token.token}',
-      },
-    );
+    Uri url;
+    var response;
+
+    if (userType == 0) {
+      url = Uri.parse('${Constants.apiUrl}/Account');
+      response = await http.get(
+        url,
+        headers: {
+          'content-type': 'application/json',
+          'accept': 'application/json',
+          'authorization': 'bearer ${token.token}',
+        },
+      );
+    } else {
+      url = Uri.parse('${Constants.apiUrl}/Account/GetUsers/$userCompany');
+      response = await http.post(
+        url,
+        headers: {
+          'content-type': 'application/json',
+          'accept': 'application/json',
+          'authorization': 'bearer ${token.token}',
+        },
+      );
+    }
+
     var body = response.body;
 
     if (response.statusCode >= 400) {

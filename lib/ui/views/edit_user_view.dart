@@ -9,7 +9,6 @@ import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
 import 'package:tickets_web_app/ui/cards/white_card.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
 
 class EditUserView extends StatefulWidget {
   const EditUserView({Key? key}) : super(key: key);
@@ -49,16 +48,15 @@ class _EditUserViewState extends State<EditUserView> {
     editUserFormProvider.active = user.active;
     editUserFormProvider.email = user.email;
     editUserFormProvider.phoneNumber = user.phoneNumber;
-    editUserFormProvider.company = user.company;
     editUserFormProvider.companyId = user.companyId;
-    editUserFormProvider.idUserType = user.userType;
+    editUserFormProvider.idUserType = user.userTypeId;
   }
 
   //---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    final userLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+    final userLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.id;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -169,7 +167,7 @@ class _EditUserViewState extends State<EditUserView> {
                             child: CustomOutlinedButton(
                               onPressed: () async {
                                 onFormSubmit(
-                                    editUserFormProvider, token, userLogged);
+                                    editUserFormProvider, token, userLoggedId);
                               },
                               text: "Guardar",
                               color: const Color.fromARGB(255, 25, 15, 219),
@@ -392,7 +390,7 @@ class _EditUserViewState extends State<EditUserView> {
 
   //--------------------------------------------------------------------
   void onFormSubmit(EditUserFormProvider editUserFormProvider, Token token,
-      String userLogged) async {
+      String userLoggedId) async {
     final isValid = editUserFormProvider.validateForm();
     if (isValid) {
       try {
@@ -407,7 +405,7 @@ class _EditUserViewState extends State<EditUserView> {
                 editUserFormProvider.phoneNumber,
                 editUserFormProvider.companyId,
                 editUserFormProvider.idUserType,
-                userLogged,
+                userLoggedId,
                 editUserFormProvider.active,
                 '')
             .then((value) => Navigator.of(context).pop());

@@ -48,8 +48,8 @@ class _CompanyModalState extends State<CompanyModal> {
 //---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    final userLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+    final userLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.id;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -91,7 +91,7 @@ class _CompanyModalState extends State<CompanyModal> {
                 Expanded(
                   child: TextFormField(
                     onFieldSubmitted: (_) =>
-                        onFormSubmit(companyFormProvider, token, userLogged),
+                        onFormSubmit(companyFormProvider, token, userLoggedId),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Ingrese Nombre de Empresa";
@@ -138,7 +138,7 @@ class _CompanyModalState extends State<CompanyModal> {
               alignment: Alignment.center,
               child: CustomOutlinedButton(
                 onPressed: () async {
-                  onFormSubmit(companyFormProvider, token, userLogged);
+                  onFormSubmit(companyFormProvider, token, userLoggedId);
                 },
                 text: "Guardar",
                 color: Colors.white,
@@ -152,7 +152,7 @@ class _CompanyModalState extends State<CompanyModal> {
 
   //--------------------------------------------------------------------
   void onFormSubmit(CompanyFormProvider companyFormProvider, Token token,
-      String userLogged) async {
+      String userLoggedId) async {
     final isValid = companyFormProvider.validateForm();
     if (isValid) {
       try {
@@ -162,7 +162,7 @@ class _CompanyModalState extends State<CompanyModal> {
               Provider.of<CompaniesProvider>(context, listen: false);
           await companiesProvider
               .newCompany(companyFormProvider.name,
-                  companyFormProvider.base64Image, token, userLogged)
+                  companyFormProvider.base64Image, token, userLoggedId)
               .then((value) => Navigator.of(context).pop());
         } else {
           //Editar Empresa
@@ -176,7 +176,7 @@ class _CompanyModalState extends State<CompanyModal> {
                       ? companyFormProvider.base64Image
                       : '',
                   token,
-                  userLogged,
+                  userLoggedId,
                   companyFormProvider.active)
               .then((value) => Navigator.of(context).pop());
         }

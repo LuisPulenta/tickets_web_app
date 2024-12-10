@@ -42,55 +42,44 @@ class _UserModalState extends State<UserModal> {
 
     if (widget.user == null) {
       user = User(
-        // firstName: 'Gonzalo',
-        // lastName: 'Prieto',
-        // userType: 0,
-        // company: 'Rowing',
-        // companyId: 3,
-        // createDate: DateTime.now().toString(),
-        // createUser: 'Luis Núñez',
-        // lastChangeDate: DateTime.now().toString(),
-        // lastChangeUser: 'Luis Núñez',
-        // active: true,
-        // fullName: 'Luis Núñez',
-        // id: '',
-        // email: 'gprieto@yopmail.com',
-        // emailConfirmed: false,
-        // phoneNumber: '011 123 456',
-
-        firstName: '',
-        lastName: '',
-        userType: -1,
-        company: '',
-        companyId: 0,
-        createDate: '',
-        createUser: '',
-        lastChangeDate: '',
-        lastChangeUser: '',
-        active: false,
-        fullName: '',
-        id: '',
-        email: '',
-        emailConfirmed: false,
-        phoneNumber: '',
-      );
+          id: '',
+          firstName: '',
+          lastName: '',
+          userTypeId: -1,
+          userTypeName: '',
+          email: '',
+          emailConfirm: false,
+          phoneNumber: '',
+          companyId: 0,
+          companyName: '',
+          createDate: '',
+          createUserId: '',
+          createUserName: '',
+          lastChangeDate: '',
+          lastChangeUserId: '',
+          lastChangeUserName: '',
+          active: false,
+          fullName: '');
     } else {
       user = User(
+        id: widget.user!.id,
         firstName: widget.user!.firstName,
         lastName: widget.user!.lastName,
-        userType: widget.user!.userType,
-        company: widget.user!.company,
+        userTypeId: widget.user!.userTypeId,
+        userTypeName: widget.user!.userTypeName,
+        email: widget.user!.email,
+        emailConfirm: widget.user!.emailConfirm,
+        phoneNumber: widget.user!.phoneNumber,
         companyId: widget.user!.companyId,
+        companyName: widget.user!.companyName,
         createDate: widget.user!.createDate,
-        createUser: widget.user!.createUser,
+        createUserId: widget.user!.createUserId,
+        createUserName: widget.user!.createUserName,
         lastChangeDate: widget.user!.lastChangeDate,
-        lastChangeUser: widget.user!.lastChangeDate,
+        lastChangeUserId: widget.user!.lastChangeUserId,
+        lastChangeUserName: widget.user!.lastChangeUserName,
         active: widget.user!.active,
         fullName: widget.user!.fullName,
-        id: widget.user!.id,
-        email: widget.user!.email,
-        emailConfirmed: widget.user!.emailConfirmed,
-        phoneNumber: widget.user!.phoneNumber,
       );
     }
 
@@ -101,16 +90,16 @@ class _UserModalState extends State<UserModal> {
     userFormProvider.email = user.email;
     userFormProvider.phoneNumber = user.phoneNumber;
     userFormProvider.company =
-        widget.user == null ? 'Seleccione una Empresa...' : user.company;
+        widget.user == null ? 'Seleccione una Empresa...' : user.companyName;
     userFormProvider.companyId = widget.user == null ? 0 : user.companyId;
-    userFormProvider.idUserType = user.userType;
+    userFormProvider.idUserType = user.userTypeId;
   }
 
 //---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    final userLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+    final userLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.id;
 
     final emailLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.email;
@@ -317,7 +306,7 @@ class _UserModalState extends State<UserModal> {
                   child: CustomOutlinedButton(
                     onPressed: () async {
                       onFormSubmit(
-                          userFormProvider, token, userLogged, emailLogged);
+                          userFormProvider, token, userLoggedId, emailLogged);
                     },
                     text: "Guardar",
                     color: Colors.white,
@@ -348,7 +337,7 @@ class _UserModalState extends State<UserModal> {
 
   //--------------------------------------------------------------------
   void onFormSubmit(UserFormProvider userFormProvider, Token token,
-      String userLogged, String emailLogged) async {
+      String userLoggedId, String emailLogged) async {
     final isValid = userFormProvider.validateForm();
     if (isValid) {
       try {
@@ -365,7 +354,7 @@ class _UserModalState extends State<UserModal> {
                   userFormProvider.companyId,
                   userFormProvider.idUserType,
                   token,
-                  userLogged)
+                  userLoggedId)
               .then((value) => Navigator.of(context).pop());
         } else {
           //Editar User
@@ -380,7 +369,7 @@ class _UserModalState extends State<UserModal> {
                   userFormProvider.phoneNumber,
                   userFormProvider.companyId,
                   userFormProvider.idUserType,
-                  userLogged,
+                  userLoggedId,
                   userFormProvider.active,
                   emailLogged)
               .then((value) => Navigator.of(context).pop());
@@ -413,16 +402,21 @@ class _UserModalState extends State<UserModal> {
     List<DropdownMenuItem<int>> list = [];
     list.add(const DropdownMenuItem(
       value: -1,
-      child: Text('Seleccione un Tipo de Usuario...'),
+      child: Text('Elija un Tipo de Usuario...'),
     ));
 
     list.add(const DropdownMenuItem(
       value: 0,
-      child: Text('Administrador'),
+      child: Text('Administrador KeyPress'),
     ));
 
     list.add(const DropdownMenuItem(
       value: 1,
+      child: Text('Administrador Empresa'),
+    ));
+
+    list.add(const DropdownMenuItem(
+      value: 2,
       child: Text('Usuario'),
     ));
     return list;
@@ -436,7 +430,7 @@ class _UserModalState extends State<UserModal> {
           : DropdownButtonFormField(
               validator: (value) {
                 if (value == 0) {
-                  return "Seleccione una Empresa";
+                  return "Seleccione una Empresa...";
                 }
                 return null;
               },
@@ -478,7 +472,7 @@ class _UserModalState extends State<UserModal> {
     return DropdownButtonFormField(
       validator: (value) {
         if (value == -1) {
-          return "Seleccione un Tipo de Usuario...";
+          return "Elija un Tipo de Usuario...";
         }
         return null;
       },
@@ -497,7 +491,7 @@ class _UserModalState extends State<UserModal> {
         prefixIcon: Icon(Icons.supervised_user_circle,
             color: Colors.white.withOpacity(0.5)),
         labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-        hintText: 'Seleccione un Tipo de Usuario...',
+        hintText: 'Elija un Tipo de Usuario...',
         labelText: 'Tipo de Usuario',
         border: OutlineInputBorder(
           borderSide: BorderSide(

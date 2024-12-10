@@ -20,7 +20,7 @@ class UsersDTS extends DataTableSource {
       index: index,
       cells: [
         DataCell(
-          Text(user.company,
+          Text(user.companyName,
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),
                   fontWeight: FontWeight.bold)),
@@ -35,17 +35,22 @@ class UsersDTS extends DataTableSource {
           Text(user.email),
         ),
         DataCell(
-          Text(user.emailConfirmed ? "Sí" : 'No',
+          Text(user.emailConfirm ? "Sí" : 'No',
               style: TextStyle(
                   fontSize: 12,
-                  color: user.emailConfirmed ? Colors.green : Colors.red)),
+                  color: user.emailConfirm ? Colors.green : Colors.red)),
         ),
         DataCell(
           Text(user.phoneNumber),
         ),
         DataCell(
-          Text(user.userType == 0 ? 'Administrador' : 'Usuario',
-              style: user.userType == 0
+          Text(
+              user.userTypeId == 0
+                  ? 'AdminKP'
+                  : user.userTypeId == 1
+                      ? 'Admin'
+                      : 'Usuario',
+              style: user.userTypeId == 0
                   ? const TextStyle(fontWeight: FontWeight.bold)
                   : const TextStyle(fontWeight: FontWeight.normal)),
         ),
@@ -58,7 +63,7 @@ class UsersDTS extends DataTableSource {
         DataCell(
           Row(
             children: [
-              user.emailConfirmed
+              user.emailConfirm
                   ? Container()
                   : IconButton(
                       tooltip: 'Reenviar Mail de Confirmación de Cuenta',

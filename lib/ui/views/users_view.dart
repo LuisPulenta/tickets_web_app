@@ -51,7 +51,7 @@ class _UsersViewState extends State<UsersView> {
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         usersProvider.sortColumnIndex = colIndex;
-                        usersProvider.sort<String>((user) => user.company);
+                        usersProvider.sort<String>((user) => user.companyName);
                       }),
                   DataColumn(
                       label: const Text("Nombre y Apellido",
