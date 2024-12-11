@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tickets_web_app/helpers/constants.dart';
 import 'package:tickets_web_app/models/models.dart';
+import 'package:tickets_web_app/services/services.dart';
 
 class TicketCabsDTS extends DataTableSource {
   final List<TicketCab> ticketCabs;
@@ -45,18 +46,19 @@ class TicketCabsDTS extends DataTableSource {
           ),
         ),
         DataCell(
+          Text(
+            ticketCab.ticketDetsNumber.toString(),
+            style: const TextStyle(color: Colors.black),
+          ),
+        ),
+        DataCell(
           Row(
             children: [
               IconButton(
                 tooltip: 'Editar Ticket',
                 onPressed: () {
-                  // showModalBottomSheet(
-                  //   backgroundColor: Colors.transparent,
-                  //   context: context,
-                  //   builder: (_) => CompanyModal(
-                  //     company: company,
-                  //   ),
-                  // );
+                  NavigationServices.replaceTo(
+                      '/dashboard/tickets/${ticketCab.id}');
                 },
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/auth_provider.dart';
 import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/router/router.dart';
+import 'package:tickets_web_app/ui/views/ticket_view.dart';
 import 'package:tickets_web_app/ui/views/users_view.dart';
 import 'package:tickets_web_app/ui/views/view.dart';
 
@@ -62,6 +63,23 @@ class DashboardHandlers {
 
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const EditUserView();
+    } else {
+      return const LoginView();
+    }
+  });
+
+  static Handler ticket = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false)
+        .setCurrentPageUrl(Flurorouter.ticketRoute);
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      if (params['id']?.first != null) {
+        return TicketView(
+          id: params['id']!.first,
+        );
+      } else {
+        return const TicketsView();
+      }
     } else {
       return const LoginView();
     }

@@ -80,6 +80,13 @@ class _TicketsViewState extends State<TicketsView> {
                         ticketCabsProvider.sortColumnIndex = colIndex;
                         ticketCabsProvider.sort<String>((item) => item.title);
                       }),
+                  DataColumn(
+                      label: const Text("Registros",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onSort: (colIndex, _) {
+                        ticketCabsProvider.sortColumnIndex = colIndex;
+                        ticketCabsProvider.sort<String>((item) => item.title);
+                      }),
                   const DataColumn(
                       label: Text("Acciones",
                           style: TextStyle(fontWeight: FontWeight.bold))),

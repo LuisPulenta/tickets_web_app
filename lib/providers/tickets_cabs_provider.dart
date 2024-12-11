@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/helpers/api_helper.dart';
 import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/notifications_service.dart';
 import 'package:tickets_web_app/services/services.dart';
 
 class TicketCabsProvider extends ChangeNotifier {
@@ -172,5 +171,18 @@ class TicketCabsProvider extends ChangeNotifier {
 
     ticketCabs = filteredList;
     notifyListeners();
+  }
+
+  //--------------------------------------------------------------------
+  Future<TicketCab> getTicketCabById(String id) async {
+    try {
+      Response response = await ApiHelper.getTicketCab(id);
+
+      TicketCab ticketCab = response.result;
+
+      return ticketCab;
+    } catch (e) {
+      throw e;
+    }
   }
 }
