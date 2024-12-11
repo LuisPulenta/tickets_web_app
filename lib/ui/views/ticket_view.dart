@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
+import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
 
 class TicketView extends StatefulWidget {
@@ -95,7 +96,7 @@ class _TicketViewState extends State<TicketView> {
   Widget _getListView() {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: double.infinity,
           height: 130,
           child: Card(
@@ -427,9 +428,36 @@ class _TicketViewState extends State<TicketView> {
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 12)),
                               ),
-                              const VerticalDivider(
-                                color: Colors.black,
-                              ),
+                              (e.image != null)
+                                  ? SizedBox(
+                                      height: 60,
+                                      child: Center(
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsetsDirectional.only(
+                                                  start: 10.0, end: 10.0),
+                                          width: 0.5,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              //---------------------- Imagen -------------------------------
+                              (e.image == null)
+                                  ? Container()
+                                  : InkWell(
+                                      onTap: () {
+                                        NotificationsService.showImage(
+                                            context, e.imageFullPath);
+                                      },
+                                      child: FadeInImage.assetNetwork(
+                                        placeholder: 'loader.gif',
+                                        image: e.imageFullPath,
+                                        width: 35,
+                                        height: 35,
+                                      ),
+                                    ),
+
                               SizedBox(
                                 height: 60,
                                 child: Center(
@@ -441,7 +469,7 @@ class _TicketViewState extends State<TicketView> {
                                   ),
                                 ),
                               ),
-                              Container(
+                              SizedBox(
                                 width: 100,
                                 child: CustomChip(estado: e.ticketState),
                               ),

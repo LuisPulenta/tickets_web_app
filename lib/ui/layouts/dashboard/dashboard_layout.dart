@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/providers/side_menu_provider.dart';
 import 'package:tickets_web_app/ui/layouts/shared/sidebar.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/navbar.dart';

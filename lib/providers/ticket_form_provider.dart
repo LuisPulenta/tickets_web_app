@@ -6,6 +6,7 @@ class TicketFormProvider extends ChangeNotifier {
 
   String description = '';
   String photo = '';
+  String photoFullPath = '';
   bool photoChanged = false;
   String base64Image = '';
 

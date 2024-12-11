@@ -42,6 +42,7 @@ class _TicketModalState extends State<TicketModal> {
     ticketFormProvider.ticketCab.id = widget.ticketCab?.id ?? 0;
     ticketFormProvider.ticketCab.companyName =
         widget.ticketCab?.companyName ?? '';
+    ticketFormProvider.photoChanged = false;
   }
 
 //---------------------------------------------------------------------------
@@ -257,11 +258,11 @@ class _AvatarContainerState extends State<_AvatarContainer> {
 
   @override
   Widget build(BuildContext context) {
-    final companyFormProvider = Provider.of<CompanyFormProvider>(context);
+    final ticketFormProvider = Provider.of<TicketFormProvider>(context);
 
-    Widget image = (companyFormProvider.base64Image != '' &&
-            !companyFormProvider.photoChanged)
-        ? Image.network(companyFormProvider.base64Image)
+    Widget image = (ticketFormProvider.base64Image != '' &&
+            !ticketFormProvider.photoChanged)
+        ? Image.network(ticketFormProvider.base64Image)
         : (file != null)
             ? Image.memory(
                 Uint8List.fromList(file!.bytes!),
@@ -303,8 +304,8 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                   const SizedBox(
                     height: 5,
                   ),
-                  Text(companyFormProvider.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold))
+                  // Text(ticketFormProvider.name,
+                  //     style: const TextStyle(fontWeight: FontWeight.bold))
                 ]),
           ),
         ),
@@ -335,11 +336,11 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                   NotificationsService.showBusyIndicator(context);
 
                   file = result.files.first;
-                  companyFormProvider.photoChanged = true;
+                  ticketFormProvider.photoChanged = true;
 
-                  if (companyFormProvider.photoChanged) {
+                  if (ticketFormProvider.photoChanged) {
                     List<int> imageBytes = file!.bytes!;
-                    companyFormProvider.base64Image = base64Encode(imageBytes);
+                    ticketFormProvider.base64Image = base64Encode(imageBytes);
                   }
 
                   setState(() {});

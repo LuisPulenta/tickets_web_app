@@ -43,4 +43,22 @@ class NotificationsService {
 
     showDialog(context: context, builder: (_) => dialog);
   }
+
+  //------------------------------------------------------------------------
+  static showImage(BuildContext context, final String url) {
+    AlertDialog dialog = AlertDialog(
+      content: SizedBox(
+        width: 500,
+        height: 500,
+        child: FadeInImage.assetNetwork(
+          placeholder: 'loader.gif',
+          image: url,
+          width: 500,
+          height: 500,
+        ),
+      ),
+    );
+
+    showDialog(context: context, builder: (_) => dialog);
+  }
 }
