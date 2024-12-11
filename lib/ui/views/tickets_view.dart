@@ -55,7 +55,8 @@ class _TicketsViewState extends State<TicketsView> {
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider.sort<String>((item) => item.company);
+                        ticketCabsProvider
+                            .sort<String>((item) => item.companyName);
                       }),
                   DataColumn(
                       label: const Text("Fecha y Usuario Alta",
@@ -67,6 +68,13 @@ class _TicketsViewState extends State<TicketsView> {
                       }),
                   DataColumn(
                       label: const Text("Asunto",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onSort: (colIndex, _) {
+                        ticketCabsProvider.sortColumnIndex = colIndex;
+                        ticketCabsProvider.sort<String>((item) => item.title);
+                      }),
+                  DataColumn(
+                      label: const Text("Estado",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;

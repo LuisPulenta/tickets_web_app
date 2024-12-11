@@ -81,6 +81,9 @@ class _UsersViewState extends State<UsersView> {
                       label: Text("Activo",
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
+                      label: Text("Fecha y Usuario Ult. Modif.",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  const DataColumn(
                       label: Text("Acciones",
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],

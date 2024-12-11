@@ -4,16 +4,25 @@ import 'package:tickets_web_app/models/models.dart';
 class TicketFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  String description = '';
+  String photo = '';
+  bool photoChanged = false;
+  String base64Image = '';
+
   TicketCab ticketCab = TicketCab(
       id: 0,
-      createDate: DateTime.now(),
-      createUser: '',
-      company: '',
+      createDate: DateTime.now().toString(),
+      createUserId: '',
+      createUserName: '',
+      companyId: 0,
+      companyName: '',
       title: '',
-      description: '',
       ticketState: 0,
-      stateDate: DateTime.now(),
-      stateUser: '');
+      asignDate: null,
+      finishDate: null,
+      inProgressDate: null,
+      ticketDets: [],
+      ticketDetsNumber: 0);
 
   //----------------------------------------------------------------
   bool validateForm() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tickets_web_app/helpers/constants.dart';
 import 'package:tickets_web_app/models/models.dart';
 
 class TicketCabsDTS extends DataTableSource {
@@ -19,14 +20,14 @@ class TicketCabsDTS extends DataTableSource {
           Text(ticketCab.id.toString()),
         ),
         DataCell(
-          Text(ticketCab.company,
+          Text(ticketCab.companyName,
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),
                   fontWeight: FontWeight.bold)),
         ),
         DataCell(
           Text(
-              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(ticketCab.createDate.toString()))}-${ticketCab.createUser}',
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(ticketCab.createDate.toString()))}-${ticketCab.createUserName}',
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
@@ -34,6 +35,14 @@ class TicketCabsDTS extends DataTableSource {
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),
                   fontWeight: FontWeight.bold)),
+        ),
+        DataCell(
+          Text(
+            Constants.estados[ticketCab.ticketState],
+            style: const TextStyle(
+              color: Color.fromARGB(255, 12, 5, 228),
+            ),
+          ),
         ),
         DataCell(
           Row(

@@ -1,55 +1,76 @@
 import 'dart:convert';
 
-List<TicketCab> ticketCabFromJson(String str) =>
-    List<TicketCab>.from(json.decode(str).map((x) => TicketCab.fromJson(x)));
+import 'package:tickets_web_app/models/models.dart';
 
-String ticketCabToJson(List<TicketCab> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+TicketCab ticketCabFromJson(String str) => TicketCab.fromJson(json.decode(str));
+
+String ticketCabToJson(TicketCab data) => json.encode(data.toJson());
 
 class TicketCab {
   int id;
-  DateTime createDate;
-  String createUser;
-  String company;
+  String createDate;
+  String createUserId;
+  String createUserName;
+  int companyId;
+  String companyName;
   String title;
-  String description;
   int ticketState;
-  DateTime stateDate;
-  String stateUser;
+  String? asignDate;
+  String? inProgressDate;
+  String? finishDate;
+  List<TicketDet>? ticketDets;
+  int ticketDetsNumber;
 
   TicketCab({
     required this.id,
     required this.createDate,
-    required this.createUser,
-    required this.company,
+    required this.createUserId,
+    required this.createUserName,
+    required this.companyId,
+    required this.companyName,
     required this.title,
-    required this.description,
     required this.ticketState,
-    required this.stateDate,
-    required this.stateUser,
+    required this.asignDate,
+    required this.inProgressDate,
+    required this.finishDate,
+    required this.ticketDets,
+    required this.ticketDetsNumber,
   });
 
   factory TicketCab.fromJson(Map<String, dynamic> json) => TicketCab(
         id: json["id"],
-        createDate: DateTime.parse(json["createDate"]),
-        createUser: json["createUser"],
-        company: json["company"],
+        createDate: json["createDate"],
+        createUserId: json["createUserId"],
+        createUserName: json["createUserName"],
+        companyId: json["companyId"],
+        companyName: json["companyName"],
         title: json["title"],
-        description: json["description"],
         ticketState: json["ticketState"],
-        stateDate: DateTime.parse(json["stateDate"]),
-        stateUser: json["stateUser"],
+        asignDate: json["asignDate"],
+        inProgressDate: json["inProgressDate"],
+        finishDate: json["finishDate"],
+        ticketDets: json["ticketDets"] != null
+            ? List<TicketDet>.from(
+                json["ticketDets"].map((x) => TicketDet.fromJson(x)))
+            : [],
+        ticketDetsNumber: json["ticketDetsNumber"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "createDate": createDate.toIso8601String(),
-        "createUser": createUser,
-        "company": company,
+        "createDate": createDate,
+        "createUserId": createUserId,
+        "createUserName": createUserName,
+        "companyId": companyId,
+        "companyName": companyName,
         "title": title,
-        "description": description,
         "ticketState": ticketState,
-        "stateDate": stateDate.toIso8601String(),
-        "stateUser": stateUser,
+        "asignDate": asignDate,
+        "inProgressDate": inProgressDate,
+        "finishDate": finishDate,
+        "ticketDets": ticketDets != null
+            ? List<TicketDet>.from(ticketDets!.map((x) => x.toJson()))
+            : [],
+        "ticketDetsNumber": ticketDetsNumber,
       };
 }

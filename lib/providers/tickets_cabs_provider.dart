@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/helpers/api_helper.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/services/notifications_service.dart';
+import 'package:tickets_web_app/services/services.dart';
 
 class TicketCabsProvider extends ChangeNotifier {
   List<TicketCab> ticketCabs = [];
@@ -51,28 +53,47 @@ class TicketCabsProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
-  Future newTicketCab(
-      TicketCab ticketCab, String userLogged, String companyLogged) async {
+  Future newTicketCab(TicketCab ticketCab, String userLogged,
+      String companyLogged, String description, String base64Image) async {
     showLoader = true;
     notifyListeners();
 
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    Token token = Token.fromJson(decodedJson);
+    User userLogged = token.user;
+
     Map<String, dynamic> request = {
-      'Id': 0,
-      'CreateDate': "2000-01-01",
-      'CreateUser': userLogged,
-      'Company': companyLogged,
+      'UserId': userLogged.id,
+      'UserName': userLogged.fullName,
+      'CompanyId': userLogged.companyId,
+      'CompanyName': userLogged.companyName,
       'Title': ticketCab.title,
-      'Description': ticketCab.description,
-      'TicketState': 0,
-      'StateDate': "2000-01-01",
-      'StateUser': userLogged,
     };
 
     try {
-      Response response = await ApiHelper.post('/ticketCabs', request);
+      Response response =
+          await ApiHelper.postTicketCab('/ticketCabs/PostTicketCab', request);
       if (response.isSuccess) {
-        getTicketCabs();
-        NotificationsService.showSnackbar("Ticket guardado con éxito");
+        int nroTicket = response.result;
+
+        Map<String, dynamic> request2 = {
+          'TicketCabId': nroTicket,
+          'Description': description,
+          'TicketState': 0,
+          'StateUserId': userLogged.id,
+          'StateUserName': userLogged.fullName,
+          'ImageArray': base64Image != '' ? base64Image : null,
+        };
+
+        try {
+          Response response2 = await ApiHelper.postTicketDet(
+              '/ticketCabs/PostTicketDet', request2);
+          if (response2.isSuccess) {
+            await getTicketCabs();
+            NotificationsService.showSnackbar("Ticket guardado con éxito");
+          }
+        } catch (e) {}
       } else {
         NotificationsService.showSnackbarError(
             'Hubo un error al guardar el Ticket');
@@ -92,7 +113,7 @@ class TicketCabsProvider extends ChangeNotifier {
 
     Map<String, dynamic> request = {
       'Id': ticketCab.id,
-      'Name': ticketCab.company,
+      'Name': ticketCab.companyName,
       'LastChangeUser': userLogged,
     };
 
@@ -144,7 +165,7 @@ class TicketCabsProvider extends ChangeNotifier {
     List<TicketCab> filteredList = [];
 
     for (var ticketCab in ticketCabs) {
-      if (ticketCab.company.toLowerCase().contains(search.toLowerCase())) {
+      if (ticketCab.companyName.toLowerCase().contains(search.toLowerCase())) {
         filteredList.add(ticketCab);
       }
     }

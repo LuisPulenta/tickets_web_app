@@ -61,6 +61,11 @@ class UsersDTS extends DataTableSource {
                   color: user.active ? Colors.green : Colors.red)),
         ),
         DataCell(
+          Text(
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(user.lastChangeDate.toString()))}-${user.lastChangeUserName}',
+              style: const TextStyle(fontSize: 12)),
+        ),
+        DataCell(
           Row(
             children: [
               user.emailConfirm

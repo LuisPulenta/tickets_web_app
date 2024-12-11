@@ -25,6 +25,7 @@ class _UserModalState extends State<UserModal> {
   late Token token;
   late UserFormProvider userFormProvider;
   late User user;
+  late User userLogged;
   List<Company> _companies = [];
 
 //---------------------------------------------------------------------------
@@ -35,6 +36,7 @@ class _UserModalState extends State<UserModal> {
     final userBody = LocalStorage.prefs.getString('userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
+    userLogged = token.user;
 
     _getCompanies();
 
@@ -262,14 +264,17 @@ class _UserModalState extends State<UserModal> {
                 ),
                 Expanded(
                   flex: 2,
-                  child: _showCompany(),
+                  child:
+                      userLogged.userTypeId == 0 ? _showCompany() : Container(),
                 ),
                 const SizedBox(
                   width: 15,
                 ),
                 Expanded(
                   flex: 2,
-                  child: _showUserType(),
+                  child: userLogged.userTypeId == 0
+                      ? _showUserType()
+                      : Container(),
                 ),
                 const Expanded(
                   flex: 1,
@@ -339,6 +344,12 @@ class _UserModalState extends State<UserModal> {
   void onFormSubmit(UserFormProvider userFormProvider, Token token,
       String userLoggedId, String emailLogged) async {
     final isValid = userFormProvider.validateForm();
+
+    if (userLogged.userTypeId == 1) {
+      userFormProvider.companyId = userLogged.companyId;
+      userFormProvider.idUserType = 2;
+    }
+
     if (isValid) {
       try {
         //Nuevo Usuario
