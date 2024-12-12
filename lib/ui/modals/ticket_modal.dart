@@ -214,16 +214,6 @@ class _TicketModalState extends State<TicketModal> {
                     : '',
               )
               .then((value) => Navigator.of(context).pop());
-        } else {
-          //Editar Ticket
-          final ticketsProvider =
-              Provider.of<TicketCabsProvider>(context, listen: false);
-          await ticketsProvider
-              .updateTicketCab(
-                ticketFormProvider.ticketCab,
-                userLogged,
-              )
-              .then((value) => Navigator.of(context).pop());
         }
       } catch (e) {
         NotificationsService.showSnackbarError("No se pudo guardar el Ticket");

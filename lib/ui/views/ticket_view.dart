@@ -34,12 +34,19 @@ class _TicketViewState extends State<TicketView> {
   @override
   void initState() {
     showLoader = true;
+
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    token = Token.fromJson(decodedJson);
+
     setState(() {});
     final ticketCabsProvider =
         Provider.of<TicketCabsProvider>(context, listen: false);
 
     ticketFormProvider =
         Provider.of<TicketFormProvider>(context, listen: false);
+
+    ticketFormProvider.description = '';
 
     ticketDets = [];
 
@@ -135,208 +142,247 @@ class _TicketViewState extends State<TicketView> {
                 elevation: 10,
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                 child: Center(
-                  child: Row(
+                  child: Stack(
                     children: [
-                      SizedBox(
-                        width: 300,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 300,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text('Creado por: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Expanded(
-                                    child: Text(ticketCab!.createUserName,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14)),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Creado por: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(ticketCab!.createUserName,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Empresa: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(ticketCab!.companyName,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Fecha: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Text(
+                                          DateFormat('dd/MM/yyyy').format(
+                                              DateTime.parse(ticketCab!
+                                                  .createDate
+                                                  .toString())),
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14)),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Hora: ',
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Text(
+                                          DateFormat('hh:mm').format(
+                                              DateTime.parse(ticketCab!
+                                                  .createDate
+                                                  .toString())),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14)),
+                                    ],
                                   ),
                                 ],
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Empresa: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Expanded(
-                                    child: Text(ticketCab!.companyName,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14)),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Fecha: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Text(
-                                      DateFormat('dd/MM/yyyy').format(
-                                          DateTime.parse(ticketCab!.createDate
-                                              .toString())),
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 14)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Hora: ',
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Text(
-                                      DateFormat('hh:mm').format(DateTime.parse(
-                                          ticketCab!.createDate.toString())),
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 14)),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child: Center(
-                          child: Container(
-                            margin: const EdgeInsetsDirectional.only(
-                                start: 10.0, end: 10.0),
-                            width: 0.5,
-                            color: Colors.white,
+                          SizedBox(
+                            height: 60,
+                            child: Center(
+                              child: Container(
+                                margin: const EdgeInsetsDirectional.only(
+                                    start: 10.0, end: 10.0),
+                                width: 0.5,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          'TICKET N°: ${ticketCab?.id} - ${ticketCab?.title}',
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 60,
-                        child: Center(
-                          child: Container(
-                            margin: const EdgeInsetsDirectional.only(
-                                start: 10.0, end: 10.0),
-                            width: 0.5,
-                            color: Colors.white,
+                          Expanded(
+                            child: Text(
+                              'TICKET N°: ${ticketCab?.id} - ${ticketCab?.title}',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 300,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 10,
+                          SizedBox(
+                            height: 60,
+                            child: Center(
+                              child: Container(
+                                margin: const EdgeInsetsDirectional.only(
+                                    start: 10.0, end: 10.0),
+                                width: 0.5,
+                                color: Colors.white,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Estado: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Expanded(
-                                    child: CustomChip(estado: ticketStateName),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
-                                  Text(' ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Fec. Asignación: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Expanded(
-                                    child: Text(
-                                        ticketCab!.asignDate != null
-                                            ? DateFormat('dd/MM/yyyy').format(
-                                                DateTime.parse(ticketCab!
-                                                    .asignDate
-                                                    .toString()))
-                                            : '',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14)),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Fec. En Curso: ',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Expanded(
-                                    child: Text(
-                                        ticketCab!.inProgressDate != null
-                                            ? DateFormat('dd/MM/yyyy').format(
-                                                DateTime.parse(ticketCab!
-                                                    .inProgressDate
-                                                    .toString()))
-                                            : '',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14)),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  const Text('Fecha Fin: ',
-                                      style: TextStyle(
-                                          color: Colors.white60, fontSize: 14)),
-                                  Expanded(
-                                    child: Text(
-                                        ticketCab!.finishDate != null
-                                            ? DateFormat('dd/MM/yyyy').format(
-                                                DateTime.parse(ticketCab!
-                                                    .finishDate
-                                                    .toString()))
-                                            : '',
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: Colors.white, fontSize: 14)),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 300,
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Estado: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child:
+                                            CustomChip(estado: ticketStateName),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: const [
+                                      Text(' ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Fec. Asignación: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(
+                                            ticketCab!.asignDate != null
+                                                ? DateFormat('dd/MM/yyyy')
+                                                    .format(DateTime.parse(
+                                                        ticketCab!.asignDate
+                                                            .toString()))
+                                                : '',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Fec. En Curso: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(
+                                            ticketCab!.inProgressDate != null
+                                                ? DateFormat('dd/MM/yyyy')
+                                                    .format(DateTime.parse(
+                                                        ticketCab!
+                                                            .inProgressDate
+                                                            .toString()))
+                                                : '',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Fecha Fin: ',
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(
+                                            ticketCab!.finishDate != null
+                                                ? DateFormat('dd/MM/yyyy')
+                                                    .format(DateTime.parse(
+                                                        ticketCab!.finishDate
+                                                            .toString()))
+                                                : '',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
+                      Positioned(
+                        top: 5,
+                        right: 10,
+                        child: InkWell(
+                          onTap: () {
+                            NavigationServices.replaceTo('/dashboard/tickets');
+                          },
+                          child: const Text("X",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold)),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -550,20 +596,6 @@ class _TicketViewState extends State<TicketView> {
                                     minLines: null,
                                     maxLines: null,
                                     expands: true,
-                                    onFieldSubmitted: (_) => onFormSubmit(
-                                        ticketFormProvider,
-                                        token,
-                                        userLogged,
-                                        companyLogged),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "Ingrese Descripción";
-                                      }
-                                      if (value.length < 3) {
-                                        return "Mínimo 3 caracteres";
-                                      }
-                                      return null;
-                                    },
                                     onChanged: (value) {
                                       ticketFormProvider.description = value;
                                     },
@@ -592,8 +624,19 @@ class _TicketViewState extends State<TicketView> {
                         children: [
                           CustomOutlinedButton(
                             onPressed: () async {
-                              onFormSubmit(ticketFormProvider, token,
-                                  userLogged, companyLogged);
+                              onFormSubmit(ticketFormProvider, userLogged,
+                                  companyLogged, 0);
+                            },
+                            text: "Enviar",
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          CustomOutlinedButton(
+                            onPressed: () async {
+                              onFormSubmit(ticketFormProvider, userLogged,
+                                  companyLogged, 1);
                             },
                             text: "Devolver",
                             color: Colors.white,
@@ -603,10 +646,32 @@ class _TicketViewState extends State<TicketView> {
                           ),
                           CustomOutlinedButton(
                             onPressed: () async {
-                              onFormSubmit(ticketFormProvider, token,
-                                  userLogged, companyLogged);
+                              onFormSubmit(ticketFormProvider, userLogged,
+                                  companyLogged, 2);
                             },
                             text: "Asignar",
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          CustomOutlinedButton(
+                            onPressed: () async {
+                              onFormSubmit(ticketFormProvider, userLogged,
+                                  companyLogged, 3);
+                            },
+                            text: "En Curso",
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          CustomOutlinedButton(
+                            onPressed: () async {
+                              onFormSubmit(ticketFormProvider, userLogged,
+                                  companyLogged, 4);
+                            },
+                            text: "Resuelto",
                             color: Colors.white,
                           ),
                         ],
@@ -621,53 +686,61 @@ class _TicketViewState extends State<TicketView> {
             )
           ],
         ),
-        showLoader
-            ? Positioned(
-                left: size.width * 0.5 - 300,
-                top: size.height * 0.5 - 50,
-                child: const LoaderComponent(
-                  text: 'Cargando Empresas...',
-                ))
-            : Container(),
       ],
     );
   }
 
 //----------------------------------------------------------------------------------
-  void onFormSubmit(TicketFormProvider ticketFormProvider, Token token,
-      String userLogged, String companyLogged) async {
-    final isValid = ticketFormProvider.validateForm();
-    if (isValid) {
-      try {
-        //Nuevo Ticket
-        if (ticketFormProvider.ticketCab.id == 0) {
-          final ticketsProvider =
-              Provider.of<TicketCabsProvider>(context, listen: false);
-          await ticketsProvider
-              .newTicketCab(
-                ticketFormProvider.ticketCab,
-                userLogged,
-                companyLogged,
-                ticketFormProvider.description,
-                ticketFormProvider.photoChanged
-                    ? ticketFormProvider.base64Image
-                    : '',
-              )
-              .then((value) => Navigator.of(context).pop());
-        } else {
-          //Editar Ticket
-          final ticketsProvider =
-              Provider.of<TicketCabsProvider>(context, listen: false);
-          await ticketsProvider
-              .updateTicketCab(
-                ticketFormProvider.ticketCab,
-                userLogged,
-              )
-              .then((value) => Navigator.of(context).pop());
-        }
-      } catch (e) {
-        NotificationsService.showSnackbarError("No se pudo guardar el Ticket");
-      }
+  void onFormSubmit(TicketFormProvider ticketFormProvider, String userLogged,
+      String companyLogged, int estado) async {
+    try {
+      final ticketsProvider =
+          Provider.of<TicketCabsProvider>(context, listen: false);
+      await ticketsProvider
+          .newTicketDet(
+        ticketCab!,
+        userLogged,
+        companyLogged,
+        ticketFormProvider.description,
+        ticketFormProvider.photoChanged ? ticketFormProvider.base64Image : '',
+        estado,
+      )
+          .then((value) {
+        Provider.of<TicketCabsProvider>(context, listen: false)
+            .getTicketCabById(widget.id)
+            .then(
+              (ticketCabDB) => setState(
+                () {
+                  ticketCab = ticketCabDB;
+                  ticketDets = ticketCab!.ticketDets != null
+                      ? ticketCab!.ticketDets!
+                      : [];
+
+                  if (estado == 0) {
+                    ticketStateName = "Enviado";
+                  }
+
+                  if (estado == 1) {
+                    ticketStateName = "Devuelto";
+                  }
+
+                  if (estado == 2) {
+                    ticketStateName = "Asignado";
+                  }
+
+                  if (estado == 3) {
+                    ticketStateName = "En Curso";
+                  }
+
+                  if (estado == 4) {
+                    ticketStateName = "Resuelto";
+                  }
+                },
+              ),
+            );
+      });
+    } catch (e) {
+      NotificationsService.showSnackbarError("No se pudo guardar el Ticket");
     }
   }
 }
@@ -699,7 +772,8 @@ class CustomChip extends StatelessWidget {
               ? const Color.fromARGB(255, 226, 179, 132)
               : estado == 'Asignado'
                   ? const Color.fromARGB(255, 240, 113, 101)
-                  : estado == 'Encurso'
+                  : (estado.toLowerCase() == 'encurso' ||
+                          estado.toLowerCase() == 'en curso')
                       ? const Color.fromARGB(255, 217, 135, 219)
                       : const Color.fromARGB(255, 145, 228, 109),
     );

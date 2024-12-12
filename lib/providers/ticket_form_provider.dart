@@ -19,9 +19,9 @@ class TicketFormProvider extends ChangeNotifier {
       companyName: '',
       title: '',
       ticketState: 0,
-      asignDate: null,
-      finishDate: null,
-      inProgressDate: null,
+      asignDate: '',
+      finishDate: '',
+      inProgressDate: '',
       ticketDets: [],
       ticketDetsNumber: 0);
 

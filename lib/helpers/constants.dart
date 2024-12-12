@@ -4,8 +4,8 @@ class Constants {
   static List<String> estados = [
     'Enviado',
     'Devuelto',
-    'En Curso',
     'Asignado',
+    'En Curso',
     'Resuelto',
   ];
 }

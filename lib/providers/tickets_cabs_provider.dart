@@ -105,54 +105,67 @@ class TicketCabsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //---------------------------------------------------------------------
-  Future updateTicketCab(TicketCab ticketCab, String userLogged) async {
+//---------------------------------------------------------------------
+  Future newTicketDet(
+      TicketCab ticketCab,
+      String userLogged,
+      String companyLogged,
+      String description,
+      String base64Image,
+      int estado) async {
     showLoader = true;
     notifyListeners();
 
-    Map<String, dynamic> request = {
-      'Id': ticketCab.id,
-      'Name': ticketCab.companyName,
-      'LastChangeUser': userLogged,
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    Token token = Token.fromJson(decodedJson);
+    User userLogged = token.user;
+    String ahora = DateTime.now().toString().substring(0, 10);
+
+    Map<String, dynamic> request2 = {
+      'TicketCabId': ticketCab.id,
+      'Description': description,
+      'TicketState': estado,
+      'StateUserId': userLogged.id,
+      'StateUserName': userLogged.fullName,
+      'ImageArray': base64Image != '' ? base64Image : null,
     };
 
     try {
-      Response response =
-          await ApiHelper.put('/ticketCabs', ticketCab.id.toString(), request);
-      if (response.isSuccess) {
-        getTicketCabs();
-        NotificationsService.showSnackbar("Cambios guardados con éxito");
-      } else {
-        NotificationsService.showSnackbarError(
-            'Hubo un error al guardar el Ticket');
+      Response response2 =
+          await ApiHelper.postTicketDet('/ticketCabs/PostTicketDet', request2);
+      if (response2.isSuccess) {
+        //---------- Actualiza TicketCab ----------
+        Map<String, dynamic> request = {
+          'Id': ticketCab.id,
+          'UserId': ticketCab.createUserId,
+          'UserName': ticketCab.createUserName,
+          'CompanyId': ticketCab.companyId,
+          'CompanyName': ticketCab.companyName,
+          'Title': ticketCab.title,
+          'TicketState': estado,
+          'AsignDate': estado == 2
+              ? ahora
+              : (estado == 3 || estado == 4)
+                  ? ticketCab.asignDate
+                  : null,
+          'InProgressDate': estado == 3
+              ? ahora
+              : (estado == 4)
+                  ? ticketCab.asignDate
+                  : null,
+          'FinishDate': estado == 4 ? ahora : null,
+        };
+
+        Response response = await ApiHelper.put(
+            '/ticketCabs', ticketCab.id.toString(), request);
+
+        if (response.isSuccess) {
+          await getTicketCabs();
+          NotificationsService.showSnackbar("Ticket guardado con éxito");
+        }
       }
-    } catch (e) {
-      NotificationsService.showSnackbarError(
-          'Se ha producido un error al guardar los cambios');
-    }
-
-    showLoader = false;
-    notifyListeners();
-  }
-
-  //--------------------------------------------------------------------
-  Future deleteTicketCab(String id) async {
-    try {
-      showLoader = true;
-      notifyListeners();
-      Response response = await ApiHelper.delete('/ticketCabs', id);
-
-      if (!response.isSuccess) {
-        NotificationsService.showSnackbarError('No se pudo borrar el Ticket');
-        showLoader = false;
-        notifyListeners();
-        return;
-      }
-      getTicketCabs();
-      NotificationsService.showSnackbar("Ticket borrado con éxito");
-    } catch (e) {
-      throw ('Error al borrar el Ticket');
-    }
+    } catch (e) {}
     showLoader = false;
     notifyListeners();
   }

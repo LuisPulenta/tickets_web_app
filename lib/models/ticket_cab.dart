@@ -15,9 +15,9 @@ class TicketCab {
   String companyName;
   String title;
   int ticketState;
-  String? asignDate;
-  String? inProgressDate;
-  String? finishDate;
+  dynamic asignDate;
+  dynamic inProgressDate;
+  dynamic finishDate;
   List<TicketDet>? ticketDets;
   int ticketDetsNumber;
 
