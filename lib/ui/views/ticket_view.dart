@@ -622,57 +622,60 @@ class _TicketViewState extends State<TicketView> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomOutlinedButton(
-                            onPressed: () async {
-                              onFormSubmit(ticketFormProvider, userLogged,
-                                  companyLogged, 0);
-                            },
-                            text: "Enviar",
-                            color: Colors.white,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: CustomOutlinedButton(
+                              onPressed: () async {
+                                onFormSubmit(ticketFormProvider, userLogged,
+                                    companyLogged, 0);
+                              },
+                              text: "Enviar",
+                              color: Colors.white,
+                            ),
                           ),
-                          const SizedBox(
-                            width: 30,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: CustomOutlinedButton(
+                              onPressed: () async {
+                                onFormSubmit(ticketFormProvider, userLogged,
+                                    companyLogged, 1);
+                              },
+                              text: "Devolver",
+                              color: Colors.white,
+                            ),
                           ),
-                          CustomOutlinedButton(
-                            onPressed: () async {
-                              onFormSubmit(ticketFormProvider, userLogged,
-                                  companyLogged, 1);
-                            },
-                            text: "Devolver",
-                            color: Colors.white,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: CustomOutlinedButton(
+                              onPressed: () async {
+                                onFormSubmit(ticketFormProvider, userLogged,
+                                    companyLogged, 2);
+                              },
+                              text: "Asignar",
+                              color: Colors.white,
+                            ),
                           ),
-                          const SizedBox(
-                            width: 30,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: CustomOutlinedButton(
+                              onPressed: () async {
+                                onFormSubmit(ticketFormProvider, userLogged,
+                                    companyLogged, 3);
+                              },
+                              text: "En Curso",
+                              color: Colors.white,
+                            ),
                           ),
-                          CustomOutlinedButton(
-                            onPressed: () async {
-                              onFormSubmit(ticketFormProvider, userLogged,
-                                  companyLogged, 2);
-                            },
-                            text: "Asignar",
-                            color: Colors.white,
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          CustomOutlinedButton(
-                            onPressed: () async {
-                              onFormSubmit(ticketFormProvider, userLogged,
-                                  companyLogged, 3);
-                            },
-                            text: "En Curso",
-                            color: Colors.white,
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          CustomOutlinedButton(
-                            onPressed: () async {
-                              onFormSubmit(ticketFormProvider, userLogged,
-                                  companyLogged, 4);
-                            },
-                            text: "Resuelto",
-                            color: Colors.white,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: CustomOutlinedButton(
+                              onPressed: () async {
+                                onFormSubmit(ticketFormProvider, userLogged,
+                                    companyLogged, 4);
+                              },
+                              text: "Resuelto",
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ),
