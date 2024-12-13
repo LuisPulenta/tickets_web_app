@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/datatables/ticket_cabs_datasource.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
+import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
@@ -18,6 +21,9 @@ class TicketsView extends StatefulWidget {
 class _TicketsViewState extends State<TicketsView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool showLoader = true;
+  late Token token;
+  String userTypeLogged = "";
+  int companyIdLogged = -1;
 
   //-------------------- initState ----------------------------
 

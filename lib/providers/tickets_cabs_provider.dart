@@ -31,7 +31,24 @@ class TicketCabsProvider extends ChangeNotifier {
     showLoader = true;
     notifyListeners();
 
-    Response response = await ApiHelper.getTicketCabs();
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    Token token = Token.fromJson(decodedJson);
+    int userTypeLogged = token.user.userTypeId;
+    String userIdLogged = token.user.id;
+    int companyIdLogged = token.user.companyId;
+
+    Response response = Response(isSuccess: false);
+
+    if (userTypeLogged == 2) {
+      response = await ApiHelper.getTicketUser(userIdLogged);
+    }
+    if (userTypeLogged == 1) {
+      response = await ApiHelper.getTicketAdmin(companyIdLogged);
+    }
+    if (userTypeLogged == 0) {
+      response = await ApiHelper.getTicketAdminKP();
+    }
 
     if (!response.isSuccess) {
       NotificationsService.showSnackbarError('Se ha producido un error');
