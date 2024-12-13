@@ -69,10 +69,17 @@ class Sidebar extends StatelessWidget {
               : Container(),
           const TextSeparator(text: 'Tickets'),
           MenuItem(
-            text: 'Tickets',
+            text: 'Pendientes',
             icon: Icons.local_activity_outlined,
             isActive: sideMenuProvider.currentPage == Flurorouter.ticketsRoute,
             onPressed: () => navigateTo(Flurorouter.ticketsRoute),
+          ),
+          MenuItem(
+            text: 'Resueltos',
+            icon: Icons.verified_outlined,
+            isActive:
+                sideMenuProvider.currentPage == Flurorouter.ticketsOkRoute,
+            onPressed: () => navigateTo(Flurorouter.ticketsOkRoute),
           ),
           const Divider(
             thickness: 2,
@@ -83,6 +90,7 @@ class Sidebar extends StatelessWidget {
             icon: Icons.exit_to_app_outlined,
             isActive: false,
             onPressed: () {
+              navigateTo(Flurorouter.dashboardRoute);
               Provider.of<AuthProvider>(context, listen: false).logout();
             },
           ),

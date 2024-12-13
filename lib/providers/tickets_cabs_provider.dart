@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tickets_web_app/helpers/api_helper.dart';
+import 'package:tickets_web_app/helpers/constants.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/services/services.dart';
 
@@ -48,6 +49,48 @@ class TicketCabsProvider extends ChangeNotifier {
     }
     if (userTypeLogged == 0) {
       response = await ApiHelper.getTicketAdminKP();
+    }
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError('Se ha producido un error');
+      showLoader = false;
+      notifyListeners();
+      return;
+    }
+    ticketCabs = response.result;
+
+    ticketCabs.sort((a, b) {
+      return a.id.compareTo(b.id);
+    });
+
+    originalTicketCabs = ticketCabs;
+
+    showLoader = false;
+    notifyListeners();
+  }
+
+  //---------------------------------------------------------------------
+  getTicketOkCabs() async {
+    showLoader = true;
+    notifyListeners();
+
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    Token token = Token.fromJson(decodedJson);
+    int userTypeLogged = token.user.userTypeId;
+    String userIdLogged = token.user.id;
+    int companyIdLogged = token.user.companyId;
+
+    Response response = Response(isSuccess: false);
+
+    if (userTypeLogged == 2) {
+      response = await ApiHelper.getTicketResueltosUser(userIdLogged);
+    }
+    if (userTypeLogged == 1) {
+      response = await ApiHelper.getTicketResueltosAdmin(companyIdLogged);
+    }
+    if (userTypeLogged == 0) {
+      response = await ApiHelper.getTicketResueltosAdminKP();
     }
 
     if (!response.isSuccess) {
@@ -194,7 +237,15 @@ class TicketCabsProvider extends ChangeNotifier {
     List<TicketCab> filteredList = [];
 
     for (var ticketCab in ticketCabs) {
-      if (ticketCab.companyName.toLowerCase().contains(search.toLowerCase())) {
+      if ((ticketCab.companyName
+              .toLowerCase()
+              .contains(search.toLowerCase())) ||
+          (Constants.estados[ticketCab.ticketState]
+              .toLowerCase()
+              .contains(search.toLowerCase())) ||
+          (ticketCab.createUserName
+              .toLowerCase()
+              .contains(search.toLowerCase()))) {
         filteredList.add(ticketCab);
       }
     }

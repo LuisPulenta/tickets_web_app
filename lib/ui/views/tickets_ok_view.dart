@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/datatables/ticket_cabs_datasource.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
-import 'package:tickets_web_app/ui/modals/ticket_modal.dart';
 
-class TicketsView extends StatefulWidget {
-  const TicketsView({Key? key}) : super(key: key);
+class TicketsOkView extends StatefulWidget {
+  const TicketsOkView({Key? key}) : super(key: key);
 
   @override
-  State<TicketsView> createState() => _TicketsViewState();
+  State<TicketsOkView> createState() => _TicketsOkViewState();
 }
 
-class _TicketsViewState extends State<TicketsView> {
+class _TicketsOkViewState extends State<TicketsOkView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool showLoader = true;
   late Token token;
   String userTypeLogged = "";
   int companyIdLogged = -1;
+  DateTime desde = DateTime.now().add(
+    const Duration(days: -30),
+  );
+  DateTime hasta = DateTime.now();
 
   //-------------------- initState ----------------------------
 
   @override
   void initState() {
     super.initState();
-    Provider.of<TicketCabsProvider>(context, listen: false).getTicketCabs();
+    Provider.of<TicketCabsProvider>(context, listen: false).getTicketOkCabs();
     showLoader = false;
     setState(() {});
   }
@@ -98,7 +101,7 @@ class _TicketsViewState extends State<TicketsView> {
                 header: Row(
                   children: [
                     const Text(
-                      "Tickets Pendientes",
+                      "Tickets Resueltos",
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -123,6 +126,46 @@ class _TicketsViewState extends State<TicketsView> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    const Text('Desde: '),
+                    Text(
+                      DateFormat('dd/MM/yyyy').format(
+                        DateTime.parse(
+                          desde.toString(),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 19, 9, 212)),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        desdeFecha();
+                      },
+                      icon: const Icon(Icons.calendar_today_outlined,
+                          color: Color.fromARGB(255, 19, 9, 212)),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    const Text('Hasta: '),
+                    Text(
+                      DateFormat('dd/MM/yyyy').format(
+                        DateTime.parse(
+                          hasta.toString(),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 19, 9, 212)),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        hastaFecha();
+                      },
+                      icon: const Icon(Icons.calendar_today_outlined,
+                          color: Color.fromARGB(255, 19, 9, 212)),
+                    ),
                   ],
                 ),
                 rowsPerPage: _rowsPerPage,
@@ -130,21 +173,6 @@ class _TicketsViewState extends State<TicketsView> {
                   _rowsPerPage = value ?? 10;
                   setState(() {});
                 },
-                actions: [
-                  CustomIconButton(
-                    icon: Icons.add_outlined,
-                    text: "Nuevo Ticket",
-                    onPressed: () {
-                      showModalBottomSheet(
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (_) => const TicketModal(
-                          ticketCab: null,
-                        ),
-                      );
-                    },
-                  ),
-                ],
               ),
               showLoader
                   ? Positioned(
@@ -159,5 +187,39 @@ class _TicketsViewState extends State<TicketsView> {
         ],
       ),
     );
+  }
+
+  //--------------- calendar -------------------
+  desdeFecha() {
+    showDatePicker(
+      context: context,
+      locale: const Locale('es', 'ES'),
+      initialDate: desde,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      setState(() {
+        if (value != null) {
+          desde = value;
+        }
+      });
+    });
+  }
+
+  //--------------- calendar -------------------
+  hastaFecha() {
+    showDatePicker(
+      context: context,
+      locale: const Locale('es', 'ES'),
+      initialDate: hasta,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      setState(() {
+        if (value != null) {
+          hasta = value;
+        }
+      });
+    });
   }
 }

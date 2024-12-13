@@ -56,6 +56,18 @@ class DashboardHandlers {
     }
   });
 
+  static Handler ticketsOk = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false)
+        .setCurrentPageUrl(Flurorouter.ticketsOkRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const TicketsOkView();
+    } else {
+      return const LoginView();
+    }
+  });
+
   static Handler editUser = Handler(handlerFunc: (context, params) {
     final authProvider = Provider.of<AuthProvider>(context!);
     Provider.of<SideMenuProvider>(context, listen: false)
@@ -78,7 +90,7 @@ class DashboardHandlers {
           id: params['id']!.first,
         );
       } else {
-        return const TicketsView();
+        return const TicketsOkView();
       }
     } else {
       return const LoginView();
