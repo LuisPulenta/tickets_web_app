@@ -504,7 +504,7 @@ class _TicketViewState extends State<TicketView> {
                                     ),
                                   ),
                                   Expanded(
-                                    child: Text(e.description,
+                                    child: SelectableText(e.description,
                                         style: const TextStyle(
                                             color: Colors.black, fontSize: 12)),
                                   ),

@@ -99,6 +99,9 @@ class _CompanyModalState extends State<CompanyModal> {
                       if (value.length < 3) {
                         return "Mínimo 3 caracteres";
                       }
+                      if (value.length > 50) {
+                        return "Máximo 50 caracteres";
+                      }
                       return null;
                     },
                     onChanged: (value) {

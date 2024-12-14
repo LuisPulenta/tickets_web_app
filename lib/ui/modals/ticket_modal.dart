@@ -110,6 +110,9 @@ class _TicketModalState extends State<TicketModal> {
                                 if (value.length < 3) {
                                   return "Mínimo 3 caracteres";
                                 }
+                                if (value.length > 50) {
+                                  return "Máximo 50 caracteres";
+                                }
                                 return null;
                               },
                               onChanged: (value) {
@@ -148,6 +151,9 @@ class _TicketModalState extends State<TicketModal> {
                             }
                             if (value.length < 3) {
                               return "Mínimo 3 caracteres";
+                            }
+                            if (value.length > 1000) {
+                              return "Máximo 1000 caracteres";
                             }
                             return null;
                           },

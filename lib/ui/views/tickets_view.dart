@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/datatables/ticket_cabs_datasource.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
+import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
@@ -27,6 +30,10 @@ class _TicketsViewState extends State<TicketsView> {
   @override
   void initState() {
     super.initState();
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    token = Token.fromJson(decodedJson);
+    userTypeLogged = token.user.userTypeName;
     Provider.of<TicketCabsProvider>(context, listen: false).getTicketCabs();
     showLoader = false;
     setState(() {});
@@ -131,19 +138,21 @@ class _TicketsViewState extends State<TicketsView> {
                   setState(() {});
                 },
                 actions: [
-                  CustomIconButton(
-                    icon: Icons.add_outlined,
-                    text: "Nuevo Ticket",
-                    onPressed: () {
-                      showModalBottomSheet(
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (_) => const TicketModal(
-                          ticketCab: null,
-                        ),
-                      );
-                    },
-                  ),
+                  (userTypeLogged == "User")
+                      ? CustomIconButton(
+                          icon: Icons.add_outlined,
+                          text: "Nuevo Ticket",
+                          onPressed: () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (_) => const TicketModal(
+                                ticketCab: null,
+                              ),
+                            );
+                          },
+                        )
+                      : Container(),
                 ],
               ),
               showLoader
