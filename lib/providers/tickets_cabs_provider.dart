@@ -70,28 +70,21 @@ class TicketCabsProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
-  getTicketOkCabs() async {
+  getTicketOkCabs(int userTypeLogged, String userIdLogged, int companyIdLogged,
+      DateTime desde, DateTime hasta) async {
     showLoader = true;
     notifyListeners();
 
-    final userBody = LocalStorage.prefs.getString('userBody');
-    var decodedJson = jsonDecode(userBody!);
-    Token token = Token.fromJson(decodedJson);
-    int userTypeLogged = token.user.userTypeId;
-    String userIdLogged = token.user.id;
-    int companyIdLogged = token.user.companyId;
+    Map<String, dynamic> request = {
+      'UserType': userTypeLogged,
+      'UserId': userIdLogged,
+      'CompanyId': companyIdLogged,
+      'Desde': desde.toString().substring(0, 10),
+      'Hasta': hasta.toString().substring(0, 10),
+    };
 
-    Response response = Response(isSuccess: false);
-
-    if (userTypeLogged == 2) {
-      response = await ApiHelper.getTicketResueltosUser(userIdLogged);
-    }
-    if (userTypeLogged == 1) {
-      response = await ApiHelper.getTicketResueltosAdmin(companyIdLogged);
-    }
-    if (userTypeLogged == 0) {
-      response = await ApiHelper.getTicketResueltosAdminKP();
-    }
+    Response response = await ApiHelper.getTicketsResueltos(
+        '/ticketCabs/GetTicketResueltos', request);
 
     if (!response.isSuccess) {
       NotificationsService.showSnackbarError('Se ha producido un error');

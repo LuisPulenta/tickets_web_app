@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/datatables/ticket_cabs_datasource.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
+import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
 
@@ -18,19 +21,35 @@ class _TicketsOkViewState extends State<TicketsOkView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool showLoader = true;
   late Token token;
-  String userTypeLogged = "";
   int companyIdLogged = -1;
-  DateTime desde = DateTime.now().add(
-    const Duration(days: -30),
-  );
+  DateTime desde = DateTime.now().add(const Duration(days: -30));
+
   DateTime hasta = DateTime.now();
+
+  //--------------- getTickets -------------------
+
+  void getTickets() async {
+    final userBody = LocalStorage.prefs.getString('userBody');
+    var decodedJson = jsonDecode(userBody!);
+    Token token = Token.fromJson(decodedJson);
+    int userTypeLogged = token.user.userTypeId;
+    String userIdLogged = token.user.id;
+    int companyIdLogged = token.user.companyId;
+    await Provider.of<TicketCabsProvider>(context, listen: false)
+        .getTicketOkCabs(
+            userTypeLogged, userIdLogged, companyIdLogged, desde, hasta);
+  }
 
   //-------------------- initState ----------------------------
 
   @override
   void initState() {
     super.initState();
-    Provider.of<TicketCabsProvider>(context, listen: false).getTicketOkCabs();
+    desde = DateTime.now().add(
+      const Duration(days: -30),
+    );
+    hasta = DateTime.now();
+    getTickets();
     showLoader = false;
     setState(() {});
   }
@@ -198,11 +217,11 @@ class _TicketsOkViewState extends State<TicketsOkView> {
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     ).then((value) {
-      setState(() {
-        if (value != null) {
-          desde = value;
-        }
-      });
+      if (value != null) {
+        desde = value;
+        getTickets();
+      }
+      setState(() {});
     });
   }
 
@@ -215,11 +234,11 @@ class _TicketsOkViewState extends State<TicketsOkView> {
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     ).then((value) {
-      setState(() {
-        if (value != null) {
-          hasta = value;
-        }
-      });
+      if (value != null) {
+        hasta = value;
+        getTickets();
+      }
+      setState(() {});
     });
   }
 }

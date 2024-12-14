@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:tickets_web_app/models/models.dart';
 
-TicketCab ticketCabFromJson(String str) => TicketCab.fromJson(json.decode(str));
+List<TicketCab> ticketCabFromJson(String str) =>
+    List<TicketCab>.from(json.decode(str).map((x) => TicketCab.fromJson(x)));
 
-String ticketCabToJson(TicketCab data) => json.encode(data.toJson());
+String ticketCabToJson(List<TicketCab> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class TicketCab {
   int id;
