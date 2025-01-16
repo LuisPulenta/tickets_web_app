@@ -1,3 +1,5 @@
+import 'package:tickets_web_app/models/models.dart';
+
 class User {
   String id;
   String firstName;
@@ -16,6 +18,7 @@ class User {
   String lastChangeUserId;
   String lastChangeUserName;
   bool active;
+  List<TicketCab> tickets;
   String fullName;
 
   User({
@@ -36,6 +39,7 @@ class User {
     required this.lastChangeUserId,
     required this.lastChangeUserName,
     required this.active,
+    required this.tickets,
     required this.fullName,
   });
 
@@ -57,6 +61,10 @@ class User {
         lastChangeUserId: json["lastChangeUserId"],
         lastChangeUserName: json["lastChangeUserName"],
         active: json["active"],
+        tickets: json["tickets"] != null
+            ? List<TicketCab>.from(
+                json["tickets"].map((x) => TicketCab.fromJson(x)))
+            : [],
         fullName: json["fullName"],
       );
 
@@ -78,6 +86,9 @@ class User {
         "lastChangeUserId": lastChangeUserId,
         "lastChangeUserName": lastChangeUserName,
         "active": active,
+        "tickets": tickets != null
+            ? List<dynamic>.from(tickets!.map((x) => x.toJson()))
+            : [],
         "fullName": fullName,
       };
 }

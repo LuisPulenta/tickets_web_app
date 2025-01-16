@@ -23,6 +23,7 @@ class TicketView extends StatefulWidget {
 }
 
 class _TicketViewState extends State<TicketView> {
+//----------------------------------------------------------------------
   TicketCab? ticketCab;
   String ticketStateName = "Enviado";
   late List<TicketDet> ticketDets;
@@ -114,9 +115,7 @@ class _TicketViewState extends State<TicketView> {
     );
   }
 
-  //-----------------------------------------------------------------------
 //------------------------------ _getListView ---------------------------
-//-----------------------------------------------------------------------
 
   Widget _getListView() {
     final userLogged =

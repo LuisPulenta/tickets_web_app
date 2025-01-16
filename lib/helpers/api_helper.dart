@@ -587,4 +587,35 @@ class ApiHelper {
     }
     return Response(isSuccess: true, result: list);
   }
+
+  //--------------------------------------------------------------
+  static Future<Response> deleteUser(String id) async {
+    Token token = Token.fromJson(
+        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+
+    if (!_validateToken(token)) {
+      return Response(
+          isSuccess: false,
+          message:
+              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+    Uri url;
+    var response;
+
+    url = Uri.parse('${Constants.apiUrl}/Account/DeleteUserById/$id');
+    response = await http.delete(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}',
+      },
+    );
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: response.body);
+    }
+
+    return Response(isSuccess: true, result: response.body);
+  }
 }

@@ -62,6 +62,14 @@ class _UsersViewState extends State<UsersView> {
                             (user) => user.lastName + user.firstName);
                       }),
                   DataColumn(
+                      label: const Text("N° Tickets",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onSort: (colIndex, _) {
+                        usersProvider.sortColumnIndex = colIndex;
+                        usersProvider.sort<String>(
+                            (user) => user.lastName + user.firstName);
+                      }),
+                  DataColumn(
                       label: const Text("Email",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {

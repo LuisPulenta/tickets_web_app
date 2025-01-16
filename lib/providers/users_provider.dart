@@ -175,4 +175,26 @@ class UsersProvider extends ChangeNotifier {
     users = filteredList;
     notifyListeners();
   }
+
+  //--------------------------------------------------------------------
+  Future deleteUser(String id) async {
+    try {
+      showLoader = true;
+      notifyListeners();
+      Response response = await ApiHelper.deleteUser(id);
+
+      if (!response.isSuccess) {
+        NotificationsService.showSnackbarError('No se pudo borrar el Usuario');
+        showLoader = false;
+        notifyListeners();
+        return;
+      }
+      getUsers();
+      NotificationsService.showSnackbar("Usuario borrado con éxito");
+    } catch (e) {
+      throw ('Error al borrar el Usuario');
+    }
+    showLoader = false;
+    notifyListeners();
+  }
 }

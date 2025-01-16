@@ -61,6 +61,7 @@ class _UserModalState extends State<UserModal> {
           lastChangeUserId: '',
           lastChangeUserName: '',
           active: false,
+          tickets: [],
           fullName: '');
     } else {
       user = User(
@@ -81,6 +82,7 @@ class _UserModalState extends State<UserModal> {
         lastChangeUserId: widget.user!.lastChangeUserId,
         lastChangeUserName: widget.user!.lastChangeUserName,
         active: widget.user!.active,
+        tickets: widget.user!.tickets,
         fullName: widget.user!.fullName,
       );
     }

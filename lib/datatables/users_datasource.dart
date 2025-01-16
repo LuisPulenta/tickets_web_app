@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
+import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/ui/modals/user_modal.dart';
 
 class UsersDTS extends DataTableSource {
@@ -30,6 +30,14 @@ class UsersDTS extends DataTableSource {
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),
                   fontWeight: FontWeight.bold)),
+        ),
+        DataCell(
+          user.tickets.isNotEmpty
+              ? Text('${user.tickets.length}',
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 12, 5, 228),
+                      fontWeight: FontWeight.bold))
+              : const Text(''),
         ),
         DataCell(
           Text(user.email),
@@ -90,35 +98,41 @@ class UsersDTS extends DataTableSource {
                 },
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),
-              IconButton(
-                tooltip: 'Borrar Usuario',
-                onPressed: () {
-                  final dialog = AlertDialog(
-                    title: const Text("Atención!!"),
-                    content: Text(
-                        "Está seguro de borrar el Usuario ${user.lastName} ${user.firstName} ?"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Si"),
+              user.tickets.isNotEmpty
+                  ? Container()
+                  : IconButton(
+                      tooltip: 'Borrar Usuario',
+                      onPressed: () {
+                        final dialog = AlertDialog(
+                          title: const Text("Atención!!"),
+                          content: Text(
+                              "Está seguro de borrar el Usuario ${user.lastName} ${user.firstName} ?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                final usersProvider =
+                                    Provider.of<UsersProvider>(context,
+                                        listen: false);
+                                await usersProvider.deleteUser(user.id).then(
+                                    (value) => {Navigator.of(context).pop()});
+                              },
+                              child: const Text("Si"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("No"),
+                            ),
+                          ],
+                        );
+                        showDialog(context: context, builder: (_) => dialog);
+                      },
+                      icon: const Icon(
+                        Icons.delete_outline_outlined,
+                        color: Colors.red,
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("No"),
-                      ),
-                    ],
-                  );
-                  showDialog(context: context, builder: (_) => dialog);
-                },
-                icon: const Icon(
-                  Icons.delete_outline_outlined,
-                  color: Colors.red,
-                ),
-              ),
+                    ),
             ],
           ),
         ),
