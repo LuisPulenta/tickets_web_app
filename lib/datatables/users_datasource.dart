@@ -113,8 +113,20 @@ class UsersDTS extends DataTableSource {
                                 final usersProvider =
                                     Provider.of<UsersProvider>(context,
                                         listen: false);
-                                await usersProvider.deleteUser(user.id).then(
-                                    (value) => {Navigator.of(context).pop()});
+
+                                final userLoggedId = Provider.of<AuthProvider>(
+                                        context,
+                                        listen: false)
+                                    .user!
+                                    .id;
+
+                                await usersProvider
+                                    .deleteUser(
+                                      user.id,
+                                      userLoggedId,
+                                    )
+                                    .then((value) =>
+                                        {Navigator.of(context).pop()});
                               },
                               child: const Text("Si"),
                             ),

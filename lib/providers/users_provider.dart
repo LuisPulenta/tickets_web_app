@@ -177,7 +177,15 @@ class UsersProvider extends ChangeNotifier {
   }
 
   //--------------------------------------------------------------------
-  Future deleteUser(String id) async {
+  Future deleteUser(
+    String id,
+    String LoggedId,
+  ) async {
+    if (id == LoggedId) {
+      NotificationsService.showSnackbarError("No puede borrarse a sí mismo");
+      return;
+    }
+
     try {
       showLoader = true;
       notifyListeners();

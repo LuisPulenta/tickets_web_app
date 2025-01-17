@@ -1,11 +1,11 @@
 {
-    "name": "tickets_web_app",
-    "short_name": "tickets_web_app",
+    "name": "Tickets Web",
+    "short_name": "Tickets Web",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Web de Keypress",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
