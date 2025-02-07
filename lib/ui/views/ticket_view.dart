@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tickets_web_app/helpers/api_helper.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/services/services.dart';
@@ -31,6 +32,9 @@ class _TicketViewState extends State<TicketView> {
   late TicketFormProvider ticketFormProvider;
   late Token token;
   String userTypeLogged = "";
+  List<User> _users = [];
+  String userIdSelected = "";
+  String userNameSelected = "";
 
 //----------------------------------------------------------------------
   @override
@@ -78,6 +82,8 @@ class _TicketViewState extends State<TicketView> {
             },
           ),
         );
+
+    _getUsers();
     showLoader = false;
 
     setState(() {});
@@ -712,6 +718,16 @@ class _TicketViewState extends State<TicketView> {
                                         ),
                                       )
                                     : Container(),
+                                SizedBox(
+                                  width: 300,
+                                  child: Expanded(
+                                    flex: 2,
+                                    child: userTypeLogged == "Admin" &&
+                                            ticketCab!.ticketState == 0
+                                        ? _showUser()
+                                        : Container(),
+                                  ),
+                                ),
 
                                 //---------- Botón En Curso ----------
                                 (userTypeLogged == "AdminKP" &&
@@ -762,6 +778,85 @@ class _TicketViewState extends State<TicketView> {
           ],
         ),
       ],
+    );
+  }
+
+//--------------------------------------------------------------------
+  Future<void> _getUsers() async {
+    final companyLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.companyId;
+
+    Response response = await ApiHelper.getUsersCombo(companyLoggedId);
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError("Error al cargar los Usuarios");
+      return;
+    }
+
+    setState(() {
+      _users = response.result;
+    });
+  }
+
+//---------------------------------------------------------------------------
+  List<DropdownMenuItem<String>> _getComboUsers() {
+    List<DropdownMenuItem<String>> list = [];
+    list.add(const DropdownMenuItem(
+      value: '',
+      child: Text('Seleccione un Usuario...'),
+    ));
+
+    for (var user in _users) {
+      list.add(DropdownMenuItem(
+        value: user.id,
+        child: Text(user.fullName),
+      ));
+    }
+    return list;
+  }
+
+//---------------------------------------------------------------------------
+  Widget _showUser() {
+    return Container(
+      child: _users.isEmpty
+          ? const Text('Cargando Usuarios...')
+          : DropdownButtonFormField(
+              validator: (value) {
+                if (value == 0) {
+                  return "Seleccione un Usuario...";
+                }
+                return null;
+              },
+              dropdownColor: const Color(0xff0f2041),
+              isExpanded: true,
+              isDense: true,
+              style:
+                  TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 16),
+              items: _getComboUsers(),
+              value: userIdSelected,
+              onChanged: (option) {
+                setState(() {
+                  userIdSelected = option!;
+                });
+              },
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.storefront,
+                    color: Colors.white.withOpacity(0.5)),
+                labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                hintText: 'Seleccione un Usuario...',
+                labelText: 'Usuario',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            ),
     );
   }
 
