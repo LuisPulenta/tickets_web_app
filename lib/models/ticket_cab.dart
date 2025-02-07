@@ -18,6 +18,8 @@ class TicketCab {
   String title;
   int ticketState;
   dynamic asignDate;
+  String userAsign;
+  String userAsignName;
   dynamic inProgressDate;
   dynamic finishDate;
   List<TicketDet>? ticketDets;
@@ -33,6 +35,8 @@ class TicketCab {
     required this.title,
     required this.ticketState,
     required this.asignDate,
+    required this.userAsign,
+    required this.userAsignName,
     required this.inProgressDate,
     required this.finishDate,
     required this.ticketDets,
@@ -49,6 +53,8 @@ class TicketCab {
         title: json["title"],
         ticketState: json["ticketState"],
         asignDate: json["asignDate"],
+        userAsign: json["userAsign"] ?? '',
+        userAsignName: json["userAsignName"] ?? '',
         inProgressDate: json["inProgressDate"],
         finishDate: json["finishDate"],
         ticketDets: json["ticketDets"] != null
@@ -68,6 +74,8 @@ class TicketCab {
         "title": title,
         "ticketState": ticketState,
         "asignDate": asignDate,
+        "userAsign": userAsign,
+        "userAsignName": userAsignName,
         "inProgressDate": inProgressDate,
         "finishDate": finishDate,
         "ticketDets": ticketDets != null

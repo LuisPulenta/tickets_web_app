@@ -160,12 +160,15 @@ class TicketCabsProvider extends ChangeNotifier {
 
 //---------------------------------------------------------------------
   Future newTicketDet(
-      TicketCab ticketCab,
-      String userLogged,
-      String companyLogged,
-      String description,
-      String base64Image,
-      int estado) async {
+    TicketCab ticketCab,
+    String userLogged,
+    String companyLogged,
+    String description,
+    String base64Image,
+    int estado,
+    String userAsign,
+    String userAsignName,
+  ) async {
     showLoader = true;
     notifyListeners();
 
@@ -197,7 +200,9 @@ class TicketCabsProvider extends ChangeNotifier {
           'CompanyName': ticketCab.companyName,
           'Title': ticketCab.title,
           'TicketState': estado,
-          'AsignDate': estado == 2
+          'UserAsign': userAsign,
+          'UserAsignName': userAsignName,
+          'AsignDate': (estado == 2 || estado == 5)
               ? ahora
               : (estado == 3 || estado == 4)
                   ? ticketCab.asignDate

@@ -685,6 +685,15 @@ class _TicketViewState extends State<TicketView> {
                                       )
                                     : Container(),
 
+                                (userTypeLogged == "Admin" &&
+                                        ticketCab!.ticketState == 0)
+                                    ? const Text('-',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold))
+                                    : Container(),
+
                                 //---------- Botón Asignar ----------
                                 (userTypeLogged == "Admin" &&
                                         ticketCab!.ticketState == 0)
@@ -702,7 +711,28 @@ class _TicketViewState extends State<TicketView> {
                                       )
                                     : Container(),
 
+                                (userTypeLogged == "Admin" &&
+                                        ticketCab!.ticketState == 0)
+                                    ? const Text('-   ',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold))
+                                    : Container(),
+
                                 //---------- Botón Derivar ----------
+
+                                SizedBox(
+                                  width: 300,
+                                  child: Expanded(
+                                    flex: 2,
+                                    child: userTypeLogged == "Admin" &&
+                                            ticketCab!.ticketState == 0
+                                        ? _showUser()
+                                        : Container(),
+                                  ),
+                                ),
+
                                 (userTypeLogged == "Admin" &&
                                         ticketCab!.ticketState == 0)
                                     ? Padding(
@@ -718,16 +748,6 @@ class _TicketViewState extends State<TicketView> {
                                         ),
                                       )
                                     : Container(),
-                                SizedBox(
-                                  width: 300,
-                                  child: Expanded(
-                                    flex: 2,
-                                    child: userTypeLogged == "Admin" &&
-                                            ticketCab!.ticketState == 0
-                                        ? _showUser()
-                                        : Container(),
-                                  ),
-                                ),
 
                                 //---------- Botón En Curso ----------
                                 (userTypeLogged == "AdminKP" &&
@@ -821,38 +841,45 @@ class _TicketViewState extends State<TicketView> {
       child: _users.isEmpty
           ? const Text('Cargando Usuarios...')
           : DropdownButtonFormField(
-              validator: (value) {
-                if (value == 0) {
-                  return "Seleccione un Usuario...";
-                }
-                return null;
-              },
-              dropdownColor: const Color(0xff0f2041),
+              // validator: (value) {
+              //   if (value == '') {
+              //     return "Seleccione un Usuario...";
+              //   }
+              //   return null;
+              // },
+              dropdownColor: const Color.fromARGB(255, 12, 133, 160),
               isExpanded: true,
               isDense: true,
-              style:
-                  TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
               items: _getComboUsers(),
               value: userIdSelected,
               onChanged: (option) {
                 setState(() {
                   userIdSelected = option!;
+
+                  for (User user in _users) {
+                    if (user.id == userIdSelected) {
+                      userNameSelected = user.fullName;
+                    }
+                  }
+                  ticketFormProvider.userAsign = userIdSelected;
+                  ticketFormProvider.userAsignName = userNameSelected;
                 });
               },
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.storefront,
-                    color: Colors.white.withOpacity(0.5)),
-                labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(4),
+                prefixIcon: Icon(Icons.person, color: Colors.white),
+                labelStyle: TextStyle(color: Colors.white),
                 hintText: 'Seleccione un Usuario...',
                 labelText: 'Usuario',
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -863,6 +890,11 @@ class _TicketViewState extends State<TicketView> {
 //----------------------------------------------------------------------------------
   void onFormSubmit(TicketFormProvider ticketFormProvider, String userLogged,
       String companyLogged, int estado) async {
+    if (estado == 5 && userIdSelected == "") {
+      NotificationsService.showSnackbarError("Debe seleccionar un Usuario");
+      return;
+    }
+
     try {
       final ticketsProvider =
           Provider.of<TicketCabsProvider>(context, listen: false);
@@ -874,6 +906,8 @@ class _TicketViewState extends State<TicketView> {
         ticketFormProvider.description,
         ticketFormProvider.photoChanged ? ticketFormProvider.base64Image : '',
         estado,
+        ticketFormProvider.userAsign,
+        ticketFormProvider.userAsignName,
       )
           .then((value) {
         Provider.of<TicketCabsProvider>(context, listen: false)

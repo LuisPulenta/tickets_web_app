@@ -87,7 +87,7 @@ class User {
         "lastChangeUserName": lastChangeUserName,
         "active": active,
         "tickets": tickets != null
-            ? List<dynamic>.from(tickets!.map((x) => x.toJson()))
+            ? List<dynamic>.from(tickets.map((x) => x.toJson()))
             : [],
         "fullName": fullName,
       };

@@ -9,6 +9,8 @@ class TicketFormProvider extends ChangeNotifier {
   String photoFullPath = '';
   bool photoChanged = false;
   String base64Image = '';
+  String userAsign = '';
+  String userAsignName = '';
 
   TicketCab ticketCab = TicketCab(
       id: 0,
@@ -20,6 +22,8 @@ class TicketFormProvider extends ChangeNotifier {
       title: '',
       ticketState: 0,
       asignDate: '',
+      userAsign: '',
+      userAsignName: '',
       finishDate: '',
       inProgressDate: '',
       ticketDets: [],

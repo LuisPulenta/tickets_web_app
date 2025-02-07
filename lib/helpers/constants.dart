@@ -7,5 +7,6 @@ class Constants {
     'Asignado',
     'En Curso',
     'Resuelto',
+    'Derivado'
   ];
 }
