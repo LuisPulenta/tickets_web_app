@@ -696,6 +696,23 @@ class _TicketViewState extends State<TicketView> {
                                       )
                                     : Container(),
 
+                                //---------- Botón Derivar ----------
+                                (userTypeLogged == "Admin" &&
+                                        ticketCab!.ticketState == 0)
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: CustomOutlinedButton(
+                                          onPressed: () async {
+                                            onFormSubmit(ticketFormProvider,
+                                                userLogged, companyLogged, 5);
+                                          },
+                                          text: "Derivar",
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Container(),
+
                                 //---------- Botón En Curso ----------
                                 (userTypeLogged == "AdminKP" &&
                                         ticketCab!.ticketState == 2)
