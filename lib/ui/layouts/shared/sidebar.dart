@@ -74,6 +74,16 @@ class Sidebar extends StatelessWidget {
             isActive: sideMenuProvider.currentPage == Flurorouter.ticketsRoute,
             onPressed: () => navigateTo(Flurorouter.ticketsRoute),
           ),
+          userType == 2
+              ? MenuItem(
+                  text: 'P/Resolver',
+                  icon: Icons.emoji_objects_outlined,
+                  isActive: sideMenuProvider.currentPage ==
+                      Flurorouter.ticketsDerivatedRoute,
+                  onPressed: () =>
+                      navigateTo(Flurorouter.ticketsDerivatedRoute),
+                )
+              : Container(),
           MenuItem(
             text: 'Resueltos',
             icon: Icons.verified_outlined,

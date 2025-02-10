@@ -17,6 +17,7 @@ import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart'
 
 class TicketView extends StatefulWidget {
   final String id;
+
   const TicketView({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class TicketView extends StatefulWidget {
 }
 
 class _TicketViewState extends State<TicketView> {
-//----------------------------------------------------------------------
+  //----------------------------------------------------------------------
   TicketCab? ticketCab;
   String ticketStateName = "Enviado";
   late List<TicketDet> ticketDets;
@@ -39,22 +40,17 @@ class _TicketViewState extends State<TicketView> {
 //----------------------------------------------------------------------
   @override
   void initState() {
+    super.initState();
     showLoader = true;
 
     final userBody = LocalStorage.prefs.getString('userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
     userTypeLogged = token.user.userTypeName;
-
-    setState(() {});
     final ticketCabsProvider =
         Provider.of<TicketCabsProvider>(context, listen: false);
-
     ticketFormProvider =
         Provider.of<TicketFormProvider>(context, listen: false);
-
-    ticketFormProvider.description = '';
-
     ticketDets = [];
 
     ticketCabsProvider.getTicketCabById(widget.id).then(
@@ -79,17 +75,175 @@ class _TicketViewState extends State<TicketView> {
               if (ticketCab!.ticketState == 4) {
                 ticketStateName = "Resuelto";
               }
+              if (ticketCab!.ticketState == 5) {
+                ticketStateName = "Derivado";
+              }
             },
           ),
         );
-
     _getUsers();
     showLoader = false;
-
     setState(() {});
   }
 
-//----------------------------------------------------------------------
+  //--------------------------------------------------------------------
+  Future<void> _getUsers() async {
+    final companyLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.companyId;
+
+    Response response = await ApiHelper.getUsersCombo(companyLoggedId);
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError("Error al cargar los Usuarios");
+      return;
+    }
+
+    setState(() {
+      _users = response.result;
+    });
+  }
+
+  //---------------------------------------------------------------------------
+  List<DropdownMenuItem<String>> _getComboUsers() {
+    List<DropdownMenuItem<String>> list = [];
+    list.add(const DropdownMenuItem(
+      value: '',
+      child: Text('Seleccione un Usuario...'),
+    ));
+
+    for (var user in _users) {
+      list.add(DropdownMenuItem(
+        value: user.id,
+        child: Text(user.fullName),
+      ));
+    }
+    return list;
+  }
+
+  //---------------------------------------------------------------------------
+  Widget _showUser() {
+    return Container(
+      child: _users.isEmpty
+          ? const Text('Cargando Usuarios...')
+          : DropdownButtonFormField(
+              // validator: (value) {
+              //   if (value == '') {
+              //     return "Seleccione un Usuario...";
+              //   }
+              //   return null;
+              // },
+              dropdownColor: const Color.fromARGB(255, 12, 133, 160),
+              isExpanded: true,
+              isDense: true,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+              items: _getComboUsers(),
+              value: userIdSelected,
+              onChanged: (option) {
+                setState(() {
+                  userIdSelected = option!;
+
+                  for (User user in _users) {
+                    if (user.id == userIdSelected) {
+                      userNameSelected = user.fullName;
+                    }
+                  }
+                  ticketFormProvider.userAsign = userIdSelected;
+                  ticketFormProvider.userAsignName = userNameSelected;
+                });
+              },
+              decoration: const InputDecoration(
+                contentPadding: EdgeInsets.all(4),
+                prefixIcon: Icon(Icons.person, color: Colors.white),
+                labelStyle: TextStyle(color: Colors.white),
+                hintText: 'Seleccione un Usuario...',
+                labelText: 'Usuario',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+//----------------------------------------------------------------------------------
+  void onFormSubmit(TicketFormProvider ticketFormProvider, String userLogged,
+      String companyLogged, int estado) async {
+    if (estado == 5 && userIdSelected == "") {
+      NotificationsService.showSnackbarError("Debe seleccionar un Usuario");
+      return;
+    }
+
+    try {
+      final ticketsCabsProvider2 =
+          Provider.of<TicketCabsProvider>(context, listen: false);
+
+      ticketFormProvider.userAsign == '';
+      ticketFormProvider.userAsignName == '';
+
+      await ticketsCabsProvider2
+          .newTicketDet(
+        ticketCab!,
+        userLogged,
+        companyLogged,
+        ticketFormProvider.description,
+        ticketFormProvider.photoChanged ? ticketFormProvider.base64Image : '',
+        estado,
+        ticketFormProvider.userAsign,
+        ticketFormProvider.userAsignName,
+      )
+          .then((value) {
+        Provider.of<TicketCabsProvider>(context, listen: false)
+            .getTicketCabById(widget.id)
+            .then(
+              (ticketCabDB) => setState(
+                () {
+                  ticketCab = ticketCabDB;
+
+                  ticketDets = ticketCab!.ticketDets != null
+                      ? ticketCab!.ticketDets!
+                      : [];
+
+                  if (estado == 0) {
+                    ticketStateName = "Enviado";
+                  }
+
+                  if (estado == 1) {
+                    ticketStateName = "Devuelto";
+                  }
+
+                  if (estado == 2) {
+                    ticketStateName = "Asignado";
+                  }
+
+                  if (estado == 3) {
+                    ticketStateName = "En Curso";
+                  }
+
+                  if (estado == 4) {
+                    ticketStateName = "Resuelto";
+                  }
+
+                  if (estado == 5) {
+                    ticketStateName = "Derivado";
+                  }
+                  ticketFormProvider.description = '';
+                },
+              ),
+            );
+      });
+    } catch (e) {
+      NotificationsService.showSnackbarError("No se pudo guardar el Ticket");
+    }
+  }
+
+  //----------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
     return showLoader
@@ -121,21 +275,20 @@ class _TicketViewState extends State<TicketView> {
     );
   }
 
-//------------------------------ _getListView ---------------------------
+  //------------------------------ _getListView ---------------------------
 
   Widget _getListView() {
     final userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
     final companyLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.companyName;
-    final size = MediaQuery.of(context).size;
     return Stack(
       children: [
         Column(
           children: [
             SizedBox(
               width: double.infinity,
-              height: 130,
+              height: 150,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6.0),
@@ -317,6 +470,23 @@ class _TicketViewState extends State<TicketView> {
                                                         ticketCab!.asignDate
                                                             .toString()))
                                                 : '',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Derivado a: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(ticketCab!.userAsignName,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                                 color: Colors.white,
@@ -571,9 +741,11 @@ class _TicketViewState extends State<TicketView> {
                 }).toList(),
               ),
             ),
+            //***********************************************************************
 
             //---------- Formulario para generar nuevo Ticket Detalle ----------
             ((userTypeLogged == "User" && ticketCab!.ticketState == 1) ||
+                    (userTypeLogged == "User" && ticketCab!.ticketState == 5) ||
                     ((userTypeLogged == "Admin" &&
                             ticketCab!.ticketState == 0) ||
                         (userTypeLogged == "AdminKP" &&
@@ -624,8 +796,7 @@ class _TicketViewState extends State<TicketView> {
                                             ticketFormProvider.description =
                                                 value;
                                           },
-                                          initialValue:
-                                              ticketFormProvider.description,
+                                          initialValue: '',
                                           decoration:
                                               CustomInput.loginInputDecoration(
                                             hint: 'Descripción',
@@ -665,7 +836,9 @@ class _TicketViewState extends State<TicketView> {
                                       )
                                     : Container(),
                                 //---------- Botón Devolver ----------
-                                ((userTypeLogged == "Admin" &&
+                                ((userTypeLogged == "User" &&
+                                            ticketCab!.ticketState == 5) ||
+                                        (userTypeLogged == "Admin" &&
                                             ticketCab!.ticketState == 0) ||
                                         (userTypeLogged == "AdminKP" &&
                                             ticketCab!.ticketState == 2) ||
@@ -767,7 +940,9 @@ class _TicketViewState extends State<TicketView> {
                                     : Container(),
 
                                 //---------- Botón Resuelto ----------
-                                ((userTypeLogged == "AdminKP" &&
+                                ((userTypeLogged == "User" &&
+                                            ticketCab!.ticketState == 5) ||
+                                        (userTypeLogged == "AdminKP" &&
                                             ticketCab!.ticketState == 2) ||
                                         (userTypeLogged == "AdminKP" &&
                                             ticketCab!.ticketState == 3))
@@ -799,153 +974,8 @@ class _TicketViewState extends State<TicketView> {
         ),
       ],
     );
-  }
 
-//--------------------------------------------------------------------
-  Future<void> _getUsers() async {
-    final companyLoggedId =
-        Provider.of<AuthProvider>(context, listen: false).user!.companyId;
-
-    Response response = await ApiHelper.getUsersCombo(companyLoggedId);
-
-    if (!response.isSuccess) {
-      NotificationsService.showSnackbarError("Error al cargar los Usuarios");
-      return;
-    }
-
-    setState(() {
-      _users = response.result;
-    });
-  }
-
-//---------------------------------------------------------------------------
-  List<DropdownMenuItem<String>> _getComboUsers() {
-    List<DropdownMenuItem<String>> list = [];
-    list.add(const DropdownMenuItem(
-      value: '',
-      child: Text('Seleccione un Usuario...'),
-    ));
-
-    for (var user in _users) {
-      list.add(DropdownMenuItem(
-        value: user.id,
-        child: Text(user.fullName),
-      ));
-    }
-    return list;
-  }
-
-//---------------------------------------------------------------------------
-  Widget _showUser() {
-    return Container(
-      child: _users.isEmpty
-          ? const Text('Cargando Usuarios...')
-          : DropdownButtonFormField(
-              // validator: (value) {
-              //   if (value == '') {
-              //     return "Seleccione un Usuario...";
-              //   }
-              //   return null;
-              // },
-              dropdownColor: const Color.fromARGB(255, 12, 133, 160),
-              isExpanded: true,
-              isDense: true,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-              items: _getComboUsers(),
-              value: userIdSelected,
-              onChanged: (option) {
-                setState(() {
-                  userIdSelected = option!;
-
-                  for (User user in _users) {
-                    if (user.id == userIdSelected) {
-                      userNameSelected = user.fullName;
-                    }
-                  }
-                  ticketFormProvider.userAsign = userIdSelected;
-                  ticketFormProvider.userAsignName = userNameSelected;
-                });
-              },
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.all(4),
-                prefixIcon: Icon(Icons.person, color: Colors.white),
-                labelStyle: TextStyle(color: Colors.white),
-                hintText: 'Seleccione un Usuario...',
-                labelText: 'Usuario',
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-    );
-  }
-
-//----------------------------------------------------------------------------------
-  void onFormSubmit(TicketFormProvider ticketFormProvider, String userLogged,
-      String companyLogged, int estado) async {
-    if (estado == 5 && userIdSelected == "") {
-      NotificationsService.showSnackbarError("Debe seleccionar un Usuario");
-      return;
-    }
-
-    try {
-      final ticketsProvider =
-          Provider.of<TicketCabsProvider>(context, listen: false);
-      await ticketsProvider
-          .newTicketDet(
-        ticketCab!,
-        userLogged,
-        companyLogged,
-        ticketFormProvider.description,
-        ticketFormProvider.photoChanged ? ticketFormProvider.base64Image : '',
-        estado,
-        ticketFormProvider.userAsign,
-        ticketFormProvider.userAsignName,
-      )
-          .then((value) {
-        Provider.of<TicketCabsProvider>(context, listen: false)
-            .getTicketCabById(widget.id)
-            .then(
-              (ticketCabDB) => setState(
-                () {
-                  ticketCab = ticketCabDB;
-                  ticketDets = ticketCab!.ticketDets != null
-                      ? ticketCab!.ticketDets!
-                      : [];
-
-                  if (estado == 0) {
-                    ticketStateName = "Enviado";
-                  }
-
-                  if (estado == 1) {
-                    ticketStateName = "Devuelto";
-                  }
-
-                  if (estado == 2) {
-                    ticketStateName = "Asignado";
-                  }
-
-                  if (estado == 3) {
-                    ticketStateName = "En Curso";
-                  }
-
-                  if (estado == 4) {
-                    ticketStateName = "Resuelto";
-                  }
-                },
-              ),
-            );
-      });
-    } catch (e) {
-      NotificationsService.showSnackbarError("No se pudo guardar el Ticket");
-    }
+    //***********************************************************************
   }
 }
 
@@ -960,27 +990,30 @@ class CustomChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6.0),
-        side: const BorderSide(
-          color: Colors.black,
-          width: 0.5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(6.0),
+          side: const BorderSide(
+            color: Colors.black,
+            width: 0.5,
+          ),
         ),
-      ),
-      label: Text(estado.toUpperCase(),
-          style: const TextStyle(
-              color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold)),
-      backgroundColor: estado == 'Enviado'
-          ? const Color.fromARGB(255, 169, 220, 227)
-          : estado == 'Devuelto'
-              ? const Color.fromARGB(255, 226, 179, 132)
-              : estado == 'Asignado'
-                  ? const Color.fromARGB(255, 240, 113, 101)
-                  : (estado.toLowerCase() == 'encurso' ||
-                          estado.toLowerCase() == 'en curso')
-                      ? const Color.fromARGB(255, 217, 135, 219)
-                      : const Color.fromARGB(255, 145, 228, 109),
-    );
+        label: Text(estado.toUpperCase(),
+            style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.bold)),
+        backgroundColor: estado == 'Enviado'
+            ? const Color.fromARGB(255, 169, 220, 227)
+            : estado == 'Devuelto'
+                ? const Color.fromARGB(255, 226, 179, 132)
+                : estado == 'Asignado'
+                    ? const Color.fromARGB(255, 240, 113, 101)
+                    : (estado.toLowerCase() == 'encurso' ||
+                            estado.toLowerCase() == 'en curso')
+                        ? const Color.fromARGB(255, 217, 135, 219)
+                        : (estado.toLowerCase() == 'derivado')
+                            ? const Color.fromARGB(255, 200, 47, 33)
+                            : const Color.fromARGB(255, 145, 228, 109));
   }
 }
 

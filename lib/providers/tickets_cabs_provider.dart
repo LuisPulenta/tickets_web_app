@@ -105,6 +105,33 @@ class TicketCabsProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
+  getTicketDerivatedCabs(
+    String userIdLogged,
+  ) async {
+    showLoader = true;
+    notifyListeners();
+
+    Response response = await ApiHelper.getTicketCabParaResolver(userIdLogged);
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError('Se ha producido un error');
+      showLoader = false;
+      notifyListeners();
+      return;
+    }
+    ticketCabs = response.result;
+
+    ticketCabs.sort((a, b) {
+      return a.id.compareTo(b.id);
+    });
+
+    originalTicketCabs = ticketCabs;
+
+    showLoader = false;
+    notifyListeners();
+  }
+
+  //---------------------------------------------------------------------
   Future newTicketCab(TicketCab ticketCab, String userLogged,
       String companyLogged, String description, String base64Image) async {
     showLoader = true;
@@ -200,14 +227,14 @@ class TicketCabsProvider extends ChangeNotifier {
           'CompanyName': ticketCab.companyName,
           'Title': ticketCab.title,
           'TicketState': estado,
-          'UserAsign': userAsign,
-          'UserAsignName': userAsignName,
-          'AsignDate': (estado == 2 || estado == 5)
+          'UserAsign': estado == 5 ? userAsign : '',
+          'UserAsignName': estado == 5 ? userAsignName : '',
+          'AsignDate': (estado == 2)
               ? ahora
-              : (estado == 3 || estado == 4)
+              : (estado == 3 || estado == 4 || estado == 5)
                   ? ticketCab.asignDate
                   : null,
-          'InProgressDate': estado == 3
+          'InProgressDate': (estado == 3 || estado == 5)
               ? ahora
               : (estado == 4)
                   ? ticketCab.asignDate

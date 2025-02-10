@@ -19,6 +19,7 @@ class Flurorouter {
   static String usersRoute = '/dashboard/users';
   static String ticketsRoute = '/dashboard/tickets';
   static String ticketsOkRoute = '/dashboard/ticketsok';
+  static String ticketsDerivatedRoute = '/dashboard/ticketsderivated';
   static String editUserRoute = '/dashboard/editUser';
   static String ticketRoute = '/dashboard/tickets/:id';
 
@@ -74,6 +75,12 @@ class Flurorouter {
     router.define(
       ticketsOkRoute,
       handler: DashboardHandlers.ticketsOk,
+      transitionType: TransitionType.fadeIn,
+    );
+
+    router.define(
+      ticketsDerivatedRoute,
+      handler: DashboardHandlers.ticketsDerivated,
       transitionType: TransitionType.fadeIn,
     );
 

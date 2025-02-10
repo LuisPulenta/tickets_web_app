@@ -4,7 +4,7 @@ class SideMenuProvider extends ChangeNotifier {
   static late AnimationController menuController;
   static bool isOpen = false;
 
-  String _currentPage = '';
+  String _currentPage = '/dashboard';
 
   String get currentPage {
     return _currentPage;

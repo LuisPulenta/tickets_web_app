@@ -39,7 +39,7 @@ class TicketCabsDTS extends DataTableSource {
         ),
         DataCell(
           Text(
-            Constants.estados[ticketCab.ticketState],
+            '${Constants.estados[ticketCab.ticketState]} ${ticketCab.userAsignName}',
             style: const TextStyle(
               color: Color.fromARGB(255, 12, 5, 228),
             ),

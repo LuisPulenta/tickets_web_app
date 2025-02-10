@@ -16,10 +16,16 @@ class DashboardLayout extends StatefulWidget {
 
 class _DashboardLayoutState extends State<DashboardLayout>
     with SingleTickerProviderStateMixin {
+  late TicketFormProvider ticketFormProvider;
 //----------------------------------------------------------------
   @override
   void initState() {
     super.initState();
+
+    ticketFormProvider =
+        Provider.of<TicketFormProvider>(context, listen: false);
+    ticketFormProvider.description = '';
+
     SideMenuProvider.menuController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
