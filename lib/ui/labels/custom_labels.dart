@@ -11,4 +11,9 @@ class CustomLabels {
     fontSize: 20,
     fontWeight: FontWeight.w400,
   );
+
+  static TextStyle h3 = GoogleFonts.roboto(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
 }

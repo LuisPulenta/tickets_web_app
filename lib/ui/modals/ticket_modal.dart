@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -260,11 +261,23 @@ class _AvatarContainerState extends State<_AvatarContainer> {
             !ticketFormProvider.photoChanged)
         ? Image.network(ticketFormProvider.base64Image)
         : (file != null)
-            ? Image.memory(
-                Uint8List.fromList(file!.bytes!),
-                width: 250,
-                height: 160,
-              )
+            ? ticketFormProvider.fileExtension == 'pdf'
+                ? Image.asset('assets/pdf.png')
+                : ticketFormProvider.fileExtension == 'rar'
+                    ? Image.asset('assets/rar.png')
+                    : ticketFormProvider.fileExtension == 'zip'
+                        ? Image.asset('assets/zip.png')
+                        : ticketFormProvider.fileExtension == 'xls' ||
+                                ticketFormProvider.fileExtension == 'xlsx'
+                            ? Image.asset('assets/xls.png')
+                            : ticketFormProvider.fileExtension == 'doc' ||
+                                    ticketFormProvider.fileExtension == 'docx'
+                                ? Image.asset('assets/doc.png')
+                                : Image.memory(
+                                    Uint8List.fromList(file!.bytes!),
+                                    width: 250,
+                                    height: 160,
+                                  )
             : const Image(
                 image: AssetImage('no-image.jpg'),
               );
@@ -280,7 +293,7 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Imagen',
+                    'Archivo',
                     style: CustomLabels.h2,
                   ),
                   const SizedBox(
@@ -300,9 +313,66 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                   const SizedBox(
                     height: 5,
                   ),
+                  SizedBox(
+                    width: 140,
+                    child: Text(
+                      ticketFormProvider.fileName,
+                      style: CustomLabels.h3,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                   // Text(ticketFormProvider.name,
                   //     style: const TextStyle(fontWeight: FontWeight.bold))
                 ]),
+          ),
+        ),
+        Positioned(
+          bottom: 10,
+          left: 10,
+          child: Container(
+            width: 45,
+            height: 45,
+            child: FloatingActionButton(
+              backgroundColor: Colors.indigo,
+              elevation: 0,
+              child: const Icon(
+                Icons.file_present_outlined,
+                size: 20,
+              ),
+              onPressed: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: [
+                    'rar',
+                    'zip',
+                    'doc',
+                    'docx',
+                    'xls',
+                    'xlsx',
+                    'pdf'
+                  ],
+                  allowMultiple: false,
+                );
+                if (result != null) {
+                  NotificationsService.showBusyIndicator(context);
+
+                  file = result.files.first;
+                  ticketFormProvider.photoChanged = true;
+                  ticketFormProvider.fileName = file!.name;
+                  ticketFormProvider.fileExtension = file!.extension!;
+
+                  if (ticketFormProvider.photoChanged) {
+                    List<int> imageBytes = file!.bytes!;
+                    ticketFormProvider.base64Image = base64Encode(imageBytes);
+                  }
+
+                  setState(() {});
+
+                  Navigator.of(context).pop();
+                } else {}
+              },
+            ),
           ),
         ),
         Positioned(
@@ -311,10 +381,6 @@ class _AvatarContainerState extends State<_AvatarContainer> {
           child: Container(
             width: 45,
             height: 45,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 5),
-              borderRadius: BorderRadius.circular(100),
-            ),
             child: FloatingActionButton(
               backgroundColor: Colors.indigo,
               elevation: 0,
@@ -333,6 +399,8 @@ class _AvatarContainerState extends State<_AvatarContainer> {
 
                   file = result.files.first;
                   ticketFormProvider.photoChanged = true;
+                  ticketFormProvider.fileName = file!.name;
+                  ticketFormProvider.fileExtension = file!.extension!;
 
                   if (ticketFormProvider.photoChanged) {
                     List<int> imageBytes = file!.bytes!;

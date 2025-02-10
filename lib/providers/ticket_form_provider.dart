@@ -4,6 +4,8 @@ import 'package:tickets_web_app/models/models.dart';
 class TicketFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  String fileName = '';
+  String fileExtension = '';
   String description = '';
   String photo = '';
   String photoFullPath = '';
