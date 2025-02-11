@@ -40,10 +40,14 @@ class _TicketModalState extends State<TicketModal> {
 
     ticketFormProvider.description = '';
 
+    ticketFormProvider.base64Image = '';
+
     ticketFormProvider.ticketCab.id = widget.ticketCab?.id ?? 0;
     ticketFormProvider.ticketCab.companyName =
         widget.ticketCab?.companyName ?? '';
     ticketFormProvider.photoChanged = false;
+
+    setState(() {});
   }
 
 //---------------------------------------------------------------------------
@@ -218,6 +222,12 @@ class _TicketModalState extends State<TicketModal> {
                 ticketFormProvider.description,
                 ticketFormProvider.photoChanged
                     ? ticketFormProvider.base64Image
+                    : '',
+                ticketFormProvider.photoChanged
+                    ? ticketFormProvider.fileName
+                    : '',
+                ticketFormProvider.photoChanged
+                    ? ticketFormProvider.fileExtension
                     : '',
               )
               .then((value) => Navigator.of(context).pop());
@@ -408,7 +418,6 @@ class _AvatarContainerState extends State<_AvatarContainer> {
                   }
 
                   setState(() {});
-
                   Navigator.of(context).pop();
                 } else {}
               },

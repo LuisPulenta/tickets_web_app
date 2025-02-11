@@ -144,6 +144,7 @@ class _TicketsViewState extends State<TicketsView> {
                           text: "Nuevo Ticket",
                           onPressed: () {
                             showModalBottomSheet(
+                              isDismissible: false,
                               backgroundColor: Colors.transparent,
                               context: context,
                               builder: (_) => const TicketModal(

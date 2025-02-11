@@ -132,8 +132,14 @@ class TicketCabsProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
-  Future newTicketCab(TicketCab ticketCab, String userLogged,
-      String companyLogged, String description, String base64Image) async {
+  Future newTicketCab(
+      TicketCab ticketCab,
+      String userLogged,
+      String companyLogged,
+      String description,
+      String base64Image,
+      String fileName,
+      String fileExtension) async {
     showLoader = true;
     notifyListeners();
 
@@ -162,6 +168,8 @@ class TicketCabsProvider extends ChangeNotifier {
           'TicketState': 0,
           'StateUserId': userLogged.id,
           'StateUserName': userLogged.fullName,
+          'FileName': base64Image != '' ? fileName : null,
+          'FileExtension': base64Image != '' ? fileExtension : null,
           'ImageArray': base64Image != '' ? base64Image : null,
         };
 

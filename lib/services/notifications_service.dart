@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsService {
   static GlobalKey<ScaffoldMessengerState> messengerKey =
@@ -60,5 +61,20 @@ class NotificationsService {
     );
 
     showDialog(context: context, builder: (_) => dialog);
+  }
+
+  //------------------------------------------------------------------------
+  static downLoadFile(final String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": "inline"
+        },
+      );
+    } else
+      // can't launch url, there is some error
+      throw "Could not launch $url";
   }
 }

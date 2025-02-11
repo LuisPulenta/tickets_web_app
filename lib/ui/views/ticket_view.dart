@@ -53,6 +53,10 @@ class _TicketViewState extends State<TicketView> {
         Provider.of<TicketFormProvider>(context, listen: false);
     ticketDets = [];
 
+    ticketFormProvider.description = '';
+
+    ticketFormProvider.base64Image = '';
+
     ticketCabsProvider.getTicketCabById(widget.id).then(
           (ticketCabDB) => setState(
             () {
@@ -568,6 +572,9 @@ class _TicketViewState extends State<TicketView> {
             Expanded(
               child: ListView(
                 children: ticketDets.map((e) {
+                  var extension = e.imageFullPath.substring(
+                      e.imageFullPath.length - 3, e.imageFullPath.length);
+
                   return Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6.0),
@@ -702,16 +709,83 @@ class _TicketViewState extends State<TicketView> {
                                   (e.image == null)
                                       ? Container()
                                       : InkWell(
-                                          onTap: () {
-                                            NotificationsService.showImage(
-                                                context, e.imageFullPath);
+                                          onTap: () async {
+                                            extension.toUpperCase() == 'PNG'
+                                                ? NotificationsService
+                                                    .showImage(context,
+                                                        e.imageFullPath)
+                                                : await NotificationsService
+                                                    .downLoadFile(
+                                                        e.imageFullPath);
                                           },
-                                          child: FadeInImage.assetNetwork(
-                                            placeholder: 'loader.gif',
-                                            image: e.imageFullPath,
-                                            width: 35,
-                                            height: 35,
-                                          ),
+                                          child: extension.toUpperCase() ==
+                                                  'PDF'
+                                              ? const Image(
+                                                  image: AssetImage('pdf.png'),
+                                                  width: 35,
+                                                  height: 35,
+                                                )
+                                              : extension.toUpperCase() == 'RAR'
+                                                  ? const Image(
+                                                      image:
+                                                          AssetImage('rar.png'),
+                                                      width: 35,
+                                                      height: 35,
+                                                    )
+                                                  : extension.toUpperCase() ==
+                                                          'ZIP'
+                                                      ? const Image(
+                                                          image: AssetImage(
+                                                              'zip.png'),
+                                                          width: 35,
+                                                          height: 35,
+                                                        )
+                                                      : extension.toUpperCase() ==
+                                                              'DOC'
+                                                          ? const Image(
+                                                              image: AssetImage(
+                                                                  'doc.png'),
+                                                              width: 35,
+                                                              height: 35,
+                                                            )
+                                                          : extension.toUpperCase() ==
+                                                                  'OCX'
+                                                              ? const Image(
+                                                                  image: AssetImage(
+                                                                      'doc.png'),
+                                                                  width: 35,
+                                                                  height: 35,
+                                                                )
+                                                              : extension.toUpperCase() ==
+                                                                      'XLS'
+                                                                  ? const Image(
+                                                                      image: AssetImage(
+                                                                          'xls.png'),
+                                                                      width: 35,
+                                                                      height:
+                                                                          35,
+                                                                    )
+                                                                  : extension.toUpperCase() ==
+                                                                          'LSX'
+                                                                      ? const Image(
+                                                                          image:
+                                                                              AssetImage('xls.png'),
+                                                                          width:
+                                                                              35,
+                                                                          height:
+                                                                              35,
+                                                                        )
+                                                                      : FadeInImage
+                                                                          .assetNetwork(
+                                                                          placeholder:
+                                                                              'loader.gif',
+                                                                          image:
+                                                                              e.imageFullPath,
+                                                                          width:
+                                                                              35,
+                                                                          height:
+                                                                              35,
+                                                                        ),
                                         ),
 
                                   SizedBox(
