@@ -25,6 +25,7 @@ class _TicketModalState extends State<TicketModal> {
   int? id;
   late Token token;
   late TicketFormProvider ticketFormProvider;
+  late SideMenuProvider sideMenuProvider;
 
 //---------------------------------------------------------------------------
   @override
@@ -37,6 +38,9 @@ class _TicketModalState extends State<TicketModal> {
     ticketFormProvider =
         Provider.of<TicketFormProvider>(context, listen: false);
 
+    final sideMenuProvider =
+        Provider.of<SideMenuProvider>(context, listen: false);
+
     ticketFormProvider.description = '';
 
     ticketFormProvider.base64Image = '';
@@ -45,6 +49,8 @@ class _TicketModalState extends State<TicketModal> {
     ticketFormProvider.ticketCab.companyName =
         widget.ticketCab?.companyName ?? '';
     ticketFormProvider.photoChanged = false;
+
+    sideMenuProvider.setAbsorbing(true);
 
     setState(() {});
   }
@@ -57,13 +63,15 @@ class _TicketModalState extends State<TicketModal> {
     final companyLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.companyName;
 
+    SideMenuProvider sideMenuProvider2 = Provider.of<SideMenuProvider>(context);
+
     return Container(
       padding: const EdgeInsets.all(20),
       height: 500,
       width: 300,
       decoration: buildBoxDecoration(),
       child: Form(
-        autovalidateMode: AutovalidateMode.always,
+        autovalidateMode: AutovalidateMode.disabled,
         key: ticketFormProvider.formKey,
         child: Column(
           children: [
@@ -82,6 +90,7 @@ class _TicketModalState extends State<TicketModal> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
+                      sideMenuProvider2.setAbsorbing(false);
                     })
               ],
             ),
@@ -207,10 +216,13 @@ class _TicketModalState extends State<TicketModal> {
   void onFormSubmit(TicketFormProvider ticketFormProvider, Token token,
       String userLogged, String companyLogged) async {
     final isValid = ticketFormProvider.validateForm();
+    SideMenuProvider sideMenuProvider2 =
+        Provider.of<SideMenuProvider>(context, listen: false);
     if (isValid) {
       try {
         //Nuevo Ticket
         if (ticketFormProvider.ticketCab.id == 0) {
+          sideMenuProvider2.setAbsorbing(false);
           final ticketsProvider =
               Provider.of<TicketCabsProvider>(context, listen: false);
           await ticketsProvider

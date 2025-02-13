@@ -5,13 +5,25 @@ class SideMenuProvider extends ChangeNotifier {
   static bool isOpen = false;
 
   String _currentPage = '/dashboard';
+  bool _absorbing = false;
 
   String get currentPage {
     return _currentPage;
   }
 
+  bool get absorbing {
+    return _absorbing;
+  }
+
   void setCurrentPageUrl(String routeName) {
     _currentPage = routeName;
+    Future.delayed(const Duration(milliseconds: 100), () {
+      notifyListeners();
+    });
+  }
+
+  void setAbsorbing(bool value) {
+    _absorbing = value;
     Future.delayed(const Duration(milliseconds: 100), () {
       notifyListeners();
     });
