@@ -57,37 +57,39 @@ class _TicketViewState extends State<TicketView> {
 
     ticketFormProvider.base64Image = '';
 
-    ticketCabsProvider.getTicketCabById(widget.id).then(
-          (ticketCabDB) => setState(
-            () {
-              ticketCab = ticketCabDB;
-              ticketDets =
-                  ticketCab!.ticketDets != null ? ticketCab!.ticketDets! : [];
+    ticketCabsProvider.getTicketCabById(widget.id).then((ticketCabDB) {
+      setState(
+        () {
+          ticketCab = ticketCabDB;
+          ticketDets =
+              ticketCab!.ticketDets != null ? ticketCab!.ticketDets! : [];
+          if (ticketCab!.ticketState == 0) {
+            ticketStateName = "Enviado";
+          }
+          if (ticketCab!.ticketState == 1) {
+            ticketStateName = "Devuelto";
+          }
 
-              if (ticketCab!.ticketState == 1) {
-                ticketStateName = "Devuelto";
-              }
+          if (ticketCab!.ticketState == 2) {
+            ticketStateName = "Asignado";
+          }
 
-              if (ticketCab!.ticketState == 2) {
-                ticketStateName = "Asignado";
-              }
+          if (ticketCab!.ticketState == 3) {
+            ticketStateName = "En Curso";
+          }
 
-              if (ticketCab!.ticketState == 3) {
-                ticketStateName = "En Curso";
-              }
-
-              if (ticketCab!.ticketState == 4) {
-                ticketStateName = "Resuelto";
-              }
-              if (ticketCab!.ticketState == 5) {
-                ticketStateName = "Derivado";
-              }
-            },
-          ),
-        );
-    _getUsers();
-    showLoader = false;
-    setState(() {});
+          if (ticketCab!.ticketState == 4) {
+            ticketStateName = "Resuelto";
+          }
+          if (ticketCab!.ticketState == 5) {
+            ticketStateName = "Derivado";
+          }
+        },
+      );
+      _getUsers();
+      showLoader = false;
+      setState(() {});
+    });
   }
 
   //--------------------------------------------------------------------
@@ -405,7 +407,7 @@ class _TicketViewState extends State<TicketView> {
                           ),
                           Expanded(
                             child: Text(
-                              'TICKET N°: ${ticketCab?.id} - ${ticketCab?.title}',
+                              'TICKET N°: ${ticketCab?.id} - ${ticketCab?.title} - Detalles: ${ticketDets.length}',
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 28,
@@ -818,21 +820,14 @@ class _TicketViewState extends State<TicketView> {
             //***********************************************************************
 
             //---------- Formulario para generar nuevo Ticket Detalle ----------
-            ((userTypeLogged == "User" && ticketCab!.ticketState == 1) ||
-                    (userTypeLogged == "User" && ticketCab!.ticketState == 5) ||
-                    ((userTypeLogged == "Admin" &&
-                            ticketCab!.ticketState == 0) ||
-                        (userTypeLogged == "AdminKP" &&
-                            ticketCab!.ticketState == 2) ||
-                        (userTypeLogged == "AdminKP" &&
-                            ticketCab!.ticketState == 3)) ||
+            ((userTypeLogged == "User" &&
+                        (ticketCab!.ticketState == 1 ||
+                            (ticketCab!.ticketState == 5 &&
+                                ticketCab!.userAsignName == userLogged))) ||
                     (userTypeLogged == "Admin" &&
-                        ticketCab!.ticketState == 0) ||
+                        (ticketCab!.ticketState == 0)) ||
                     (userTypeLogged == "AdminKP" &&
-                        ticketCab!.ticketState == 2) ||
-                    ((userTypeLogged == "AdminKP" &&
-                            ticketCab!.ticketState == 2) ||
-                        (userTypeLogged == "AdminKP" &&
+                        (ticketCab!.ticketState == 2 ||
                             ticketCab!.ticketState == 3)))
                 ? Card(
                     shape: RoundedRectangleBorder(
