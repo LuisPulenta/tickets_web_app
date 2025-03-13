@@ -48,7 +48,15 @@ class Sidebar extends StatelessWidget {
               onPressed: () => navigateTo(Flurorouter.dashboardRoute),
             ),
             userType == 0
-                ? const TextSeparator(text: 'Empresas y Usuarios')
+                ? const TextSeparator(text: 'Tablas Maestras')
+                : Container(),
+            userType == 0
+                ? MenuItem(
+                    text: 'Categorías',
+                    icon: Icons.category,
+                    //isActive: sideMenuProvider.currentPage == Flurorouter.companiesRoute,
+                    onPressed: () => navigateTo(Flurorouter.categoriesRoute),
+                  )
                 : Container(),
             userType == 0
                 ? MenuItem(

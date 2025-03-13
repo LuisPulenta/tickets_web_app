@@ -6,3 +6,5 @@ export 'package:tickets_web_app/models/auth_response.dart';
 export 'package:tickets_web_app/models/company.dart';
 export 'package:tickets_web_app/models/token.dart';
 export 'package:tickets_web_app/models/user.dart';
+export 'package:tickets_web_app/models/category.dart';
+export 'package:tickets_web_app/models/subcategory.dart';

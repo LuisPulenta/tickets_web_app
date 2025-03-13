@@ -9,15 +9,15 @@ class NavbarAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+    final userLogged = Provider.of<AuthProvider>(context, listen: false).user;
 
     String? companyLogo = LocalStorage.prefs.getString('companyLogo');
 
     return Row(
       children: [
         LinkText(
-            text: userLogged,
+            text:
+                '${userLogged!.fullName} - ${userLogged.email} - ${userLogged.userTypeName}',
             onPressed: () =>
                 NavigationServices.navigateTo('/dashboard/editUser')),
         const SizedBox(

@@ -2,6 +2,8 @@ export 'package:tickets_web_app/providers/tickets_cabs_provider.dart';
 export 'package:tickets_web_app/providers/change_password_form_provider.dart';
 export 'package:tickets_web_app/providers/edit_user_form_provider.dart';
 export 'package:tickets_web_app/providers/auth_provider.dart';
+export 'package:tickets_web_app/providers/categories_provider.dart';
+export 'package:tickets_web_app/providers/category_form_provider.dart';
 export 'package:tickets_web_app/providers/companies_provider.dart';
 export 'package:tickets_web_app/providers/company_form_provider.dart';
 export 'package:tickets_web_app/providers/login_form_provider.dart';

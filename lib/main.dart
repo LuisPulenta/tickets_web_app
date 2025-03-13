@@ -30,10 +30,16 @@ class AppState extends StatelessWidget {
           create: (_) => SideMenuProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => CategoriesProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => CompaniesProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => UsersProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CategoryFormProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => CompanyFormProvider(),
