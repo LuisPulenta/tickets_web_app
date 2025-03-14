@@ -1,29 +1,29 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/category.dart';
-import 'package:tickets_web_app/models/token.dart';
+import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/services/services.dart';
 import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-
 import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/labels/custom_labels.dart';
 
-class CategoryModal extends StatefulWidget {
+class SubcategoryModal extends StatefulWidget {
+  final Subcategory? subcategory;
   final Category? category;
 
-  const CategoryModal({Key? key, this.category}) : super(key: key);
+  const SubcategoryModal({Key? key, this.subcategory, this.category})
+      : super(key: key);
 
   @override
-  State<CategoryModal> createState() => _CategoryModalState();
+  State<SubcategoryModal> createState() => _SubcategoryModalState();
 }
 
-class _CategoryModalState extends State<CategoryModal> {
+class _SubcategoryModalState extends State<SubcategoryModal> {
 //---------------------------------------------------------------------------
   int? id;
   late Token token;
-  late CategoryFormProvider categoryFormProvider;
+  late SubcategoryFormProvider subcategoryFormProvider;
 
 //---------------------------------------------------------------------------
   @override
@@ -33,11 +33,11 @@ class _CategoryModalState extends State<CategoryModal> {
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
 
-    categoryFormProvider =
-        Provider.of<CategoryFormProvider>(context, listen: false);
+    subcategoryFormProvider =
+        Provider.of<SubcategoryFormProvider>(context, listen: false);
 
-    categoryFormProvider.id = widget.category?.id ?? 0;
-    categoryFormProvider.name = widget.category?.name ?? '';
+    subcategoryFormProvider.id = widget.subcategory?.id ?? 0;
+    subcategoryFormProvider.name = widget.subcategory?.name ?? '';
   }
 
 //---------------------------------------------------------------------------
@@ -50,14 +50,14 @@ class _CategoryModalState extends State<CategoryModal> {
       decoration: buildBoxDecoration(),
       child: Form(
         autovalidateMode: AutovalidateMode.always,
-        key: categoryFormProvider.formKey,
+        key: subcategoryFormProvider.formKey,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.category?.name ?? 'Nueva Categoría',
+                  widget.subcategory?.name ?? 'Nueva Subcategoría',
                   style: CustomLabels.h1.copyWith(color: Colors.white),
                 ),
                 IconButton(
@@ -83,10 +83,10 @@ class _CategoryModalState extends State<CategoryModal> {
                 Expanded(
                   child: TextFormField(
                     onFieldSubmitted: (_) =>
-                        onFormSubmit(categoryFormProvider, token),
+                        onFormSubmit(subcategoryFormProvider, token),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Ingrese Nombre de Categoría";
+                        return "Ingrese Nombre de Subcategoría";
                       }
                       if (value.length < 3) {
                         return "Mínimo 3 caracteres";
@@ -97,18 +97,18 @@ class _CategoryModalState extends State<CategoryModal> {
                       return null;
                     },
                     onChanged: (value) {
-                      categoryFormProvider.name = value;
+                      subcategoryFormProvider.name = value;
                     },
-                    initialValue: widget.category?.name ?? '',
+                    initialValue: widget.subcategory?.name ?? '',
                     decoration: CustomInput.loginInputDecoration(
-                      hint: 'Nombre de la Categoría',
-                      label: 'Categoría',
+                      hint: 'Nombre de la Subcategoría',
+                      label: 'Subcategoría',
                       icon: Icons.category_outlined,
                     ),
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-                categoryFormProvider.id > 0 ? const Spacer() : Container(),
+                subcategoryFormProvider.id > 0 ? const Spacer() : Container(),
                 const Spacer(),
               ],
             ),
@@ -117,7 +117,7 @@ class _CategoryModalState extends State<CategoryModal> {
               alignment: Alignment.center,
               child: CustomOutlinedButton(
                 onPressed: () async {
-                  onFormSubmit(categoryFormProvider, token);
+                  onFormSubmit(subcategoryFormProvider, token);
                 },
                 text: "Guardar",
                 color: Colors.white,
@@ -131,31 +131,34 @@ class _CategoryModalState extends State<CategoryModal> {
 
   //--------------------------------------------------------------------
   void onFormSubmit(
-      CategoryFormProvider categoryFormProvider, Token token) async {
-    final isValid = categoryFormProvider.validateForm();
+      SubcategoryFormProvider subcategoryFormProvider, Token token) async {
+    final isValid = subcategoryFormProvider.validateForm();
     if (isValid) {
       try {
         //Nueva Empresa
-        if (categoryFormProvider.id == 0) {
-          final categoriesProvider =
-              Provider.of<CategoriesProvider>(context, listen: false);
-          await categoriesProvider
-              .newCategory(categoryFormProvider.name)
+        if (subcategoryFormProvider.id == 0) {
+          final subcategoriesProvider =
+              Provider.of<SubcategoriesProvider>(context, listen: false);
+          await subcategoriesProvider
+              .newSubcategory(subcategoryFormProvider.name,
+                  widget.category!.id.toString(), widget.category!.name)
               .then((value) => Navigator.of(context).pop());
         } else {
           //Editar Empresa
-          final categoriesProvider =
-              Provider.of<CategoriesProvider>(context, listen: false);
-          await categoriesProvider
-              .updateCategory(
-                categoryFormProvider.id,
-                categoryFormProvider.name,
+          final subcategoriesProvider =
+              Provider.of<SubcategoriesProvider>(context, listen: false);
+          await subcategoriesProvider
+              .updateSubcategory(
+                subcategoryFormProvider.id,
+                subcategoryFormProvider.name,
+                widget.category!.id.toString(),
+                widget.category!.name,
               )
               .then((value) => Navigator.of(context).pop());
         }
       } catch (e) {
         NotificationsService.showSnackbarError(
-            "No se pudo guardar la Categoría");
+            "No se pudo guardar la Subcategoría");
       }
     }
   }

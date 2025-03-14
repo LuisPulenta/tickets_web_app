@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CategoryFormProvider extends ChangeNotifier {
+class SubcategoryFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   int id = 0;

@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tickets_web_app/datatables/subcategories_datasource.dart';
 import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/services/local_storage.dart';
-import 'package:tickets_web_app/services/navigation_services.dart';
+import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
+import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
+import 'package:tickets_web_app/ui/modals/subcategory_modal.dart';
 
 import '../../models/models.dart';
 
@@ -18,8 +21,7 @@ class CategoryView extends StatefulWidget {
 
 class _CategoryViewState extends State<CategoryView> {
   //----------------------------------------------------------------------
-  Category? category;
-  late List<Subcategory> subcategories;
+  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool showLoader = false;
   late Token token;
   String userTypeLogged = "";
@@ -35,259 +37,142 @@ class _CategoryViewState extends State<CategoryView> {
     userTypeLogged = token.user.userTypeName;
 
     setState(() {});
-    final categoriesProvider =
-        Provider.of<CategoriesProvider>(context, listen: false);
+    getCategory();
 
-    subcategories = [];
-
-    categoriesProvider.getCategoryById(widget.id).then(
-          (categoryDB) => setState(
-            () {
-              category = categoryDB;
-              subcategories = category!.subcategories != null
-                  ? category!.subcategories!
-                  : [];
-            },
-          ),
-        );
     showLoader = false;
     setState(() {});
   }
 
-  ///----------------------------------------------------------------------
+  //-------------------- getCategory ----------------------------
+
+  void getCategory() {
+    final categoriesProvider =
+        Provider.of<CategoriesProvider>(context, listen: false);
+    final subcategoriesProvider =
+        Provider.of<SubcategoriesProvider>(context, listen: false);
+    categoriesProvider.getCategoryById(widget.id).then(
+          (categoryDB) => setState(
+            () {
+              subcategoriesProvider.category = categoryDB;
+              subcategoriesProvider.subcategories =
+                  subcategoriesProvider.category!.subcategories!;
+            },
+          ),
+        );
+  }
+
+  //-------------------- Pantalla ----------------------------
   @override
   Widget build(BuildContext context) {
-    return showLoader
-        ? const Center(child: LoaderComponent(text: 'Por favor espere...'))
-        : _getContent();
-  }
-
-  //------------------------------ _getContent --------------------------
-  Widget _getContent() {
-    return Column(
-      children: <Widget>[
-        subcategories.isEmpty
-            ? Expanded(child: _noContent())
-            : Expanded(child: _getListView()),
-      ],
-    );
-  }
-
-  //------------------------------ _noContent -----------------------------
-  Widget _noContent() {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      child: const Center(
-        child: Text(
-          'No hay subcategorías en esta categoría',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-
-  //------------------------------ _getListView ---------------------------
-
-  Widget _getListView() {
-    final userLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.fullName;
-    final companyLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.companyName;
+    final categoriesProvider = Provider.of<CategoriesProvider>(context);
+    final subcategoriesProvider = Provider.of<SubcategoriesProvider>(context);
+    List<Subcategory> subcategories =
+        Provider.of<SubcategoriesProvider>(context).subcategories;
     final size = MediaQuery.of(context).size;
-
-    TextStyle titleStyle = const TextStyle(
-        color: Color.fromARGB(255, 3, 30, 184),
-        fontSize: 12,
-        fontWeight: FontWeight.bold);
-
-    TextStyle dataStyle = const TextStyle(
-      color: Colors.black,
-      fontSize: 12,
-    );
-
-    return Stack(
-      children: [
-        Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 130,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6.0),
-                  side: const BorderSide(
-                    color: Colors.black,
-                    width: 0.5,
-                  ),
-                ),
-                color: const Color.fromARGB(255, 12, 133, 160),
-                shadowColor: Colors.white,
-                elevation: 10,
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                child: Center(
-                  child: Stack(
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 300,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const Text('Categoría: ',
-                                          textAlign: TextAlign.start,
-                                          style: TextStyle(
-                                              color: Colors.white60,
-                                              fontSize: 14)),
-                                      Expanded(
-                                        child: Text(category!.name,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 14)),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 60,
-                            child: Center(
-                              child: Container(
-                                margin: const EdgeInsetsDirectional.only(
-                                    start: 10.0, end: 10.0),
-                                width: 0.5,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Positioned(
-                        top: 5,
-                        right: 10,
-                        child: InkWell(
-                          onTap: () {
-                            NavigationServices.replaceTo(
-                                '/dashboard/categories');
-                          },
-                          child: const Text("X",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold)),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: ListView(
+        physics: const ClampingScrollPhysics(),
+        children: [
+          Stack(
+            children: [
+              PaginatedDataTable(
+                sortColumnIndex: subcategoriesProvider.sortColumnIndex,
+                columns: [
+                  const DataColumn(
+                      label: Text("ID",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: const Text("Nombre",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onSort: (colIndex, _) {
+                        subcategoriesProvider.sortColumnIndex = colIndex;
+                        subcategoriesProvider.sort<String>((user) => user.name);
+                      }),
+                  const DataColumn(
+                      label: Text("Acciones",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                ],
+                source: SubcategoriesDTS(subcategories, context, widget.id,
+                    subcategoriesProvider.category!),
+                header: Row(
+                  children: [
+                    Text(
+                      "Categoría: ${subcategoriesProvider.category!.name}",
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    const Text(
+                      "Subcategorías",
+                      maxLines: 1,
+                    ),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    //Search input
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 250),
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey.withOpacity(0.2),
                         ),
-                      )
-                    ],
-                  ),
+                        child: TextField(
+                          decoration: CustomInput.searchInputDecoration(
+                              hint: "Buscar...", icon: Icons.search_outlined),
+                          onSubmitted: (value) {
+                            categoriesProvider!.search = value;
+                            categoriesProvider!.filter();
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 50,
+                    ),
+                  ],
                 ),
+                rowsPerPage: _rowsPerPage,
+                onRowsPerPageChanged: (value) {
+                  _rowsPerPage = value ?? 10;
+                  setState(() {});
+                },
+                actions: [
+                  CustomIconButton(
+                    icon: Icons.add_outlined,
+                    text: "Nueva Subcategoría",
+                    onPressed: () async {
+                      await showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (_) => SubcategoryModal(
+                          subcategory: null,
+                          category: subcategoriesProvider.category!,
+                        ),
+                      );
+                      getCategory();
+                    },
+                  ),
+                ],
               ),
-            ),
-            Expanded(
-              child: ListView(
-                children: subcategories.map((e) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.0),
-                      side: const BorderSide(
-                        color: Colors.black,
-                        width: 0.5,
-                      ),
-                    ),
-                    color: Colors.white,
-                    shadowColor: Colors.white,
-                    elevation: 10,
-                    margin: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-                    child: Container(
-                      margin: const EdgeInsets.all(0),
-                      padding: const EdgeInsets.all(5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 200,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text('Id: ', style: titleStyle),
-                                            Expanded(
-                                              child: Text(e.id.toString(),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: dataStyle),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 60,
-                                    child: Center(
-                                      child: Container(
-                                        margin:
-                                            const EdgeInsetsDirectional.only(
-                                                start: 10.0, end: 10.0),
-                                        width: 0.5,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                                width: 80,
-                                                child: Text('Nombre: ',
-                                                    style: titleStyle)),
-                                            SizedBox(
-                                              width: 600,
-                                              child: SelectableText(e.name,
-                                                  style: dataStyle),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-        ),
-      ],
+              showLoader
+                  ? Positioned(
+                      left: size.width * 0.5 - 300,
+                      top: size.height * 0.5 - 50,
+                      child: const LoaderComponent(
+                        text: 'Cargando Subcategorías...',
+                      ))
+                  : Container()
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

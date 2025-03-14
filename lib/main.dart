@@ -42,6 +42,12 @@ class AppState extends StatelessWidget {
           create: (_) => CategoryFormProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => SubcategoryFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SubcategoriesProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => CompanyFormProvider(),
         ),
         ChangeNotifierProvider(

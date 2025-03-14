@@ -4,6 +4,8 @@ export 'package:tickets_web_app/providers/edit_user_form_provider.dart';
 export 'package:tickets_web_app/providers/auth_provider.dart';
 export 'package:tickets_web_app/providers/categories_provider.dart';
 export 'package:tickets_web_app/providers/category_form_provider.dart';
+export 'package:tickets_web_app/providers/subcategory_form_provider.dart';
+export 'package:tickets_web_app/providers/subcategories_provider.dart';
 export 'package:tickets_web_app/providers/companies_provider.dart';
 export 'package:tickets_web_app/providers/company_form_provider.dart';
 export 'package:tickets_web_app/providers/login_form_provider.dart';
