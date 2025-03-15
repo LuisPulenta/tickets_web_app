@@ -103,7 +103,7 @@ class _TicketModalState extends State<TicketModal> {
               color: Colors.white.withOpacity(0.3),
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             //----------------- Fila Asunto y Descripción - Imagen ----------------------
             Row(
@@ -125,7 +125,7 @@ class _TicketModalState extends State<TicketModal> {
                         ],
                       ),
                       const SizedBox(
-                        height: 25,
+                        height: 15,
                       ),
                       Row(
                         children: [
@@ -133,10 +133,11 @@ class _TicketModalState extends State<TicketModal> {
                             width: 600,
                             child: TextFormField(
                               onFieldSubmitted: (_) => onFormSubmit(
-                                  ticketFormProvider,
-                                  token,
-                                  userLogged,
-                                  companyLogged),
+                                ticketFormProvider,
+                                token,
+                                userLogged,
+                                companyLogged,
+                              ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return "Ingrese Asunto";
@@ -165,7 +166,7 @@ class _TicketModalState extends State<TicketModal> {
                         ],
                       ),
                       const SizedBox(
-                        height: 25,
+                        height: 15,
                       ),
                       SizedBox(
                         height: 100,
@@ -269,10 +270,20 @@ class _TicketModalState extends State<TicketModal> {
               onChanged: (option) {
                 setState(() {
                   ticketFormProvider.categoryId = option!;
+                  ticketFormProvider.ticketCab.categoryId = option;
+                  for (Category category in _categories) {
+                    if (category.id == option) {
+                      ticketFormProvider.categoryName = category.name;
+                      ticketFormProvider.ticketCab.categoryName = category.name;
+                    }
+                  }
+                  ticketFormProvider.subcategoryId = 0;
                   _getSubcategories(option);
                 });
               },
               decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
                 prefixIcon:
                     Icon(Icons.category, color: Colors.white.withOpacity(0.5)),
                 labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
@@ -347,9 +358,19 @@ class _TicketModalState extends State<TicketModal> {
               onChanged: (option) {
                 setState(() {
                   ticketFormProvider.subcategoryId = option!;
+                  ticketFormProvider.ticketCab.subcategoryId = option;
+                  for (Subcategory subcategory in _subcategories) {
+                    if (subcategory.id == option) {
+                      ticketFormProvider.subcategoryName = subcategory.name;
+                      ticketFormProvider.ticketCab.subcategoryName =
+                          subcategory.name;
+                    }
+                  }
                 });
               },
               decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
                 prefixIcon: Icon(Icons.category_outlined,
                     color: Colors.white.withOpacity(0.5)),
                 labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),

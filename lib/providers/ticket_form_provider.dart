@@ -14,9 +14,9 @@ class TicketFormProvider extends ChangeNotifier {
   String userAsign = '';
   String userAsignName = '';
   int categoryId = 0;
-  String category = '';
+  String categoryName = '';
   int subcategoryId = 0;
-  String subcategory = '';
+  String subcategoryName = '';
 
   TicketCab ticketCab = TicketCab(
       id: 0,

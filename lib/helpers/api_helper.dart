@@ -843,7 +843,7 @@ class ApiHelper {
           message:
               'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
     }
-    var url = Uri.parse('${Constants.apiUrl}/Categories/Combo/$categoryId');
+    var url = Uri.parse('${Constants.apiUrl}/Subcategories/Combo/$categoryId');
     var response = await http.get(
       url,
       headers: {

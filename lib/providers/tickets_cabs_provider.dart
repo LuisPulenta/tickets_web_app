@@ -154,6 +154,10 @@ class TicketCabsProvider extends ChangeNotifier {
       'CompanyId': userLogged.companyId,
       'CompanyName': userLogged.companyName,
       'Title': ticketCab.title,
+      'CategoryId': ticketCab.categoryId,
+      'CategoryName': ticketCab.categoryName,
+      'SubcategoryId': ticketCab.subcategoryId,
+      'SubcategoryName': ticketCab.subcategoryName,
     };
 
     try {

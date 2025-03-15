@@ -32,6 +32,18 @@ class TicketCabsDTS extends DataTableSource {
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
+          Text(ticketCab.categoryName,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 12, 5, 228),
+                  fontWeight: FontWeight.bold)),
+        ),
+        DataCell(
+          Text(ticketCab.subcategoryName,
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 12, 5, 228),
+                  fontWeight: FontWeight.bold)),
+        ),
+        DataCell(
           Text(ticketCab.title,
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),

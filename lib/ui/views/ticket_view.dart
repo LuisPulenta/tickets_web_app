@@ -390,6 +390,32 @@ class _TicketViewState extends State<TicketView> {
                                               fontSize: 14)),
                                     ],
                                   ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Categoría: ',
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Text(ticketCab!.categoryName,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14)),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Subcategoría: ',
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Text(ticketCab!.subcategoryName,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14)),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
