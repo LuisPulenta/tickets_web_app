@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tickets_web_app/helpers/api_helper.dart';
 import 'package:tickets_web_app/models/models.dart';
 import 'package:tickets_web_app/providers/providers.dart';
 import 'package:tickets_web_app/services/services.dart';
@@ -26,6 +27,8 @@ class _TicketModalState extends State<TicketModal> {
   late Token token;
   late TicketFormProvider ticketFormProvider;
   late SideMenuProvider sideMenuProvider;
+  List<Category> _categories = [];
+  List<Subcategory> _subcategories = [];
 
 //---------------------------------------------------------------------------
   @override
@@ -51,6 +54,8 @@ class _TicketModalState extends State<TicketModal> {
     ticketFormProvider.photoChanged = false;
 
     sideMenuProvider.setAbsorbing(true);
+
+    _getCategories();
 
     setState(() {});
   }
@@ -106,6 +111,22 @@ class _TicketModalState extends State<TicketModal> {
                 Expanded(
                   child: Column(
                     children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _showCategory(),
+                          ),
+                          const SizedBox(
+                            width: 50,
+                          ),
+                          Expanded(
+                            child: _showSubcategory(),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
                       Row(
                         children: [
                           SizedBox(
@@ -210,6 +231,160 @@ class _TicketModalState extends State<TicketModal> {
         ),
       ),
     );
+  }
+
+  //--------------------------------------------------------------------
+  Future<void> _getCategories() async {
+    Response response = await ApiHelper.getCategoriesCombo();
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError("Error al cargar las Categorías");
+      return;
+    }
+
+    setState(() {
+      _categories = response.result;
+    });
+  }
+
+//---------------------------------------------------------------------------
+  Widget _showCategory() {
+    return Container(
+      child: _categories.isEmpty
+          ? const Text('Cargando Categorías...')
+          : DropdownButtonFormField(
+              validator: (value) {
+                if (value == 0) {
+                  return "Seleccione una Categoría...";
+                }
+                return null;
+              },
+              dropdownColor: const Color(0xff0f2041),
+              isExpanded: true,
+              isDense: true,
+              style:
+                  TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 16),
+              items: _getComboCategories(),
+              value: ticketFormProvider.categoryId,
+              onChanged: (option) {
+                setState(() {
+                  ticketFormProvider.categoryId = option!;
+                  _getSubcategories(option);
+                });
+              },
+              decoration: InputDecoration(
+                prefixIcon:
+                    Icon(Icons.category, color: Colors.white.withOpacity(0.5)),
+                labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                hintText: 'Seleccione una Categoría...',
+                labelText: 'Categoría',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+  //---------------------------------------------------------------------------
+  List<DropdownMenuItem<int>> _getComboCategories() {
+    List<DropdownMenuItem<int>> list = [];
+    list.add(const DropdownMenuItem(
+      value: 0,
+      child: Text('Seleccione una Categoría...'),
+    ));
+
+    for (var category in _categories) {
+      list.add(DropdownMenuItem(
+        value: category.id,
+        child: Text(category.name),
+      ));
+    }
+    return list;
+  }
+
+  //--------------------------------------------------------------------
+  Future<void> _getSubcategories(int categoryId) async {
+    Response response = await ApiHelper.getSubcategoriesCombo(categoryId);
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError(
+          "Error al cargar las Subcategorías");
+      return;
+    }
+
+    setState(() {
+      _subcategories = response.result;
+    });
+  }
+
+  //---------------------------------------------------------------------------
+  Widget _showSubcategory() {
+    return Container(
+      child: _categories.isEmpty
+          ? const Text('Cargando Subcategorías...')
+          : DropdownButtonFormField(
+              validator: (value) {
+                if (value == 0) {
+                  return "Seleccione una Subcategoría...";
+                }
+                return null;
+              },
+              dropdownColor: const Color(0xff0f2041),
+              isExpanded: true,
+              isDense: true,
+              style:
+                  TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 16),
+              items: _getComboSubcategories(),
+              value: ticketFormProvider.subcategoryId,
+              onChanged: (option) {
+                setState(() {
+                  ticketFormProvider.subcategoryId = option!;
+                });
+              },
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.category_outlined,
+                    color: Colors.white.withOpacity(0.5)),
+                labelStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                hintText: 'Seleccione una Subcategoría...',
+                labelText: 'Subcategoría',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+  //---------------------------------------------------------------------------
+  List<DropdownMenuItem<int>> _getComboSubcategories() {
+    List<DropdownMenuItem<int>> list = [];
+    list.add(const DropdownMenuItem(
+      value: 0,
+      child: Text('Seleccione una Subcategoría...'),
+    ));
+
+    for (var subcategory in _subcategories) {
+      list.add(DropdownMenuItem(
+        value: subcategory.id,
+        child: Text(subcategory.name),
+      ));
+    }
+    return list;
   }
 
   //--------------------------------------------------------------------

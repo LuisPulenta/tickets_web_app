@@ -15,6 +15,10 @@ class TicketCab {
   String createUserName;
   int companyId;
   String companyName;
+  int categoryId;
+  String categoryName;
+  int subcategoryId;
+  String subcategoryName;
   String title;
   int ticketState;
   dynamic asignDate;
@@ -32,6 +36,10 @@ class TicketCab {
     required this.createUserName,
     required this.companyId,
     required this.companyName,
+    required this.categoryId,
+    required this.categoryName,
+    required this.subcategoryId,
+    required this.subcategoryName,
     required this.title,
     required this.ticketState,
     required this.asignDate,
@@ -50,6 +58,10 @@ class TicketCab {
         createUserName: json["createUserName"],
         companyId: json["companyId"],
         companyName: json["companyName"],
+        categoryId: json["categoryId"],
+        categoryName: json["categoryName"],
+        subcategoryId: json["subcategoryId"],
+        subcategoryName: json["subcategoryName"],
         title: json["title"],
         ticketState: json["ticketState"],
         asignDate: json["asignDate"],
@@ -71,6 +83,10 @@ class TicketCab {
         "createUserName": createUserName,
         "companyId": companyId,
         "companyName": companyName,
+        "categoryId": categoryId,
+        "categoryName": categoryName,
+        "subcategoryId": subcategoryId,
+        "subcategoryName": subcategoryName,
         "title": title,
         "ticketState": ticketState,
         "asignDate": asignDate,

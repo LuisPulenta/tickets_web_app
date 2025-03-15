@@ -13,6 +13,10 @@ class TicketFormProvider extends ChangeNotifier {
   String base64Image = '';
   String userAsign = '';
   String userAsignName = '';
+  int categoryId = 0;
+  String category = '';
+  int subcategoryId = 0;
+  String subcategory = '';
 
   TicketCab ticketCab = TicketCab(
       id: 0,
@@ -21,6 +25,10 @@ class TicketFormProvider extends ChangeNotifier {
       createUserName: '',
       companyId: 0,
       companyName: '',
+      categoryId: 0,
+      categoryName: '',
+      subcategoryId: 0,
+      subcategoryName: '',
       title: '',
       ticketState: 0,
       asignDate: '',
