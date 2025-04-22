@@ -48,6 +48,10 @@ class _TicketModalState extends State<TicketModal> {
 
     ticketFormProvider.base64Image = '';
 
+    ticketFormProvider.categoryId = 0;
+
+    ticketFormProvider.subcategoryId = 0;
+
     ticketFormProvider.ticketCab.id = widget.ticketCab?.id ?? 0;
     ticketFormProvider.ticketCab.companyName =
         widget.ticketCab?.companyName ?? '';
@@ -222,7 +226,11 @@ class _TicketModalState extends State<TicketModal> {
               child: CustomOutlinedButton(
                 onPressed: () async {
                   onFormSubmit(
-                      ticketFormProvider, token, userLogged, companyLogged);
+                    ticketFormProvider,
+                    token,
+                    userLogged,
+                    companyLogged,
+                  );
                 },
                 text: "Guardar",
                 color: Colors.white,
@@ -409,8 +417,12 @@ class _TicketModalState extends State<TicketModal> {
   }
 
   //--------------------------------------------------------------------
-  void onFormSubmit(TicketFormProvider ticketFormProvider, Token token,
-      String userLogged, String companyLogged) async {
+  void onFormSubmit(
+    TicketFormProvider ticketFormProvider,
+    Token token,
+    String userLogged,
+    String companyLogged,
+  ) async {
     final isValid = ticketFormProvider.validateForm();
     SideMenuProvider sideMenuProvider2 =
         Provider.of<SideMenuProvider>(context, listen: false);

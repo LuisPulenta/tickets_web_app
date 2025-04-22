@@ -36,11 +36,19 @@ class _TicketViewState extends State<TicketView> {
   List<User> _users = [];
   String userIdSelected = "";
   String userNameSelected = "";
+  String userLogged = "";
+  String companyLogged = "";
 
 //----------------------------------------------------------------------
   @override
   void initState() {
     super.initState();
+
+    userLogged =
+        Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+    companyLogged =
+        Provider.of<AuthProvider>(context, listen: false).user!.companyName;
+
     showLoader = true;
 
     final userBody = LocalStorage.prefs.getString('userBody');
@@ -129,6 +137,7 @@ class _TicketViewState extends State<TicketView> {
   //---------------------------------------------------------------------------
   Widget _showUser() {
     return Container(
+      width: 300,
       child: _users.isEmpty
           ? const Text('Cargando Usuarios...')
           : DropdownButtonFormField(
@@ -179,8 +188,12 @@ class _TicketViewState extends State<TicketView> {
   }
 
 //----------------------------------------------------------------------------------
-  void onFormSubmit(TicketFormProvider ticketFormProvider, String userLogged,
-      String companyLogged, int estado) async {
+  void onFormSubmit(
+    TicketFormProvider ticketFormProvider,
+    String userLogged,
+    String companyLogged,
+    int estado,
+  ) async {
     if (estado == 5 && userIdSelected == "") {
       NotificationsService.showSnackbarError("Debe seleccionar un Usuario");
       return;
@@ -284,14 +297,11 @@ class _TicketViewState extends State<TicketView> {
   //------------------------------ _getListView ---------------------------
 
   Widget _getListView() {
-    final userLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.fullName;
-    final companyLogged =
-        Provider.of<AuthProvider>(context, listen: false).user!.companyName;
     return Stack(
       children: [
         Column(
           children: [
+            //------------- CABECERA TICKET ---------------------
             SizedBox(
               width: double.infinity,
               height: 150,
@@ -597,7 +607,11 @@ class _TicketViewState extends State<TicketView> {
                 ),
               ),
             ),
+
+            //------------- DETALLES TICKET ---------------------
             Expanded(
+              // SizedBox(
+              //   height: 300,
               child: ListView(
                 children: ticketDets.map((e) {
                   var extension = e.imageFullPath.substring(
@@ -843,7 +857,8 @@ class _TicketViewState extends State<TicketView> {
                 }).toList(),
               ),
             ),
-            //***********************************************************************
+
+            //------------- PIE TICKET ---------------------
 
             //---------- Formulario para generar nuevo Ticket Detalle ----------
             ((userTypeLogged == "User" &&
@@ -855,212 +870,244 @@ class _TicketViewState extends State<TicketView> {
                     (userTypeLogged == "AdminKP" &&
                         (ticketCab!.ticketState == 2 ||
                             ticketCab!.ticketState == 3)))
-                ? Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6.0),
-                      side: const BorderSide(
-                        color: Colors.black,
-                        width: 0.5,
+                ? SizedBox(
+                    height: 280,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.0),
+                        side: const BorderSide(
+                          color: Colors.black,
+                          width: 0.5,
+                        ),
                       ),
-                    ),
-                    color: const Color.fromARGB(255, 12, 133, 160),
-                    shadowColor: Colors.white,
-                    elevation: 10,
-                    margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: Form(
-                      autovalidateMode: AutovalidateMode.always,
-                      key: ticketFormProvider.formKey,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        height: 100,
-                                        child: TextFormField(
-                                          keyboardType: TextInputType.multiline,
-                                          minLines: null,
-                                          maxLines: null,
-                                          expands: true,
-                                          onChanged: (value) {
-                                            ticketFormProvider.description =
-                                                value;
-                                          },
-                                          initialValue: '',
-                                          decoration:
-                                              CustomInput.loginInputDecoration(
-                                            hint: 'Descripción',
-                                            label: 'Descripción',
-                                            icon: Icons.comment,
-                                          ),
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                      color: const Color.fromARGB(255, 12, 133, 160),
+                      shadowColor: Colors.white,
+                      elevation: 10,
+                      margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Form(
+                        autovalidateMode: AutovalidateMode.always,
+                        key: ticketFormProvider.formKey,
+                        child: Column(
+                          children: [
+                            //-------------- Descripcion --------------------
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: 100,
+                                      child: TextFormField(
+                                        keyboardType: TextInputType.multiline,
+                                        minLines: null,
+                                        maxLines: null,
+                                        expands: true,
+                                        onChanged: (value) {
+                                          ticketFormProvider.description =
+                                              value;
+                                        },
+                                        initialValue: '',
+                                        decoration:
+                                            CustomInput.loginInputDecoration(
+                                          hint: 'Descripción',
+                                          label: 'Descripción',
+                                          icon: Icons.comment,
                                         ),
+                                        style: const TextStyle(
+                                            color: Colors.white),
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                                const _AvatarContainer(),
-                              ],
+                                  const _AvatarContainer(),
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            alignment: Alignment.center,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                //---------- Botón Enviar ----------
-                                (userTypeLogged == "User" &&
-                                        ticketCab!.ticketState == 1)
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: CustomOutlinedButton(
-                                          onPressed: () async {
-                                            onFormSubmit(ticketFormProvider,
-                                                userLogged, companyLogged, 0);
-                                          },
-                                          text: "Enviar",
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Container(),
-                                //---------- Botón Devolver ----------
-                                ((userTypeLogged == "User" &&
-                                            ticketCab!.ticketState == 5) ||
-                                        (userTypeLogged == "Admin" &&
-                                            ticketCab!.ticketState == 0) ||
-                                        (userTypeLogged == "AdminKP" &&
-                                            ticketCab!.ticketState == 2) ||
-                                        (userTypeLogged == "AdminKP" &&
-                                            ticketCab!.ticketState == 3))
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: CustomOutlinedButton(
-                                          onPressed: () async {
-                                            onFormSubmit(ticketFormProvider,
-                                                userLogged, companyLogged, 1);
-                                          },
-                                          text: "Devolver",
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Container(),
+                            //------------ Botones ---------------
+                            Container(
+                              height: 60,
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  //---------- Botón Enviar ----------
+                                  (userTypeLogged == "User" &&
+                                          ticketCab!.ticketState == 1)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    0);
+                                              },
+                                              text: "Enviar",
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                  //---------- Botón Devolver ----------
+                                  ((userTypeLogged == "User" &&
+                                              ticketCab!.ticketState == 5) ||
+                                          (userTypeLogged == "Admin" &&
+                                              ticketCab!.ticketState == 0) ||
+                                          (userTypeLogged == "AdminKP" &&
+                                              ticketCab!.ticketState == 2) ||
+                                          (userTypeLogged == "AdminKP" &&
+                                              ticketCab!.ticketState == 3))
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    1);
+                                              },
+                                              text: "Devolver",
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                  (userTypeLogged == "Admin" &&
+                                          ticketCab!.ticketState == 0)
+                                      ? const Text('-',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold))
+                                      : Container(),
 
-                                (userTypeLogged == "Admin" &&
-                                        ticketCab!.ticketState == 0)
-                                    ? const Text('-',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.bold))
-                                    : Container(),
+                                  //---------- Botón Asignar ----------
+                                  (userTypeLogged == "Admin" &&
+                                          ticketCab!.ticketState == 0)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    2);
+                                              },
+                                              text: "Asignar",
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
 
-                                //---------- Botón Asignar ----------
-                                (userTypeLogged == "Admin" &&
-                                        ticketCab!.ticketState == 0)
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: CustomOutlinedButton(
-                                          onPressed: () async {
-                                            onFormSubmit(ticketFormProvider,
-                                                userLogged, companyLogged, 2);
-                                          },
-                                          text: "Asignar",
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Container(),
+                                  (userTypeLogged == "Admin" &&
+                                          ticketCab!.ticketState == 0)
+                                      ? const Text('-',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold))
+                                      : Container(),
+                                  //---------- Botón Derivar ----------
 
-                                (userTypeLogged == "Admin" &&
-                                        ticketCab!.ticketState == 0)
-                                    ? const Text('-   ',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.bold))
-                                    : Container(),
-
-                                //---------- Botón Derivar ----------
-
-                                SizedBox(
-                                  width: 300,
-                                  child: Expanded(
-                                    flex: 2,
+                                  SizedBox(
+                                    width: 300,
                                     child: userTypeLogged == "Admin" &&
                                             ticketCab!.ticketState == 0
                                         ? _showUser()
                                         : Container(),
                                   ),
-                                ),
 
-                                (userTypeLogged == "Admin" &&
-                                        ticketCab!.ticketState == 0)
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: CustomOutlinedButton(
-                                          onPressed: () async {
-                                            onFormSubmit(ticketFormProvider,
-                                                userLogged, companyLogged, 5);
-                                          },
-                                          text: "Derivar",
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Container(),
+                                  (userTypeLogged == "Admin" &&
+                                          ticketCab!.ticketState == 0)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    5);
+                                              },
+                                              text: "Derivar",
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
 
-                                //---------- Botón En Curso ----------
-                                (userTypeLogged == "AdminKP" &&
-                                        ticketCab!.ticketState == 2)
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: CustomOutlinedButton(
-                                          onPressed: () async {
-                                            onFormSubmit(ticketFormProvider,
-                                                userLogged, companyLogged, 3);
-                                          },
-                                          text: "En Curso",
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Container(),
+                                  //---------- Botón En Curso ----------
+                                  (userTypeLogged == "AdminKP" &&
+                                          ticketCab!.ticketState == 2)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    3);
+                                              },
+                                              text: "En Curso",
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
 
-                                //---------- Botón Resuelto ----------
-                                ((userTypeLogged == "User" &&
-                                            ticketCab!.ticketState == 5) ||
-                                        (userTypeLogged == "AdminKP" &&
-                                            ticketCab!.ticketState == 2) ||
-                                        (userTypeLogged == "AdminKP" &&
-                                            ticketCab!.ticketState == 3))
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: CustomOutlinedButton(
-                                          onPressed: () async {
-                                            onFormSubmit(ticketFormProvider,
-                                                userLogged, companyLogged, 4);
-                                          },
-                                          text: "Resuelto",
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
+                                  //---------- Botón Resuelto ----------
+                                  ((userTypeLogged == "User" &&
+                                              ticketCab!.ticketState == 5) ||
+                                          (userTypeLogged == "AdminKP" &&
+                                              ticketCab!.ticketState == 2) ||
+                                          (userTypeLogged == "AdminKP" &&
+                                              ticketCab!.ticketState == 3))
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    4);
+                                              },
+                                              text: "Resuelto",
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        ],
+                            const SizedBox(
+                              height: 5,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   )
@@ -1069,8 +1116,6 @@ class _TicketViewState extends State<TicketView> {
         ),
       ],
     );
-
-    //***********************************************************************
   }
 }
 

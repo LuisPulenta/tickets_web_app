@@ -84,6 +84,22 @@ class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
                             .sort<String>((item) => item.createDate.toString());
                       }),
                   DataColumn(
+                      label: const Text("Categoría",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onSort: (colIndex, _) {
+                        ticketCabsProvider.sortColumnIndex = colIndex;
+                        ticketCabsProvider
+                            .sort<String>((item) => item.categoryName);
+                      }),
+                  DataColumn(
+                      label: const Text("Subcategoría",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onSort: (colIndex, _) {
+                        ticketCabsProvider.sortColumnIndex = colIndex;
+                        ticketCabsProvider
+                            .sort<String>((item) => item.subcategoryName);
+                      }),
+                  DataColumn(
                       label: const Text("Asunto",
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {

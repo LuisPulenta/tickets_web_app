@@ -18,27 +18,30 @@ class CustomOutlinedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      style: ButtonStyle(
-        shape: MaterialStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
+    return SizedBox(
+      height: 50,
+      child: OutlinedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
           ),
-        ),
-        side: MaterialStateProperty.all(
-          BorderSide(
-            color: color,
+          side: MaterialStateProperty.all(
+            BorderSide(
+              color: color,
+            ),
           ),
+          backgroundColor: MaterialStateProperty.all(
+              isFilled ? color.withOpacity(0.3) : Colors.transparent),
         ),
-        backgroundColor: MaterialStateProperty.all(
-            isFilled ? color.withOpacity(0.3) : Colors.transparent),
-      ),
-      onPressed: () => onPressed(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Text(text,
-            style: TextStyle(
-                fontSize: 16, color: isTextWhite! ? Colors.white : color)),
+        onPressed: () => onPressed(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(text,
+              style: TextStyle(
+                  fontSize: 16, color: isTextWhite! ? Colors.white : color)),
+        ),
       ),
     );
   }
