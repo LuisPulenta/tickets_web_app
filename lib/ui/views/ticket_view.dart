@@ -216,6 +216,8 @@ class _TicketViewState extends State<TicketView> {
         estado,
         ticketFormProvider.userAsign,
         ticketFormProvider.userAsignName,
+        ticketFormProvider.photoChanged ? ticketFormProvider.fileName : '',
+        ticketFormProvider.photoChanged ? ticketFormProvider.fileExtension : '',
       )
           .then((value) {
         Provider.of<TicketCabsProvider>(context, listen: false)
@@ -1249,6 +1251,8 @@ class _AvatarContainerState extends State<_AvatarContainer> {
 
                   file = result.files.first;
                   ticketFormProvider.photoChanged = true;
+                  ticketFormProvider.fileName = file!.name;
+                  ticketFormProvider.fileExtension = file!.extension!;
 
                   if (ticketFormProvider.photoChanged) {
                     List<int> imageBytes = file!.bytes!;
