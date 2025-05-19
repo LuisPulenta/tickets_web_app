@@ -132,7 +132,7 @@ class TicketCabsProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
-  Future newTicketCab(
+  Future<int?> newTicketCab(
       TicketCab ticketCab,
       String userLogged,
       String companyLogged,
@@ -183,18 +183,24 @@ class TicketCabsProvider extends ChangeNotifier {
           if (response2.isSuccess) {
             await getTicketCabs();
             NotificationsService.showSnackbar("Ticket guardado con éxito");
+            return nroTicket;
           }
-        } catch (e) {}
+        } catch (e) {
+          return null;
+        }
       } else {
         NotificationsService.showSnackbarError(
             'Hubo un error al guardar el Ticket');
+        return null;
       }
     } catch (e) {
       NotificationsService.showSnackbarError(
           'Hubo un error al guardar el Ticket');
+      return null;
     }
     showLoader = false;
     notifyListeners();
+    return null;
   }
 
 //---------------------------------------------------------------------

@@ -34,6 +34,7 @@ class _TicketModalState extends State<TicketModal> {
   @override
   void initState() {
     super.initState();
+
     final userBody = LocalStorage.prefs.getString('userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
@@ -69,6 +70,7 @@ class _TicketModalState extends State<TicketModal> {
   Widget build(BuildContext context) {
     final userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+
     final companyLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.companyName;
 
@@ -424,6 +426,7 @@ class _TicketModalState extends State<TicketModal> {
     String companyLogged,
   ) async {
     final isValid = ticketFormProvider.validateForm();
+    int newTicketCab;
     SideMenuProvider sideMenuProvider2 =
         Provider.of<SideMenuProvider>(context, listen: false);
     if (isValid) {
@@ -433,23 +436,40 @@ class _TicketModalState extends State<TicketModal> {
           sideMenuProvider2.setAbsorbing(false);
           final ticketsProvider =
               Provider.of<TicketCabsProvider>(context, listen: false);
-          await ticketsProvider
-              .newTicketCab(
-                ticketFormProvider.ticketCab,
-                userLogged,
-                companyLogged,
-                ticketFormProvider.description,
-                ticketFormProvider.photoChanged
-                    ? ticketFormProvider.base64Image
-                    : '',
-                ticketFormProvider.photoChanged
-                    ? ticketFormProvider.fileName
-                    : '',
-                ticketFormProvider.photoChanged
-                    ? ticketFormProvider.fileExtension
-                    : '',
-              )
-              .then((value) => Navigator.of(context).pop());
+          var newTicketCab = await ticketsProvider.newTicketCab(
+            ticketFormProvider.ticketCab,
+            userLogged,
+            companyLogged,
+            ticketFormProvider.description,
+            ticketFormProvider.photoChanged
+                ? ticketFormProvider.base64Image
+                : '',
+            ticketFormProvider.photoChanged ? ticketFormProvider.fileName : '',
+            ticketFormProvider.photoChanged
+                ? ticketFormProvider.fileExtension
+                : '',
+          );
+
+          //------------------ ENVIAR MAIL -------------------------
+          final emailLogged =
+              Provider.of<AuthProvider>(context, listen: false).user!.email;
+          Map<String, dynamic> request = {
+            'to': 'oberti@yopmail.com',
+            'cc': emailLogged,
+            'subject': 'Nuevo Ticket N° $newTicketCab creado por $userLogged',
+            'body': '''
+Se ha creado el Ticket N° $newTicketCab <br>
+Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''',
+          };
+
+          try {
+            Response response = await ApiHelper.sendMail(request);
+          } catch (e) {
+            return null;
+          }
+
+          Navigator.of(context).pop();
         }
       } catch (e) {
         NotificationsService.showSnackbarError("No se pudo guardar el Ticket");
