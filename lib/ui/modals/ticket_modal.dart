@@ -453,8 +453,22 @@ class _TicketModalState extends State<TicketModal> {
           //------------------ ENVIAR MAIL -------------------------
           final emailLogged =
               Provider.of<AuthProvider>(context, listen: false).user!.email;
+
+          final companyLoggedId =
+              Provider.of<AuthProvider>(context, listen: false).user!.companyId;
+
+          String toEmail = "";
+
+          try {
+            Response response = await ApiHelper.getMailsAdmin(companyLoggedId);
+            EmailResponse emailResponse = response.result;
+            toEmail = emailResponse.emails;
+          } catch (e) {
+            return null;
+          }
+
           Map<String, dynamic> request = {
-            'to': 'oberti@yopmail.com',
+            'to': toEmail,
             'cc': emailLogged,
             'subject': 'Nuevo Ticket N° $newTicketCab creado por $userLogged',
             'body': '''

@@ -895,4 +895,47 @@ class ApiHelper {
     }
     return Response(isSuccess: true, result: true);
   }
+
+  //--------------------------------------------------------------
+  static Future<Response> getMailsAdmin(int companyId) async {
+    var url = Uri.parse('${Constants.apiUrl}/account/GetMailsAdmin/$companyId');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(
+        isSuccess: true, result: EmailResponse.fromJson(decodedJson));
+  }
+
+  //--------------------------------------------------------------
+  static Future<Response> getMailsAdminKP(int companyId) async {
+    var url = Uri.parse('${Constants.apiUrl}/account/GetMailsAdminKP');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+      },
+    );
+
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    var decodedJson = jsonDecode(body);
+    return Response(
+        isSuccess: true, result: EmailResponse.fromJson(decodedJson));
+  }
 }
