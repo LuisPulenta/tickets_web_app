@@ -203,6 +203,16 @@ class _TicketViewState extends State<TicketView> {
       final ticketsCabsProvider2 =
           Provider.of<TicketCabsProvider>(context, listen: false);
 
+      Response response = await ApiHelper.getUser(ticketCab!.createUserId);
+      User userTicket = response.result;
+      String emailUserTicket = userTicket.email;
+      String emailUserSelected = "";
+      if (userIdSelected != "") {
+        Response response2 = await ApiHelper.getUser(userIdSelected);
+        User userSelected = response2.result;
+        emailUserSelected = userSelected.email;
+      }
+
       ticketFormProvider.userAsign == '';
       ticketFormProvider.userAsignName == '';
 
@@ -254,6 +264,9 @@ class _TicketViewState extends State<TicketView> {
                   if (estado == 5) {
                     ticketStateName = "Derivado";
                   }
+
+                  _sendEmail(estado, ticketCab!.id, emailUserTicket,
+                      emailUserSelected, ticketCab!.companyId);
                   ticketFormProvider.description = '';
                 },
               ),
@@ -1118,6 +1131,115 @@ class _TicketViewState extends State<TicketView> {
         ),
       ],
     );
+  }
+
+  //---------------------------------------------------------------------------------
+  void _sendEmail(int estado, int nroTicket, String emailUserTicket,
+      String emailUserSelected, int companyTicketId) async {
+    String emailUserLogged =
+        Provider.of<AuthProvider>(context, listen: false).user!.email;
+    int companyLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.companyId;
+
+    Response response = await ApiHelper.getMailsAdmin(companyTicketId);
+    EmailResponse emailResponse = response.result;
+
+    String emailsAdmin = emailResponse.emails;
+
+    Response response2 = await ApiHelper.getMailsAdminKP();
+    EmailResponse emailResponse2 = response2.result;
+
+    String emailsAdminKP = emailResponse2.emails;
+
+    String to = '';
+    String cc = '';
+    String subject = '';
+    String body = '';
+
+    switch (estado) {
+      //Enviado
+      case 0:
+        to = emailsAdmin;
+        cc = emailUserTicket;
+        subject = 'TicketN N° $nroTicket ENVIADO';
+        body = '''
+Se ha enviado nuevamente el Ticket N° $nroTicket.<br>
+Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+        break;
+      //Devuelto
+      case 1:
+        to = emailUserTicket;
+        cc = emailUserLogged;
+        subject = 'TicketN N° $nroTicket DEVUELTO';
+        body = '''
+Se ha devuelto el Ticket N° $nroTicket para su revisión.<br>
+Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+        break;
+
+      //Asignado
+      case 2:
+        to = emailsAdminKP;
+        cc = emailUserTicket;
+        subject = 'TicketN N° $nroTicket ASIGNADO';
+        body = '''
+Se ha asignado a Keypress el Ticket N° $nroTicket para su resolución<br>
+Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+        break;
+
+      //En curso
+      case 3:
+        to = emailUserTicket;
+        cc = emailsAdmin;
+        subject = 'TicketN N° $nroTicket EN CURSO';
+        body = '''
+La resolución del Ticket N° $nroTicket se encuentra en curso.<br>
+En breve se comunicará su resolución.<br>
+Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+        break;
+
+      //Resuelto
+      case 4:
+        to = emailUserTicket;
+        cc = emailsAdmin;
+        subject = 'TicketN N° $nroTicket RESUELTO';
+        body = '''
+El Ticket N° $nroTicket ha sido resuelto<br>
+Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+        break;
+
+      //Derivado
+      case 5:
+        to = emailUserSelected;
+        cc = emailUserTicket;
+        subject = 'TicketN N° $nroTicket DERIVADO';
+        body = '''
+El Ticket N° $nroTicket ha sido derivado<br>
+Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+        break;
+    }
+
+    Map<String, dynamic> request = {
+      'to': to,
+      'cc': cc,
+      'subject': subject,
+      'body': body,
+    };
+
+    print('💥💥💥💥💥💥💥💥💥💥💥');
+    print(request);
+    print('💥💥💥💥💥💥💥💥💥💥💥');
+
+    try {
+      await ApiHelper.sendMail(request);
+    } catch (e) {
+      return null;
+    }
   }
 }
 

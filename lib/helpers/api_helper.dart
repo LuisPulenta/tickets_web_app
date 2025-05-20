@@ -16,7 +16,7 @@ class ApiHelper {
           message:
               'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
     }
-    var url = Uri.parse('${Constants.apiUrl}/api/Users/$id');
+    var url = Uri.parse('${Constants.apiUrl}/Account/$id');
     var response = await http.get(
       url,
       headers: {
@@ -25,6 +25,7 @@ class ApiHelper {
         'authorization': 'bearer ${token.token}',
       },
     );
+
     var body = response.body;
 
     if (response.statusCode >= 400) {
@@ -32,6 +33,7 @@ class ApiHelper {
     }
 
     var decodedJson = jsonDecode(body);
+
     return Response(isSuccess: true, result: User.fromJson(decodedJson));
   }
 
@@ -918,7 +920,7 @@ class ApiHelper {
   }
 
   //--------------------------------------------------------------
-  static Future<Response> getMailsAdminKP(int companyId) async {
+  static Future<Response> getMailsAdminKP() async {
     var url = Uri.parse('${Constants.apiUrl}/account/GetMailsAdminKP');
     var response = await http.post(
       url,
