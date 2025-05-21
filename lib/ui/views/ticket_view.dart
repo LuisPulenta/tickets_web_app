@@ -265,8 +265,14 @@ class _TicketViewState extends State<TicketView> {
                     ticketStateName = "Derivado";
                   }
 
-                  _sendEmail(estado, ticketCab!.id, emailUserTicket,
-                      emailUserSelected, ticketCab!.companyId);
+                  _sendEmail(
+                      estado,
+                      ticketCab!.id,
+                      emailUserTicket,
+                      emailUserSelected,
+                      ticketCab!.companyId,
+                      ticketCab!.categoryName,
+                      ticketCab!.subcategoryName);
                   ticketFormProvider.description = '';
                 },
               ),
@@ -1134,8 +1140,14 @@ class _TicketViewState extends State<TicketView> {
   }
 
   //---------------------------------------------------------------------------------
-  void _sendEmail(int estado, int nroTicket, String emailUserTicket,
-      String emailUserSelected, int companyTicketId) async {
+  void _sendEmail(
+      int estado,
+      int nroTicket,
+      String emailUserTicket,
+      String emailUserSelected,
+      int companyTicketId,
+      String categoryName,
+      String subcategoryName) async {
     String emailUserLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.email;
     int companyLoggedId =
@@ -1161,7 +1173,8 @@ class _TicketViewState extends State<TicketView> {
       case 0:
         to = emailsAdmin;
         cc = emailUserTicket;
-        subject = 'TicketN N° $nroTicket ENVIADO';
+        subject =
+            'TicketN N° $nroTicket ENVIADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 Se ha enviado nuevamente el Ticket N° $nroTicket.<br>
 Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
@@ -1171,7 +1184,8 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
       case 1:
         to = emailUserTicket;
         cc = emailUserLogged;
-        subject = 'TicketN N° $nroTicket DEVUELTO';
+        subject =
+            'TicketN N° $nroTicket DEVUELTO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 Se ha devuelto el Ticket N° $nroTicket para su revisión.<br>
 Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
@@ -1182,7 +1196,8 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
       case 2:
         to = emailsAdminKP;
         cc = emailUserTicket;
-        subject = 'TicketN N° $nroTicket ASIGNADO';
+        subject =
+            'TicketN N° $nroTicket ASIGNADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 Se ha asignado a Keypress el Ticket N° $nroTicket para su resolución<br>
 Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
@@ -1193,7 +1208,8 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
       case 3:
         to = emailUserTicket;
         cc = emailsAdmin;
-        subject = 'TicketN N° $nroTicket EN CURSO';
+        subject =
+            'TicketN N° $nroTicket EN CURSO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 La resolución del Ticket N° $nroTicket se encuentra en curso.<br>
 En breve se comunicará su resolución.<br>
@@ -1205,7 +1221,8 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
       case 4:
         to = emailUserTicket;
         cc = emailsAdmin;
-        subject = 'TicketN N° $nroTicket RESUELTO';
+        subject =
+            'TicketN N° $nroTicket RESUELTO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 El Ticket N° $nroTicket ha sido resuelto<br>
 Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
@@ -1216,9 +1233,10 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
       case 5:
         to = emailUserSelected;
         cc = emailUserTicket;
-        subject = 'TicketN N° $nroTicket DERIVADO';
+        subject =
+            'TicketN N° $nroTicket DERIVADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
-El Ticket N° $nroTicket ha sido derivado<br>
+El Ticket N° $nroTicket ha sido derivado a $emailUserSelected para su revisión.<br>
 Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
@@ -1230,10 +1248,6 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
       'subject': subject,
       'body': body,
     };
-
-    print('💥💥💥💥💥💥💥💥💥💥💥');
-    print(request);
-    print('💥💥💥💥💥💥💥💥💥💥💥');
 
     try {
       await ApiHelper.sendMail(request);

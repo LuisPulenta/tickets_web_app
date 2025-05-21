@@ -470,7 +470,8 @@ class _TicketModalState extends State<TicketModal> {
           Map<String, dynamic> request = {
             'to': toEmail,
             'cc': emailLogged,
-            'subject': 'Nuevo Ticket N° $newTicketCab creado por $userLogged',
+            'subject':
+                'Nuevo Ticket N° $newTicketCab creado por $userLogged - Categoría: ${ticketFormProvider.categoryName} - Subcategoría: ${ticketFormProvider.subcategoryName}',
             'body': '''
 Se ha creado el Ticket N° $newTicketCab <br>
 Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
