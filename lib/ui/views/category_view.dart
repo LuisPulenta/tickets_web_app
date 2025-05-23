@@ -127,8 +127,8 @@ class _CategoryViewState extends State<CategoryView> {
                           decoration: CustomInput.searchInputDecoration(
                               hint: "Buscar...", icon: Icons.search_outlined),
                           onSubmitted: (value) {
-                            categoriesProvider!.search = value;
-                            categoriesProvider!.filter();
+                            categoriesProvider.search = value;
+                            categoriesProvider.filter();
                           },
                         ),
                       ),
