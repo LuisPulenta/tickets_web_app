@@ -12,6 +12,8 @@ import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
 import 'package:tickets_web_app/ui/labels/custom_labels.dart';
 import 'package:flutter/services.dart';
 
+import '../../helpers/constants.dart';
+
 class TicketModal extends StatefulWidget {
   final TicketCab? ticketCab;
 
@@ -226,6 +228,7 @@ class _TicketModalState extends State<TicketModal> {
               margin: const EdgeInsets.only(top: 30),
               alignment: Alignment.center,
               child: CustomOutlinedButton(
+                backGroundColor: colorEnviado,
                 onPressed: () async {
                   onFormSubmit(
                     ticketFormProvider,

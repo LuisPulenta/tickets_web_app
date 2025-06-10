@@ -5,15 +5,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-import 'package:tickets_web_app/ui/cards/white_card.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
+
+import '../../helpers/api_helper.dart';
+import '../../helpers/constants.dart';
+import '../../models/models.dart';
+import '../../providers/providers.dart';
+import '../../services/services.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../cards/white_card.dart';
+import '../inputs/custom_inputs.dart';
+import '../labels/custom_labels.dart';
+import '../layouts/shared/widgets/loader_component.dart';
 
 class TicketView extends StatefulWidget {
   final String id;
@@ -27,17 +29,17 @@ class TicketView extends StatefulWidget {
 class _TicketViewState extends State<TicketView> {
   //----------------------------------------------------------------------
   TicketCab? ticketCab;
-  String ticketStateName = "Enviado";
+  String ticketStateName = 'Enviado';
   late List<TicketDet> ticketDets;
   bool showLoader = false;
   late TicketFormProvider ticketFormProvider;
   late Token token;
-  String userTypeLogged = "";
+  String userTypeLogged = '';
   List<User> _users = [];
-  String userIdSelected = "";
-  String userNameSelected = "";
-  String userLogged = "";
-  String companyLogged = "";
+  String userIdSelected = '';
+  String userNameSelected = '';
+  String userLogged = '';
+  String companyLogged = '';
 
 //----------------------------------------------------------------------
   @override
@@ -72,25 +74,25 @@ class _TicketViewState extends State<TicketView> {
           ticketDets =
               ticketCab!.ticketDets != null ? ticketCab!.ticketDets! : [];
           if (ticketCab!.ticketState == 0) {
-            ticketStateName = "Enviado";
+            ticketStateName = 'Enviado';
           }
           if (ticketCab!.ticketState == 1) {
-            ticketStateName = "Devuelto";
+            ticketStateName = 'Devuelto';
           }
 
           if (ticketCab!.ticketState == 2) {
-            ticketStateName = "Asignado";
+            ticketStateName = 'Asignado';
           }
 
           if (ticketCab!.ticketState == 3) {
-            ticketStateName = "En Curso";
+            ticketStateName = 'En Curso';
           }
 
           if (ticketCab!.ticketState == 4) {
-            ticketStateName = "Resuelto";
+            ticketStateName = 'Resuelto';
           }
           if (ticketCab!.ticketState == 5) {
-            ticketStateName = "Derivado";
+            ticketStateName = 'Derivado';
           }
         },
       );
@@ -108,7 +110,7 @@ class _TicketViewState extends State<TicketView> {
     Response response = await ApiHelper.getUsersCombo(companyLoggedId);
 
     if (!response.isSuccess) {
-      NotificationsService.showSnackbarError("Error al cargar los Usuarios");
+      NotificationsService.showSnackbarError('Error al cargar los Usuarios');
       return;
     }
 
@@ -136,7 +138,7 @@ class _TicketViewState extends State<TicketView> {
 
   //---------------------------------------------------------------------------
   Widget _showUser() {
-    return Container(
+    return SizedBox(
       width: 300,
       child: _users.isEmpty
           ? const Text('Cargando Usuarios...')
@@ -147,7 +149,8 @@ class _TicketViewState extends State<TicketView> {
               //   }
               //   return null;
               // },
-              dropdownColor: const Color.fromARGB(255, 12, 133, 160),
+
+              dropdownColor: colorDerivado,
               isExpanded: true,
               isDense: true,
               style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -166,18 +169,20 @@ class _TicketViewState extends State<TicketView> {
                   ticketFormProvider.userAsignName = userNameSelected;
                 });
               },
-              decoration: const InputDecoration(
-                contentPadding: EdgeInsets.all(4),
-                prefixIcon: Icon(Icons.person, color: Colors.white),
-                labelStyle: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                fillColor: colorDerivado,
+                filled: true,
+                contentPadding: const EdgeInsets.all(4),
+                prefixIcon: const Icon(Icons.person, color: Colors.white),
+                labelStyle: const TextStyle(color: Colors.white),
                 hintText: 'Seleccione un Usuario...',
                 labelText: 'Usuario',
-                border: OutlineInputBorder(
+                border: const OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.white,
                   ),
                 ),
-                enabledBorder: OutlineInputBorder(
+                enabledBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.white,
                   ),
@@ -194,8 +199,8 @@ class _TicketViewState extends State<TicketView> {
     String companyLogged,
     int estado,
   ) async {
-    if (estado == 5 && userIdSelected == "") {
-      NotificationsService.showSnackbarError("Debe seleccionar un Usuario");
+    if (estado == 5 && userIdSelected == '') {
+      NotificationsService.showSnackbarError('Debe seleccionar un Usuario');
       return;
     }
 
@@ -206,8 +211,8 @@ class _TicketViewState extends State<TicketView> {
       Response response = await ApiHelper.getUser(ticketCab!.createUserId);
       User userTicket = response.result;
       String emailUserTicket = userTicket.email;
-      String emailUserSelected = "";
-      if (userIdSelected != "") {
+      String emailUserSelected = '';
+      if (userIdSelected != '') {
         Response response2 = await ApiHelper.getUser(userIdSelected);
         User userSelected = response2.result;
         emailUserSelected = userSelected.email;
@@ -242,27 +247,27 @@ class _TicketViewState extends State<TicketView> {
                       : [];
 
                   if (estado == 0) {
-                    ticketStateName = "Enviado";
+                    ticketStateName = 'Enviado';
                   }
 
                   if (estado == 1) {
-                    ticketStateName = "Devuelto";
+                    ticketStateName = 'Devuelto';
                   }
 
                   if (estado == 2) {
-                    ticketStateName = "Asignado";
+                    ticketStateName = 'Asignado';
                   }
 
                   if (estado == 3) {
-                    ticketStateName = "En Curso";
+                    ticketStateName = 'En Curso';
                   }
 
                   if (estado == 4) {
-                    ticketStateName = "Resuelto";
+                    ticketStateName = 'Resuelto';
                   }
 
                   if (estado == 5) {
-                    ticketStateName = "Derivado";
+                    ticketStateName = 'Derivado';
                   }
 
                   _sendEmail(
@@ -279,7 +284,7 @@ class _TicketViewState extends State<TicketView> {
             );
       });
     } catch (e) {
-      NotificationsService.showSnackbarError("No se pudo guardar el Ticket");
+      NotificationsService.showSnackbarError('No se pudo guardar el Ticket');
     }
   }
 
@@ -344,7 +349,7 @@ class _TicketViewState extends State<TicketView> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 300,
+                            width: 450,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(
@@ -616,7 +621,7 @@ class _TicketViewState extends State<TicketView> {
                           onTap: () {
                             NavigationServices.replaceTo('/dashboard/tickets');
                           },
-                          child: const Text("X",
+                          child: const Text('X',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 28,
@@ -882,13 +887,13 @@ class _TicketViewState extends State<TicketView> {
             //------------- PIE TICKET ---------------------
 
             //---------- Formulario para generar nuevo Ticket Detalle ----------
-            ((userTypeLogged == "User" &&
+            ((userTypeLogged == 'User' &&
                         (ticketCab!.ticketState == 1 ||
                             (ticketCab!.ticketState == 5 &&
                                 ticketCab!.userAsignName == userLogged))) ||
-                    (userTypeLogged == "Admin" &&
+                    (userTypeLogged == 'Admin' &&
                         (ticketCab!.ticketState == 0)) ||
-                    (userTypeLogged == "AdminKP" &&
+                    (userTypeLogged == 'AdminKP' &&
                         (ticketCab!.ticketState == 2 ||
                             ticketCab!.ticketState == 3)))
                 ? SizedBox(
@@ -951,7 +956,7 @@ class _TicketViewState extends State<TicketView> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   //---------- Botón Enviar ----------
-                                  (userTypeLogged == "User" &&
+                                  (userTypeLogged == 'User' &&
                                           ticketCab!.ticketState == 1)
                                       ? SizedBox(
                                           width: 200,
@@ -959,6 +964,8 @@ class _TicketViewState extends State<TicketView> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15),
                                             child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorEnviado,
                                               onPressed: () async {
                                                 onFormSubmit(
                                                     ticketFormProvider,
@@ -966,20 +973,21 @@ class _TicketViewState extends State<TicketView> {
                                                     companyLogged,
                                                     0);
                                               },
-                                              text: "Enviar",
+                                              text: 'Enviar',
                                               color: Colors.white,
                                             ),
                                           ),
                                         )
                                       : Container(),
+
                                   //---------- Botón Devolver ----------
-                                  ((userTypeLogged == "User" &&
+                                  ((userTypeLogged == 'User' &&
                                               ticketCab!.ticketState == 5) ||
-                                          (userTypeLogged == "Admin" &&
+                                          (userTypeLogged == 'Admin' &&
                                               ticketCab!.ticketState == 0) ||
-                                          (userTypeLogged == "AdminKP" &&
+                                          (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 2) ||
-                                          (userTypeLogged == "AdminKP" &&
+                                          (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 3))
                                       ? SizedBox(
                                           width: 200,
@@ -987,6 +995,8 @@ class _TicketViewState extends State<TicketView> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15),
                                             child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorDevuelto,
                                               onPressed: () async {
                                                 onFormSubmit(
                                                     ticketFormProvider,
@@ -994,13 +1004,13 @@ class _TicketViewState extends State<TicketView> {
                                                     companyLogged,
                                                     1);
                                               },
-                                              text: "Devolver",
-                                              color: Colors.white,
+                                              text: 'Devolver',
+                                              color: Colors.black,
                                             ),
                                           ),
                                         )
                                       : Container(),
-                                  (userTypeLogged == "Admin" &&
+                                  (userTypeLogged == 'Admin' &&
                                           ticketCab!.ticketState == 0)
                                       ? const Text('-',
                                           style: TextStyle(
@@ -1009,8 +1019,33 @@ class _TicketViewState extends State<TicketView> {
                                               fontWeight: FontWeight.bold))
                                       : Container(),
 
+                                  //---------- Botón Devolver al Admin ----------
+                                  (userTypeLogged == 'User' &&
+                                          ticketCab!.ticketState == 5)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorEnviado,
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    0);
+                                              },
+                                              text: 'Dev. a Admin',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+
                                   //---------- Botón Asignar ----------
-                                  (userTypeLogged == "Admin" &&
+                                  (userTypeLogged == 'Admin' &&
                                           ticketCab!.ticketState == 0)
                                       ? SizedBox(
                                           width: 200,
@@ -1018,6 +1053,8 @@ class _TicketViewState extends State<TicketView> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15),
                                             child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorAsignado,
                                               onPressed: () async {
                                                 onFormSubmit(
                                                     ticketFormProvider,
@@ -1025,16 +1062,16 @@ class _TicketViewState extends State<TicketView> {
                                                     companyLogged,
                                                     2);
                                               },
-                                              text: "Asignar",
-                                              color: Colors.white,
+                                              text: 'Asignar a KP',
+                                              color: Colors.black,
                                             ),
                                           ),
                                         )
                                       : Container(),
 
-                                  (userTypeLogged == "Admin" &&
+                                  (userTypeLogged == 'Admin' &&
                                           ticketCab!.ticketState == 0)
-                                      ? const Text('-',
+                                      ? const Text('-  ',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 28,
@@ -1044,13 +1081,13 @@ class _TicketViewState extends State<TicketView> {
 
                                   SizedBox(
                                     width: 300,
-                                    child: userTypeLogged == "Admin" &&
+                                    child: userTypeLogged == 'Admin' &&
                                             ticketCab!.ticketState == 0
                                         ? _showUser()
                                         : Container(),
                                   ),
 
-                                  (userTypeLogged == "Admin" &&
+                                  (userTypeLogged == 'Admin' &&
                                           ticketCab!.ticketState == 0)
                                       ? SizedBox(
                                           width: 200,
@@ -1058,6 +1095,8 @@ class _TicketViewState extends State<TicketView> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15),
                                             child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorDerivado,
                                               onPressed: () async {
                                                 onFormSubmit(
                                                     ticketFormProvider,
@@ -1065,7 +1104,7 @@ class _TicketViewState extends State<TicketView> {
                                                     companyLogged,
                                                     5);
                                               },
-                                              text: "Derivar",
+                                              text: 'Derivar',
                                               color: Colors.white,
                                             ),
                                           ),
@@ -1073,7 +1112,7 @@ class _TicketViewState extends State<TicketView> {
                                       : Container(),
 
                                   //---------- Botón En Curso ----------
-                                  (userTypeLogged == "AdminKP" &&
+                                  (userTypeLogged == 'AdminKP' &&
                                           ticketCab!.ticketState == 2)
                                       ? SizedBox(
                                           width: 200,
@@ -1081,6 +1120,8 @@ class _TicketViewState extends State<TicketView> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15),
                                             child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorEnCurso,
                                               onPressed: () async {
                                                 onFormSubmit(
                                                     ticketFormProvider,
@@ -1088,7 +1129,7 @@ class _TicketViewState extends State<TicketView> {
                                                     companyLogged,
                                                     3);
                                               },
-                                              text: "En Curso",
+                                              text: 'En Curso',
                                               color: Colors.white,
                                             ),
                                           ),
@@ -1096,11 +1137,11 @@ class _TicketViewState extends State<TicketView> {
                                       : Container(),
 
                                   //---------- Botón Resuelto ----------
-                                  ((userTypeLogged == "User" &&
+                                  ((userTypeLogged == 'User' &&
                                               ticketCab!.ticketState == 5) ||
-                                          (userTypeLogged == "AdminKP" &&
+                                          (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 2) ||
-                                          (userTypeLogged == "AdminKP" &&
+                                          (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 3))
                                       ? SizedBox(
                                           width: 200,
@@ -1108,6 +1149,8 @@ class _TicketViewState extends State<TicketView> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 15),
                                             child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorResuelto,
                                               onPressed: () async {
                                                 onFormSubmit(
                                                     ticketFormProvider,
@@ -1115,8 +1158,8 @@ class _TicketViewState extends State<TicketView> {
                                                     companyLogged,
                                                     4);
                                               },
-                                              text: "Resuelto",
-                                              color: Colors.white,
+                                              text: 'Resuelto',
+                                              color: Colors.black,
                                             ),
                                           ),
                                         )
@@ -1281,17 +1324,17 @@ class CustomChip extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.bold)),
         backgroundColor: estado == 'Enviado'
-            ? const Color.fromARGB(255, 169, 220, 227)
+            ? colorEnviado
             : estado == 'Devuelto'
-                ? const Color.fromARGB(255, 226, 179, 132)
+                ? colorDevuelto
                 : estado == 'Asignado'
-                    ? const Color.fromARGB(255, 240, 113, 101)
+                    ? colorAsignado
                     : (estado.toLowerCase() == 'encurso' ||
                             estado.toLowerCase() == 'en curso')
-                        ? const Color.fromARGB(255, 217, 135, 219)
+                        ? colorEnCurso
                         : (estado.toLowerCase() == 'derivado')
-                            ? const Color.fromARGB(255, 200, 47, 33)
-                            : const Color.fromARGB(255, 145, 228, 109));
+                            ? colorDerivado
+                            : colorResuelto);
   }
 }
 

@@ -44,7 +44,8 @@ class Sidebar extends StatelessWidget {
             MenuItem(
               text: 'Inicio',
               icon: Icons.home,
-              // isActive: sideMenuProvider.currentPage == Flurorouter.dashboardRoute,
+              isActive:
+                  sideMenuProvider.currentPage == Flurorouter.dashboardRoute,
               onPressed: () => navigateTo(Flurorouter.dashboardRoute),
             ),
             userType == 0
@@ -54,7 +55,8 @@ class Sidebar extends StatelessWidget {
                 ? MenuItem(
                     text: 'Categorías',
                     icon: Icons.category,
-                    //isActive: sideMenuProvider.currentPage == Flurorouter.companiesRoute,
+                    isActive: sideMenuProvider.currentPage ==
+                        Flurorouter.categoriesRoute,
                     onPressed: () => navigateTo(Flurorouter.categoriesRoute),
                   )
                 : Container(),
@@ -62,7 +64,8 @@ class Sidebar extends StatelessWidget {
                 ? MenuItem(
                     text: 'Empresas',
                     icon: Icons.storefront,
-                    //isActive: sideMenuProvider.currentPage == Flurorouter.companiesRoute,
+                    isActive: sideMenuProvider.currentPage ==
+                        Flurorouter.companiesRoute,
                     onPressed: () => navigateTo(Flurorouter.companiesRoute),
                   )
                 : Container(),
@@ -70,7 +73,8 @@ class Sidebar extends StatelessWidget {
                 ? MenuItem(
                     text: 'Usuarios',
                     icon: Icons.groups,
-                    //isActive: sideMenuProvider.currentPage == Flurorouter.usersRoute,
+                    isActive:
+                        sideMenuProvider.currentPage == Flurorouter.usersRoute,
                     onPressed: () => navigateTo(Flurorouter.usersRoute),
                   )
                 : Container(),
@@ -78,14 +82,16 @@ class Sidebar extends StatelessWidget {
             MenuItem(
               text: 'Pendientes',
               icon: Icons.local_activity_outlined,
-              //isActive:sideMenuProvider.currentPage == Flurorouter.ticketsRoute,
+              isActive:
+                  sideMenuProvider.currentPage == Flurorouter.ticketsRoute,
               onPressed: () => navigateTo(Flurorouter.ticketsRoute),
             ),
             userType == 2
                 ? MenuItem(
                     text: 'P/Resolver',
                     icon: Icons.emoji_objects_outlined,
-                    //isActive: sideMenuProvider.currentPage == Flurorouter.ticketsDerivatedRoute,
+                    isActive: sideMenuProvider.currentPage ==
+                        Flurorouter.ticketsDerivatedRoute,
                     onPressed: () =>
                         navigateTo(Flurorouter.ticketsDerivatedRoute),
                   )
@@ -93,7 +99,8 @@ class Sidebar extends StatelessWidget {
             MenuItem(
               text: 'Resueltos',
               icon: Icons.verified_outlined,
-              //isActive: sideMenuProvider.currentPage == Flurorouter.ticketsOkRoute,
+              isActive:
+                  sideMenuProvider.currentPage == Flurorouter.ticketsOkRoute,
               onPressed: () => navigateTo(Flurorouter.ticketsOkRoute),
             ),
             const Divider(
@@ -101,7 +108,7 @@ class Sidebar extends StatelessWidget {
               color: Colors.white,
             ),
             MenuItem(
-              text: 'Logout',
+              text: 'Salir',
               icon: Icons.exit_to_app_outlined,
               isActive: false,
               onPressed: () {
