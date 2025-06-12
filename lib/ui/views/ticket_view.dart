@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -119,19 +120,30 @@ class _TicketViewState extends State<TicketView> {
     });
   }
 
+  // //---------------------------------------------------------------------------
+  // List<DropdownMenuItem<String>> _getComboUsers() {
+  //   List<DropdownMenuItem<String>> list = [];
+  //   list.add(const DropdownMenuItem(
+  //     value: '',
+  //     child: Text('Seleccione un Usuario...'),
+  //   ));
+
+  //   for (var user in _users) {
+  //     list.add(DropdownMenuItem(
+  //       value: user.id,
+  //       child: Text(user.fullName),
+  //     ));
+  //   }
+  //   return list;
+  // }
+
   //---------------------------------------------------------------------------
-  List<DropdownMenuItem<String>> _getComboUsers() {
-    List<DropdownMenuItem<String>> list = [];
-    list.add(const DropdownMenuItem(
-      value: '',
-      child: Text('Seleccione un Usuario...'),
-    ));
+  List<String> _getComboUsers() {
+    List<String> list = [];
+    //list.add('Seleccione un Usuario...');
 
     for (var user in _users) {
-      list.add(DropdownMenuItem(
-        value: user.id,
-        child: Text(user.fullName),
-      ));
+      list.add(user.fullName);
     }
     return list;
   }
@@ -142,20 +154,69 @@ class _TicketViewState extends State<TicketView> {
       width: 300,
       child: _users.isEmpty
           ? const Text('Cargando Usuarios...')
-          : DropdownButtonFormField(
-              // validator: (value) {
-              //   if (value == '') {
-              //     return "Seleccione un Usuario...";
-              //   }
-              //   return null;
-              // },
-
-              dropdownColor: colorDerivado,
-              isExpanded: true,
-              isDense: true,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+          : DropdownSearch<String>(
               items: _getComboUsers(),
-              value: userIdSelected,
+              popupProps: PopupProps.menu(
+                showSearchBox: true,
+                searchFieldProps: TextFieldProps(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor:
+                        Colors.grey.shade200, // Fondo de la caja de búsqueda
+                    hintText: 'Buscar...',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                itemBuilder: (context, item, isSelected) {
+                  return Container(
+                    color: isSelected
+                        ? colorDerivado
+                        : colorDerivado
+                            .withOpacity(0.5), // fondo de cada opción
+                    padding: const EdgeInsets.all(12),
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                        color: isSelected
+                            ? Colors.yellow
+                            : Colors.white, // color del texto
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                  );
+                },
+                menuProps: MenuProps(
+                  backgroundColor: colorDerivado, // Fondo del menú desplegable
+                ),
+              ),
+              dropdownDecoratorProps: DropDownDecoratorProps(
+                baseStyle: const TextStyle(color: Colors.white, fontSize: 16),
+                dropdownSearchDecoration: InputDecoration(
+                  fillColor: colorDerivado,
+                  border: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                    ),
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.white,
+                    ),
+                  ),
+                  filled: true,
+                  //isDense: true,
+                  labelStyle:
+                      const TextStyle(color: Colors.white, fontSize: 16),
+
+                  labelText: 'Usuario',
+                  hintText: 'Seleccione un Usuario...',
+                ),
+              ),
               onChanged: (option) {
                 setState(() {
                   userIdSelected = option!;
@@ -169,26 +230,55 @@ class _TicketViewState extends State<TicketView> {
                   ticketFormProvider.userAsignName = userNameSelected;
                 });
               },
-              decoration: InputDecoration(
-                fillColor: colorDerivado,
-                filled: true,
-                contentPadding: const EdgeInsets.all(4),
-                prefixIcon: const Icon(Icons.person, color: Colors.white),
-                labelStyle: const TextStyle(color: Colors.white),
-                hintText: 'Seleccione un Usuario...',
-                labelText: 'Usuario',
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                  ),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
             ),
+
+      // DropdownButtonFormField(
+      //     // validator: (value) {
+      //     //   if (value == '') {
+      //     //     return "Seleccione un Usuario...";
+      //     //   }
+      //     //   return null;
+      //     // },
+
+      //     dropdownColor: colorDerivado,
+      //     isExpanded: true,
+      //     isDense: true,
+      //     style: const TextStyle(color: Colors.white, fontSize: 16),
+      //     items: _getComboUsers(),
+      //     value: userIdSelected,
+      //     onChanged: (option) {
+      //       setState(() {
+      //         userIdSelected = option!;
+
+      //         for (User user in _users) {
+      //           if (user.id == userIdSelected) {
+      //             userNameSelected = user.fullName;
+      //           }
+      //         }
+      //         ticketFormProvider.userAsign = userIdSelected;
+      //         ticketFormProvider.userAsignName = userNameSelected;
+      //       });
+      //     },
+      //     decoration: InputDecoration(
+      //       fillColor: colorDerivado,
+      //       filled: true,
+      //       contentPadding: const EdgeInsets.all(4),
+      //       prefixIcon: const Icon(Icons.person, color: Colors.white),
+      //       labelStyle: const TextStyle(color: Colors.white),
+      //       hintText: 'Seleccione un Usuario...',
+      //       labelText: 'Usuario',
+      //       border: const OutlineInputBorder(
+      //         borderSide: BorderSide(
+      //           color: Colors.white,
+      //         ),
+      //       ),
+      //       enabledBorder: const OutlineInputBorder(
+      //         borderSide: BorderSide(
+      //           color: Colors.white,
+      //         ),
+      //       ),
+      //     ),
+      //   ),
     );
   }
 
@@ -1137,12 +1227,15 @@ class _TicketViewState extends State<TicketView> {
                                       : Container(),
 
                                   //---------- Botón Resuelto ----------
+
                                   ((userTypeLogged == 'User' &&
                                               ticketCab!.ticketState == 5) ||
                                           (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 2) ||
                                           (userTypeLogged == 'AdminKP' &&
-                                              ticketCab!.ticketState == 3))
+                                              ticketCab!.ticketState == 3) ||
+                                          (userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 0))
                                       ? SizedBox(
                                           width: 200,
                                           child: Padding(
