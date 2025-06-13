@@ -870,7 +870,11 @@ class _TicketViewState extends State<TicketView> {
                                       ? Container()
                                       : InkWell(
                                           onTap: () async {
-                                            extension.toUpperCase() == 'PNG'
+                                            (extension.toUpperCase() == 'PNG' ||
+                                                    extension.toUpperCase() ==
+                                                        'JPG' ||
+                                                    extension.toUpperCase() ==
+                                                        'JPEG')
                                                 ? NotificationsService
                                                     .showImage(context,
                                                         e.imageFullPath)

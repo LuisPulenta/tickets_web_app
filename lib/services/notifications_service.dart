@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NotificationsService {
@@ -47,20 +48,44 @@ class NotificationsService {
 
   //------------------------------------------------------------------------
   static showImage(BuildContext context, final String url) {
-    AlertDialog dialog = AlertDialog(
-      content: SizedBox(
-        width: 500,
-        height: 500,
-        child: FadeInImage.assetNetwork(
-          placeholder: 'loader.gif',
-          image: url,
-          width: 500,
-          height: 500,
-        ),
-      ),
-    );
+    final size = MediaQuery.of(context).size;
 
-    showDialog(context: context, builder: (_) => dialog);
+    showDialog(
+        context: context,
+        builder: (_) {
+          return Stack(
+            children: [
+              InteractiveViewer(
+                boundaryMargin: const EdgeInsets.all(double.infinity),
+                child: SizedBox(
+                  width: size.width,
+                  height: size.height,
+                  child: FadeInImage.assetNetwork(
+                    placeholder: 'assets/loading.gif',
+                    image: url,
+                    fit: BoxFit.contain,
+                    width: size.width,
+                    height: size.height,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: size.height * 0.1,
+                right: size.width * 0.1,
+                child: IconButton(
+                  icon: const Icon(
+                    FontAwesomeIcons.rectangleXmark,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   //------------------------------------------------------------------------
@@ -69,12 +94,12 @@ class NotificationsService {
       await launch(
         url,
         headers: {
-          "Content-Type": "application/pdf",
-          "Content-Disposition": "inline"
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': 'inline'
         },
       );
-    } else
-      // can't launch url, there is some error
-      throw "Could not launch $url";
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
