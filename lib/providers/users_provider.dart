@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/notifications_service.dart';
+
+import '../helpers/api_helper.dart';
+import '../models/models.dart';
+import '../services/notifications_service.dart';
 
 class UsersProvider extends ChangeNotifier {
   List<User> users = [];
@@ -81,7 +82,7 @@ class UsersProvider extends ChangeNotifier {
       showLoader = false;
       notifyListeners();
       NotificationsService.showSnackbar(
-          "Se ha enviado un correo con las instrucciones para activar el usuario.");
+          'Se ha enviado un correo con las instrucciones para activar el usuario.');
 
       getUsers();
       notifyListeners();
@@ -104,13 +105,14 @@ class UsersProvider extends ChangeNotifier {
     int idUserType,
     String userLoggedId,
     bool active,
+    bool isResolver,
     String emailLogged,
   ) async {
     showLoader = true;
     notifyListeners();
     if (email == emailLogged && !active) {
       NotificationsService.showSnackbarError(
-          "No puede desactivarse a sí mismo");
+          'No puede desactivarse a sí mismo');
       notifyListeners();
       showLoader = false;
       notifyListeners();
@@ -128,6 +130,7 @@ class UsersProvider extends ChangeNotifier {
       'CreateUserId': '',
       'LastChangeUserId': userLoggedId,
       'Active': active,
+      'IsResolver': isResolver ? 1 : 0,
     };
 
     try {
@@ -136,7 +139,7 @@ class UsersProvider extends ChangeNotifier {
         getUsers();
         showLoader = false;
         notifyListeners();
-        NotificationsService.showSnackbar("Cambios guardados con éxito");
+        NotificationsService.showSnackbar('Cambios guardados con éxito');
       }
     } catch (e) {
       showLoader = false;
@@ -182,7 +185,7 @@ class UsersProvider extends ChangeNotifier {
     String LoggedId,
   ) async {
     if (id == LoggedId) {
-      NotificationsService.showSnackbarError("No puede borrarse a sí mismo");
+      NotificationsService.showSnackbarError('No puede borrarse a sí mismo');
       return;
     }
 
@@ -198,7 +201,7 @@ class UsersProvider extends ChangeNotifier {
         return;
       }
       getUsers();
-      NotificationsService.showSnackbar("Usuario borrado con éxito");
+      NotificationsService.showSnackbar('Usuario borrado con éxito');
     } catch (e) {
       throw ('Error al borrar el Usuario');
     }

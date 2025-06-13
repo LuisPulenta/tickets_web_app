@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-import 'package:tickets_web_app/ui/cards/white_card.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
+
+import '../../models/models.dart';
+import '../../providers/providers.dart';
+import '../../services/services.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../cards/white_card.dart';
+import '../inputs/custom_inputs.dart';
 
 class EditUserView extends StatefulWidget {
   const EditUserView({Key? key}) : super(key: key);
@@ -64,7 +65,7 @@ class _EditUserViewState extends State<EditUserView> {
         physics: const ClampingScrollPhysics(),
         children: [
           WhiteCard(
-            title: "Editar Usuario",
+            title: 'Editar Usuario',
             child: Column(
               children: [
                 Form(
@@ -85,10 +86,10 @@ class _EditUserViewState extends State<EditUserView> {
                               initialValue: editUserFormProvider.firstName,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "Ingrese Nombre del Usuario";
+                                  return 'Ingrese Nombre del Usuario';
                                 }
                                 if (value.length < 3) {
-                                  return "Mínimo 3 caracteres";
+                                  return 'Mínimo 3 caracteres';
                                 }
                                 return null;
                               },
@@ -112,10 +113,10 @@ class _EditUserViewState extends State<EditUserView> {
                               initialValue: editUserFormProvider.lastName,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "Ingrese Apellido del Usuario";
+                                  return 'Ingrese Apellido del Usuario';
                                 }
                                 if (value.length < 3) {
-                                  return "Mínimo 3 caracteres";
+                                  return 'Mínimo 3 caracteres';
                                 }
                                 return null;
                               },
@@ -169,7 +170,7 @@ class _EditUserViewState extends State<EditUserView> {
                                 onFormSubmit(
                                     editUserFormProvider, token, userLoggedId);
                               },
-                              text: "Guardar",
+                              text: 'Guardar',
                               color: const Color.fromARGB(255, 25, 15, 219),
                               isFilled: true,
                             ),
@@ -189,7 +190,7 @@ class _EditUserViewState extends State<EditUserView> {
                                       showChangePassword = true;
                                       setState(() {});
                                     },
-                                    text: "Cambiar Contraseña",
+                                    text: 'Cambiar Contraseña',
                                     color:
                                         const Color.fromARGB(255, 25, 15, 219),
                                     isFilled: true,
@@ -241,10 +242,10 @@ class _EditUserViewState extends State<EditUserView> {
                                     obscureText: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "Ingrese Contraseña actual";
+                                        return 'Ingrese Contraseña actual';
                                       }
                                       if (value.length < 6) {
-                                        return "Mínimo 6 caracteres";
+                                        return 'Mínimo 6 caracteres';
                                       }
 
                                       return null;
@@ -270,10 +271,10 @@ class _EditUserViewState extends State<EditUserView> {
                                     obscureText: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "Ingrese Nueva Contraseña";
+                                        return 'Ingrese Nueva Contraseña';
                                       }
                                       if (value.length < 6) {
-                                        return "Mínimo 6 caracteres";
+                                        return 'Mínimo 6 caracteres';
                                       }
                                       if (changePasswordFormProvider
                                               .confirmpassword !=
@@ -304,10 +305,10 @@ class _EditUserViewState extends State<EditUserView> {
                                     obscureText: true,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return "Ingrese Confirmación de Contraseña";
+                                        return 'Ingrese Confirmación de Contraseña';
                                       }
                                       if (value.length < 6) {
-                                        return "Mínimo 6 caracteres";
+                                        return 'Mínimo 6 caracteres';
                                       }
                                       if (changePasswordFormProvider
                                               .confirmpassword !=
@@ -315,6 +316,7 @@ class _EditUserViewState extends State<EditUserView> {
                                               .newpassword) {
                                         return 'La nueva contraseña y la confirmación no son iguales';
                                       }
+                                      return null;
                                     },
                                     keyboardType: TextInputType.number,
                                     onChanged: (value) {
@@ -349,7 +351,7 @@ class _EditUserViewState extends State<EditUserView> {
                                       onForm2Submit(
                                           changePasswordFormProvider, token);
                                     },
-                                    text: "Cambiar Contraseña",
+                                    text: 'Cambiar Contraseña',
                                     color:
                                         const Color.fromARGB(255, 25, 15, 219),
                                     isFilled: true,
@@ -407,10 +409,11 @@ class _EditUserViewState extends State<EditUserView> {
                 editUserFormProvider.idUserType,
                 userLoggedId,
                 editUserFormProvider.active,
+                editUserFormProvider.isResolver,
                 '')
             .then((value) => Navigator.of(context).pop());
       } catch (e) {
-        NotificationsService.showSnackbarError("No se pudo guardar el Usuario");
+        NotificationsService.showSnackbarError('No se pudo guardar el Usuario');
       }
     }
   }

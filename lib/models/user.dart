@@ -1,4 +1,4 @@
-import 'package:tickets_web_app/models/models.dart';
+import 'models.dart';
 
 class User {
   String id;
@@ -18,6 +18,7 @@ class User {
   String lastChangeUserId;
   String lastChangeUserName;
   bool active;
+  int? isResolver;
   List<TicketCab> tickets;
   String fullName;
 
@@ -39,56 +40,59 @@ class User {
     required this.lastChangeUserId,
     required this.lastChangeUserName,
     required this.active,
+    required this.isResolver,
     required this.tickets,
     required this.fullName,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
-        userTypeId: json["userTypeId"],
-        userTypeName: json["userTypeName"],
-        email: json["email"],
-        emailConfirm: json["emailConfirm"],
-        phoneNumber: json["phoneNumber"],
-        companyId: json["companyId"],
-        companyName: json["companyName"],
-        createDate: json["createDate"],
-        createUserId: json["createUserId"],
-        createUserName: json["createUserName"],
-        lastChangeDate: json["lastChangeDate"],
-        lastChangeUserId: json["lastChangeUserId"],
-        lastChangeUserName: json["lastChangeUserName"],
-        active: json["active"],
-        tickets: json["tickets"] != null
+        id: json['id'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        userTypeId: json['userTypeId'],
+        userTypeName: json['userTypeName'],
+        email: json['email'],
+        emailConfirm: json['emailConfirm'],
+        phoneNumber: json['phoneNumber'],
+        companyId: json['companyId'],
+        companyName: json['companyName'],
+        createDate: json['createDate'],
+        createUserId: json['createUserId'],
+        createUserName: json['createUserName'],
+        lastChangeDate: json['lastChangeDate'],
+        lastChangeUserId: json['lastChangeUserId'],
+        lastChangeUserName: json['lastChangeUserName'],
+        active: json['active'],
+        isResolver: json['isResolver'],
+        tickets: json['tickets'] != null
             ? List<TicketCab>.from(
-                json["tickets"].map((x) => TicketCab.fromJson(x)))
+                json['tickets'].map((x) => TicketCab.fromJson(x)))
             : [],
-        fullName: json["fullName"],
+        fullName: json['fullName'],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "firstName": firstName,
-        "lastName": lastName,
-        "userTypeId": userTypeId,
-        "userTypeName": userTypeName,
-        "email": email,
-        "emailConfirm": emailConfirm,
-        "phoneNumber": phoneNumber,
-        "companyId": companyId,
-        "companyName": companyName,
-        "createDate": createDate,
-        "createUserId": createUserId,
-        "createUserName": createUserName,
-        "lastChangeDate": lastChangeDate,
-        "lastChangeUserId": lastChangeUserId,
-        "lastChangeUserName": lastChangeUserName,
-        "active": active,
-        "tickets": tickets != null
+        'id': id,
+        'firstName': firstName,
+        'lastName': lastName,
+        'userTypeId': userTypeId,
+        'userTypeName': userTypeName,
+        'email': email,
+        'emailConfirm': emailConfirm,
+        'phoneNumber': phoneNumber,
+        'companyId': companyId,
+        'companyName': companyName,
+        'createDate': createDate,
+        'createUserId': createUserId,
+        'createUserName': createUserName,
+        'lastChangeDate': lastChangeDate,
+        'lastChangeUserId': lastChangeUserId,
+        'lastChangeUserName': lastChangeUserName,
+        'active': active,
+        'isResolver': isResolver,
+        'tickets': tickets != null
             ? List<dynamic>.from(tickets.map((x) => x.toJson()))
             : [],
-        "fullName": fullName,
+        'fullName': fullName,
       };
 }

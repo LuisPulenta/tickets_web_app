@@ -1,14 +1,16 @@
 import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
+
+import '../../helpers/api_helper.dart';
+import '../../models/models.dart';
+import '../../providers/providers.dart';
+import '../../services/services.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../inputs/custom_inputs.dart';
+import '../labels/custom_labels.dart';
 
 class UserModal extends StatefulWidget {
   final User? user;
@@ -61,6 +63,7 @@ class _UserModalState extends State<UserModal> {
           lastChangeUserId: '',
           lastChangeUserName: '',
           active: false,
+          isResolver: 0,
           tickets: [],
           fullName: '');
     } else {
@@ -82,6 +85,7 @@ class _UserModalState extends State<UserModal> {
         lastChangeUserId: widget.user!.lastChangeUserId,
         lastChangeUserName: widget.user!.lastChangeUserName,
         active: widget.user!.active,
+        isResolver: widget.user!.isResolver,
         tickets: widget.user!.tickets,
         fullName: widget.user!.fullName,
       );
@@ -91,6 +95,7 @@ class _UserModalState extends State<UserModal> {
     userFormProvider.firstName = user.firstName;
     userFormProvider.lastName = user.lastName;
     userFormProvider.active = user.active;
+    userFormProvider.isResolver = user.isResolver == 1 ? true : false;
     userFormProvider.email = user.email;
     userFormProvider.phoneNumber = user.phoneNumber;
     userFormProvider.company =
@@ -157,10 +162,10 @@ class _UserModalState extends State<UserModal> {
                     initialValue: userFormProvider.email,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Ingrese Email del Usuario";
+                        return 'Ingrese Email del Usuario';
                       }
                       if (!EmailValidator.validate(value)) {
-                        return "El Email no tiene formato válido";
+                        return 'El Email no tiene formato válido';
                       }
                       return null;
                     },
@@ -184,13 +189,13 @@ class _UserModalState extends State<UserModal> {
                     initialValue: userFormProvider.firstName,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Ingrese Nombre del Usuario";
+                        return 'Ingrese Nombre del Usuario';
                       }
                       if (value.length < 3) {
-                        return "Mínimo 3 caracteres";
+                        return 'Mínimo 3 caracteres';
                       }
                       if (value.length > 50) {
-                        return "Máximo 50 caracteres";
+                        return 'Máximo 50 caracteres';
                       }
                       return null;
                     },
@@ -214,13 +219,13 @@ class _UserModalState extends State<UserModal> {
                     initialValue: userFormProvider.lastName,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Ingrese Apellido del Usuario";
+                        return 'Ingrese Apellido del Usuario';
                       }
                       if (value.length < 3) {
-                        return "Mínimo 3 caracteres";
+                        return 'Mínimo 3 caracteres';
                       }
                       if (value.length > 50) {
-                        return "Máximo 50 caracteres";
+                        return 'Máximo 50 caracteres';
                       }
                       return null;
                     },
@@ -313,6 +318,26 @@ class _UserModalState extends State<UserModal> {
                 const SizedBox(
                   width: 50,
                 ),
+                userFormProvider.id != ''
+                    ? Container(
+                        padding: const EdgeInsets.only(top: 30),
+                        width: 200,
+                        child: SwitchListTile(
+                            tileColor: Colors.red,
+                            title: const Text(
+                              'Resolvedor:',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            value: userFormProvider.isResolver,
+                            onChanged: (value) {
+                              userFormProvider.isResolver = value;
+                              setState(() {});
+                            }),
+                      )
+                    : Container(),
+                const SizedBox(
+                  width: 50,
+                ),
                 Container(
                   margin: const EdgeInsets.only(top: 30),
                   alignment: Alignment.center,
@@ -321,7 +346,7 @@ class _UserModalState extends State<UserModal> {
                       onFormSubmit(
                           userFormProvider, token, userLoggedId, emailLogged);
                     },
-                    text: "Guardar",
+                    text: 'Guardar',
                     color: Colors.white,
                   ),
                 ),
@@ -339,7 +364,7 @@ class _UserModalState extends State<UserModal> {
     Response response = await ApiHelper.getCompaniesCombo();
 
     if (!response.isSuccess) {
-      NotificationsService.showSnackbarError("Error al cargar las Empresas");
+      NotificationsService.showSnackbarError('Error al cargar las Empresas');
       return;
     }
 
@@ -390,11 +415,12 @@ class _UserModalState extends State<UserModal> {
                   userFormProvider.idUserType,
                   userLoggedId,
                   userFormProvider.active,
+                  userFormProvider.isResolver,
                   emailLogged)
               .then((value) => Navigator.of(context).pop());
         }
       } catch (e) {
-        NotificationsService.showSnackbarError("No se pudo guardar el Usuario");
+        NotificationsService.showSnackbarError('No se pudo guardar el Usuario');
       }
     }
   }
@@ -449,7 +475,7 @@ class _UserModalState extends State<UserModal> {
           : DropdownButtonFormField(
               validator: (value) {
                 if (value == 0) {
-                  return "Seleccione una Empresa...";
+                  return 'Seleccione una Empresa...';
                 }
                 return null;
               },
@@ -491,7 +517,7 @@ class _UserModalState extends State<UserModal> {
     return DropdownButtonFormField(
       validator: (value) {
         if (value == -1) {
-          return "Elija un Tipo de Usuario...";
+          return 'Elija un Tipo de Usuario...';
         }
         return null;
       },

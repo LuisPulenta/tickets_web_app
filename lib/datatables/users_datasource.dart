@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/ui/modals/user_modal.dart';
+
+import '../models/models.dart';
+import '../providers/providers.dart';
+import '../ui/modals/user_modal.dart';
 
 class UsersDTS extends DataTableSource {
   final List<User> users;
@@ -43,7 +44,7 @@ class UsersDTS extends DataTableSource {
           Text(user.email),
         ),
         DataCell(
-          Text(user.emailConfirm ? "Sí" : 'No',
+          Text(user.emailConfirm ? 'Sí' : 'No',
               style: TextStyle(
                   fontSize: 12,
                   color: user.emailConfirm ? Colors.green : Colors.red)),
@@ -63,7 +64,13 @@ class UsersDTS extends DataTableSource {
                   : const TextStyle(fontWeight: FontWeight.normal)),
         ),
         DataCell(
-          Text(user.active ? "Sí" : 'No',
+          Text(user.isResolver == 1 ? 'Sí' : 'No',
+              style: TextStyle(
+                  fontSize: 12,
+                  color: user.isResolver == 1 ? Colors.green : Colors.red)),
+        ),
+        DataCell(
+          Text(user.active ? 'Sí' : 'No',
               style: TextStyle(
                   fontSize: 12,
                   color: user.active ? Colors.green : Colors.red)),
@@ -104,9 +111,9 @@ class UsersDTS extends DataTableSource {
                       tooltip: 'Borrar Usuario',
                       onPressed: () {
                         final dialog = AlertDialog(
-                          title: const Text("Atención!!"),
+                          title: const Text('Atención!!'),
                           content: Text(
-                              "Está seguro de borrar el Usuario ${user.lastName} ${user.firstName} ?"),
+                              'Está seguro de borrar el Usuario ${user.lastName} ${user.firstName} ?'),
                           actions: [
                             TextButton(
                               onPressed: () async {
@@ -128,13 +135,13 @@ class UsersDTS extends DataTableSource {
                                     .then((value) =>
                                         {Navigator.of(context).pop()});
                               },
-                              child: const Text("Si"),
+                              child: const Text('Si'),
                             ),
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("No"),
+                              child: const Text('No'),
                             ),
                           ],
                         );

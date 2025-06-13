@@ -11,6 +11,7 @@ class EditUserFormProvider extends ChangeNotifier {
   int companyId = 0;
   int idUserType = -1;
   bool active = false;
+  bool isResolver = false;
 
   //----------------------------------------------------------------
   bool validateForm() {

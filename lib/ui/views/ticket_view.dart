@@ -143,7 +143,9 @@ class _TicketViewState extends State<TicketView> {
     //list.add('Seleccione un Usuario...');
 
     for (var user in _users) {
-      list.add(user.fullName);
+      if (user.isResolver == 1) {
+        list.add(user.fullName);
+      }
     }
     return list;
   }

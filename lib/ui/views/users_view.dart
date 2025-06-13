@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/datatables/users_datasource.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/users_provider.dart';
-import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
-import 'package:tickets_web_app/ui/modals/user_modal.dart';
+
+import '../../datatables/users_datasource.dart';
+import '../../models/models.dart';
+import '../../providers/users_provider.dart';
+import '../buttons/custom_icon_button.dart';
+import '../inputs/custom_inputs.dart';
+import '../layouts/shared/widgets/loader_component.dart';
+import '../modals/user_modal.dart';
 
 class UsersView extends StatefulWidget {
   const UsersView({Key? key}) : super(key: key);
@@ -47,14 +48,14 @@ class _UsersViewState extends State<UsersView> {
                 sortColumnIndex: usersProvider.sortColumnIndex,
                 columns: [
                   DataColumn(
-                      label: const Text("Empresa",
+                      label: const Text('Empresa',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         usersProvider.sortColumnIndex = colIndex;
                         usersProvider.sort<String>((user) => user.companyName);
                       }),
                   DataColumn(
-                      label: const Text("Nombre y Apellido",
+                      label: const Text('Nombre y Apellido',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         usersProvider.sortColumnIndex = colIndex;
@@ -62,7 +63,7 @@ class _UsersViewState extends State<UsersView> {
                             (user) => user.lastName + user.firstName);
                       }),
                   DataColumn(
-                      label: const Text("N° Tickets",
+                      label: const Text('N° Tickets',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         usersProvider.sortColumnIndex = colIndex;
@@ -70,36 +71,39 @@ class _UsersViewState extends State<UsersView> {
                             (user) => user.lastName + user.firstName);
                       }),
                   DataColumn(
-                      label: const Text("Email",
+                      label: const Text('Email',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         usersProvider.sortColumnIndex = colIndex;
                         usersProvider.sort<String>((user) => user.email);
                       }),
                   const DataColumn(
-                      label: Text("Email Confirm.",
+                      label: Text('Email Confirm.',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Teléfono",
+                      label: Text('Teléfono',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Tipo Usuario",
+                      label: Text('Tipo Usuario',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Activo",
+                      label: Text('Resolvedor',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Fecha y Usuario Ult. Modif.",
+                      label: Text('Activo',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Acciones",
+                      label: Text('Fecha y Usuario Ult. Modif.',
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  const DataColumn(
+                      label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
                 source: UsersDTS(users, context),
                 header: Row(
                   children: [
                     const Text(
-                      "Usuarios",
+                      'Usuarios',
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -116,7 +120,7 @@ class _UsersViewState extends State<UsersView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: "Buscar...", icon: Icons.search_outlined),
+                              hint: 'Buscar...', icon: Icons.search_outlined),
                           onSubmitted: (value) {
                             usersProvider.search = value;
                             usersProvider.filter();
@@ -150,7 +154,7 @@ class _UsersViewState extends State<UsersView> {
                 actions: [
                   CustomIconButton(
                     icon: Icons.add_outlined,
-                    text: "Nuevo Usuario",
+                    text: 'Nuevo Usuario',
                     onPressed: () {
                       showModalBottomSheet(
                         backgroundColor: Colors.transparent,
