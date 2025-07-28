@@ -221,11 +221,11 @@ class _TicketViewState extends State<TicketView> {
               ),
               onChanged: (option) {
                 setState(() {
-                  userIdSelected = option!;
+                  userNameSelected = option!;
 
                   for (User user in _users) {
-                    if (user.id == userIdSelected) {
-                      userNameSelected = user.fullName;
+                    if (userNameSelected == user.fullName) {
+                      userIdSelected = user.id;
                     }
                   }
                   ticketFormProvider.userAsign = userIdSelected;
