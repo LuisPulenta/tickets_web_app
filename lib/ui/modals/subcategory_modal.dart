@@ -29,7 +29,7 @@ class _SubcategoryModalState extends State<SubcategoryModal> {
   @override
   void initState() {
     super.initState();
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
 

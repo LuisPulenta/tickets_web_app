@@ -32,7 +32,7 @@ class TicketCabsProvider extends ChangeNotifier {
     showLoader = true;
     notifyListeners();
 
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     Token token = Token.fromJson(decodedJson);
     int userTypeLogged = token.user.userTypeId;
@@ -143,7 +143,7 @@ class TicketCabsProvider extends ChangeNotifier {
     showLoader = true;
     notifyListeners();
 
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     Token token = Token.fromJson(decodedJson);
     User userLogged = token.user;
@@ -218,7 +218,7 @@ class TicketCabsProvider extends ChangeNotifier {
     showLoader = true;
     notifyListeners();
 
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     Token token = Token.fromJson(decodedJson);
     User userLogged = token.user;

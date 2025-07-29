@@ -1,13 +1,15 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/helpers/constants.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/router/router.dart';
-import 'package:tickets_web_app/services/local_storage.dart';
-import 'package:tickets_web_app/services/navigation_services.dart';
 import 'package:http/http.dart' as http;
-import 'package:tickets_web_app/services/notifications_service.dart';
+
+import '../helpers/api_helper.dart';
+import '../helpers/constants.dart';
+import '../models/models.dart';
+import '../router/router.dart';
+import '../services/local_storage.dart';
+import '../services/navigation_services.dart';
+import '../services/notifications_service.dart';
 
 enum AuthStatus {
   checking,
@@ -30,8 +32,8 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     final data = {
-      "userName": email,
-      "password": password,
+      'userName': email,
+      'password': password,
     };
 
     var url = Uri.parse('${Constants.apiUrl}/Account/CreateToken');
@@ -46,7 +48,7 @@ class AuthProvider extends ChangeNotifier {
     );
 
     if (response.statusCode >= 400) {
-      NotificationsService.showSnackbarError("Credenciales no válidas");
+      NotificationsService.showSnackbarError('Credenciales no válidas');
       showLoader = false;
       notifyListeners();
       return;
@@ -59,16 +61,16 @@ class AuthProvider extends ChangeNotifier {
     user = token.user;
 
     if (!user!.active) {
-      NotificationsService.showSnackbarError("Usuario no activo");
+      NotificationsService.showSnackbarError('Usuario no activo');
       showLoader = false;
       notifyListeners();
       return;
     }
 
-    LocalStorage.prefs.setString('token', token.token);
-    LocalStorage.prefs.setString('userBody', body);
-    LocalStorage.prefs.setInt('userType', user!.userTypeId);
-    LocalStorage.prefs.setInt('userCompany', user!.companyId);
+    LocalStorage.prefs.setString('tickets-token', token.token);
+    LocalStorage.prefs.setString('tickets-userBody', body);
+    LocalStorage.prefs.setInt('tickets-userType', user!.userTypeId);
+    LocalStorage.prefs.setInt('tickets-userCompany', user!.companyId);
 
     Response response2 = await ApiHelper.getCompany(user!.companyId);
 
@@ -76,7 +78,7 @@ class AuthProvider extends ChangeNotifier {
 
     authStatus = AuthStatus.authenticated;
 
-    LocalStorage.prefs.setString('companyLogo', company.photoFullPath);
+    LocalStorage.prefs.setString('tickets-companyLogo', company.photoFullPath);
     NavigationServices.replaceTo(Flurorouter.dashboardRoute);
     showLoader = false;
     notifyListeners();
@@ -86,8 +88,8 @@ class AuthProvider extends ChangeNotifier {
 
   //----------------------------------------------------------------
   Future<bool> isAuthenticated() async {
-    final token = LocalStorage.prefs.getString('token');
-    String? userBody = LocalStorage.prefs.getString('userBody');
+    final token = LocalStorage.prefs.getString('tickets-token');
+    String? userBody = LocalStorage.prefs.getString('tickets-userBody');
 
     if (token == null) {
       authStatus = AuthStatus.notAuthenticated;
@@ -115,7 +117,7 @@ class AuthProvider extends ChangeNotifier {
 
   //---------------------------------------------------------------
   logout() {
-    LocalStorage.prefs.remove('token');
+    LocalStorage.prefs.remove('tickets-token');
     authStatus = AuthStatus.notAuthenticated;
     notifyListeners();
   }
@@ -126,7 +128,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     final data = {
-      "Email": email,
+      'Email': email,
     };
 
     var url = Uri.parse('${Constants.apiUrl}/Account/RecoverPassword');
@@ -141,7 +143,7 @@ class AuthProvider extends ChangeNotifier {
     );
 
     if (response.statusCode >= 400) {
-      NotificationsService.showSnackbarError("Ese Email no está registrado");
+      NotificationsService.showSnackbarError('Ese Email no está registrado');
       showLoader = false;
       notifyListeners();
       return;
@@ -149,7 +151,7 @@ class AuthProvider extends ChangeNotifier {
 
     NavigationServices.replaceTo(Flurorouter.loginRoute);
     NotificationsService.showSnackbar(
-        "Las instrucciones para el cambio de contraseña han sido enviadas al email $email");
+        'Las instrucciones para el cambio de contraseña han sido enviadas al email $email');
     showLoader = false;
     notifyListeners();
   }
@@ -160,7 +162,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     final data = {
-      "Email": email,
+      'Email': email,
     };
 
     var url = Uri.parse('${Constants.apiUrl}/Account/ResendToken');
@@ -175,7 +177,7 @@ class AuthProvider extends ChangeNotifier {
     );
 
     if (response.statusCode >= 400) {
-      NotificationsService.showSnackbarError("Ese Email no está registrado");
+      NotificationsService.showSnackbarError('Ese Email no está registrado');
       showLoader = false;
       notifyListeners();
       return;
@@ -183,7 +185,7 @@ class AuthProvider extends ChangeNotifier {
 
     NavigationServices.replaceTo(Flurorouter.loginRoute);
     NotificationsService.showSnackbar(
-        "Las instrucciones para la confirmación de cuenta han sido enviadas al email $email");
+        'Las instrucciones para la confirmación de cuenta han sido enviadas al email $email');
     showLoader = false;
     notifyListeners();
   }
@@ -206,14 +208,14 @@ class AuthProvider extends ChangeNotifier {
     Response response = await ApiHelper.post('/Account/ChangePassword', data);
 
     if (!response.isSuccess) {
-      NotificationsService.showSnackbarError("Error al cambiar la Contraseña");
+      NotificationsService.showSnackbarError('Error al cambiar la Contraseña');
       showLoader = false;
       notifyListeners();
       return;
     }
 
     NavigationServices.replaceTo(Flurorouter.loginRoute);
-    NotificationsService.showSnackbar("Contraseña cambiada con éxito!!");
+    NotificationsService.showSnackbar('Contraseña cambiada con éxito!!');
     showLoader = false;
     notifyListeners();
   }

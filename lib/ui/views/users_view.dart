@@ -44,6 +44,7 @@ class _UsersViewState extends State<UsersView> {
           Stack(
             children: [
               PaginatedDataTable(
+                columnSpacing: 10.0,
                 sortAscending: usersProvider.ascending,
                 sortColumnIndex: usersProvider.sortColumnIndex,
                 columns: [

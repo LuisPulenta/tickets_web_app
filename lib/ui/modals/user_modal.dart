@@ -35,7 +35,7 @@ class _UserModalState extends State<UserModal> {
   void initState() {
     super.initState();
 
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
     userLogged = token.user;

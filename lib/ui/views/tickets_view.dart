@@ -31,7 +31,7 @@ class _TicketsViewState extends State<TicketsView> {
   @override
   void initState() {
     super.initState();
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
     userTypeLogged = token.user.userTypeName;
@@ -55,6 +55,7 @@ class _TicketsViewState extends State<TicketsView> {
           Stack(
             children: [
               PaginatedDataTable(
+                columnSpacing: 10.0,
                 sortAscending: ticketCabsProvider.ascending,
                 sortColumnIndex: ticketCabsProvider.sortColumnIndex,
                 columns: [

@@ -54,7 +54,7 @@ class _TicketViewState extends State<TicketView> {
 
     showLoader = true;
 
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
     userTypeLogged = token.user.userTypeName;

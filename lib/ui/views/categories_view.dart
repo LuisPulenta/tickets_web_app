@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/datatables/categories_datasource.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/categories_provider.dart';
-import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
-import 'package:tickets_web_app/ui/modals/category_modal.dart';
+
+import '../../datatables/categories_datasource.dart';
+import '../../models/models.dart';
+import '../../providers/categories_provider.dart';
+import '../buttons/custom_icon_button.dart';
+import '../inputs/custom_inputs.dart';
+import '../layouts/shared/widgets/loader_component.dart';
+import '../modals/category_modal.dart';
 
 class CategoriesView extends StatefulWidget {
   const CategoriesView({Key? key}) : super(key: key);
@@ -44,14 +45,15 @@ class _CategoriesViewState extends State<CategoriesView> {
           Stack(
             children: [
               PaginatedDataTable(
+                columnSpacing: 10.0,
                 sortAscending: categoriesProvider.ascending,
                 sortColumnIndex: categoriesProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(
-                      label: Text("ID",
+                      label: Text('ID',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: const Text("Nombre",
+                      label: const Text('Nombre',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         categoriesProvider.sortColumnIndex = colIndex;
@@ -59,18 +61,18 @@ class _CategoriesViewState extends State<CategoriesView> {
                       }),
                   const DataColumn(
                     label: Text(
-                      "Subcategorías",
+                      'Subcategorías',
                     ),
                   ),
                   const DataColumn(
-                      label: Text("Acciones",
+                      label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
                 source: CategoriesDTS(categories, context),
                 header: Row(
                   children: [
                     const Text(
-                      "Categorías",
+                      'Categorías',
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -87,7 +89,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: "Buscar...", icon: Icons.search_outlined),
+                              hint: 'Buscar...', icon: Icons.search_outlined),
                           onSubmitted: (value) {
                             categoriesProvider.search = value;
                             categoriesProvider.filter();
@@ -108,7 +110,7 @@ class _CategoriesViewState extends State<CategoriesView> {
                 actions: [
                   CustomIconButton(
                     icon: Icons.add_outlined,
-                    text: "Nueva Categoría",
+                    text: 'Nueva Categoría',
                     onPressed: () {
                       showModalBottomSheet(
                         backgroundColor: Colors.transparent,

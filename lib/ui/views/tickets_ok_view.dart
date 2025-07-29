@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/datatables/ticket_cabs_datasource.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
+import '../../datatables/ticket_cabs_datasource.dart';
+import '../../models/models.dart';
+import '../../providers/providers.dart';
+import '../../services/services.dart';
+import '../inputs/custom_inputs.dart';
+import '../layouts/shared/widgets/loader_component.dart';
 
 class TicketsOkView extends StatefulWidget {
   const TicketsOkView({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class _TicketsOkViewState extends State<TicketsOkView> {
   //--------------- getTickets -------------------
 
   void getTickets() async {
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     Token token = Token.fromJson(decodedJson);
     int userTypeLogged = token.user.userTypeId;
@@ -69,14 +69,15 @@ class _TicketsOkViewState extends State<TicketsOkView> {
           Stack(
             children: [
               PaginatedDataTable(
+                columnSpacing: 10.0,
                 sortAscending: ticketCabsProvider.ascending,
                 sortColumnIndex: ticketCabsProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(
-                      label: Text("ID",
+                      label: Text('ID',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: const Text("Empresa",
+                      label: const Text('Empresa',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
@@ -84,7 +85,7 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                             .sort<String>((item) => item.companyName);
                       }),
                   DataColumn(
-                      label: const Text("Fecha y Usuario Alta",
+                      label: const Text('Fecha y Usuario Alta',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
@@ -92,7 +93,7 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                             .sort<String>((item) => item.createDate.toString());
                       }),
                   DataColumn(
-                      label: const Text("Categoría",
+                      label: const Text('Categoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
@@ -100,7 +101,7 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                             .sort<String>((item) => item.categoryName);
                       }),
                   DataColumn(
-                      label: const Text("Subcategoría",
+                      label: const Text('Subcategoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
@@ -108,35 +109,35 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                             .sort<String>((item) => item.subcategoryName);
                       }),
                   DataColumn(
-                      label: const Text("Asunto",
+                      label: const Text('Asunto',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
                         ticketCabsProvider.sort<String>((item) => item.title);
                       }),
                   DataColumn(
-                      label: const Text("Estado",
+                      label: const Text('Estado',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
                         ticketCabsProvider.sort<String>((item) => item.title);
                       }),
                   DataColumn(
-                      label: const Text("Registros",
+                      label: const Text('Registros',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         ticketCabsProvider.sortColumnIndex = colIndex;
                         ticketCabsProvider.sort<String>((item) => item.title);
                       }),
                   const DataColumn(
-                      label: Text("Acciones",
+                      label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
                 source: TicketCabsDTS(ticketCabs, context),
                 header: Row(
                   children: [
                     const Text(
-                      "Tickets Resueltos",
+                      'Tickets Resueltos',
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -153,7 +154,7 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: "Buscar...", icon: Icons.search_outlined),
+                              hint: 'Buscar...', icon: Icons.search_outlined),
                           onSubmitted: (value) {
                             ticketCabsProvider.search = value;
                             ticketCabsProvider.filter();

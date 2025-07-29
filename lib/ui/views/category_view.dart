@@ -31,7 +31,7 @@ class _CategoryViewState extends State<CategoryView> {
   void initState() {
     showLoader = true;
 
-    final userBody = LocalStorage.prefs.getString('userBody');
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
     userTypeLogged = token.user.userTypeName;
@@ -77,6 +77,7 @@ class _CategoryViewState extends State<CategoryView> {
           Stack(
             children: [
               PaginatedDataTable(
+                columnSpacing: 10.0,
                 sortColumnIndex: subcategoriesProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(

@@ -1,14 +1,16 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/local_storage.dart';
+
+import '../models/models.dart';
+import '../services/local_storage.dart';
 import 'constants.dart';
 
 class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getUser(String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -41,7 +43,7 @@ class ApiHelper {
   static Future<Response> put(
       String controller, String id, Map<String, dynamic> request) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -91,7 +93,7 @@ class ApiHelper {
   static Future<Response> post(
       String controller, Map<String, dynamic> request) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -120,7 +122,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> delete(String controller, String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -156,7 +158,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getCompanies() async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -192,7 +194,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getCompaniesCombo() async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -228,10 +230,10 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getUsers() async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
-    int userType = LocalStorage.prefs.getInt('userType') ?? 99;
-    int userCompany = LocalStorage.prefs.getInt('userCompany') ?? 99;
+    int userType = LocalStorage.prefs.getInt('tickets-userType') ?? 99;
+    int userCompany = LocalStorage.prefs.getInt('tickets-userCompany') ?? 99;
 
     if (!_validateToken(token)) {
       return Response(
@@ -240,7 +242,7 @@ class ApiHelper {
               'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
     }
     Uri url;
-    var response;
+    http.Response response;
 
     if (userType == 0) {
       url = Uri.parse('${Constants.apiUrl}/Account');
@@ -283,7 +285,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getCompany(int id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -313,7 +315,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getTicketCabs() async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -349,7 +351,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getTicketUser(String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -385,7 +387,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getTicketAdmin(int id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -421,7 +423,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getTicketAdminKP() async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -458,7 +460,7 @@ class ApiHelper {
   static Future<Response> postTicketCab(
       String controller, Map<String, dynamic> request) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -483,7 +485,7 @@ class ApiHelper {
 
     var body = response.body;
     var decodedJson = jsonDecode(body);
-    int nro = decodedJson["id"];
+    int nro = decodedJson['id'];
 
     return Response(isSuccess: true, result: nro);
   }
@@ -492,7 +494,7 @@ class ApiHelper {
   static Future<Response> postTicketDet(
       String controller, Map<String, dynamic> request) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -525,7 +527,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getTicketCab(String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -556,7 +558,7 @@ class ApiHelper {
   static Future<Response> getTicketsResueltos(
       String controller, Map<String, dynamic> request) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -593,7 +595,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getTicketCabParaResolver(String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -630,7 +632,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> deleteUser(String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -639,7 +641,7 @@ class ApiHelper {
               'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
     }
     Uri url;
-    var response;
+    http.Response response;
 
     url = Uri.parse('${Constants.apiUrl}/Account/DeleteUserById/$id');
     response = await http.delete(
@@ -661,7 +663,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getUsersCombo(int id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -697,7 +699,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getCategories() async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -733,7 +735,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getCategory(String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -764,7 +766,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getSubcategories(String id) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -801,7 +803,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getCategoriesCombo() async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -837,7 +839,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> getSubcategoriesCombo(int categoryId) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(
@@ -873,7 +875,7 @@ class ApiHelper {
   //--------------------------------------------------------------
   static Future<Response> sendMail(Map<String, dynamic> request) async {
     Token token = Token.fromJson(
-        jsonDecode(LocalStorage.prefs.getString('userBody') ?? ''));
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
 
     if (!_validateToken(token)) {
       return Response(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/buttons/link_text.dart';
+
+import '../../../../providers/auth_provider.dart';
+import '../../../../services/services.dart';
+import '../../../buttons/link_text.dart';
 
 class NavbarAvatar extends StatelessWidget {
   const NavbarAvatar({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class NavbarAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final userLogged = Provider.of<AuthProvider>(context, listen: false).user;
 
-    String? companyLogo = LocalStorage.prefs.getString('companyLogo');
+    String? companyLogo = LocalStorage.prefs.getString('tickets-companyLogo');
 
     return Row(
       children: [

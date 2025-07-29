@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/datatables/companies_datasource.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/companies_provider.dart';
-import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
-import 'package:tickets_web_app/ui/modals/company_modal.dart';
+
+import '../../datatables/companies_datasource.dart';
+import '../../models/models.dart';
+import '../../providers/companies_provider.dart';
+import '../buttons/custom_icon_button.dart';
+import '../inputs/custom_inputs.dart';
+import '../layouts/shared/widgets/loader_component.dart';
+import '../modals/company_modal.dart';
 
 class CompaniesView extends StatefulWidget {
   const CompaniesView({Key? key}) : super(key: key);
@@ -43,24 +44,25 @@ class _CompaniesViewState extends State<CompaniesView> {
           Stack(
             children: [
               PaginatedDataTable(
+                columnSpacing: 10.0,
                 sortAscending: companiesProvider.ascending,
                 sortColumnIndex: companiesProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(
-                      label: Text("Logo",
+                      label: Text('Logo',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("ID",
+                      label: Text('ID',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: const Text("Nombre",
+                      label: const Text('Nombre',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         companiesProvider.sortColumnIndex = colIndex;
                         companiesProvider.sort<String>((user) => user.name);
                       }),
                   DataColumn(
-                      label: const Text("Fecha y Usuario Alta",
+                      label: const Text('Fecha y Usuario Alta',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         companiesProvider.sortColumnIndex = colIndex;
@@ -68,23 +70,23 @@ class _CompaniesViewState extends State<CompaniesView> {
                             .sort<String>((user) => user.createDate.toString());
                       }),
                   const DataColumn(
-                      label: Text("Fecha y Usuario Ult. Modif.",
+                      label: Text('Fecha y Usuario Ult. Modif.',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Usuarios",
+                      label: Text('Usuarios',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Activa",
+                      label: Text('Activa',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
-                      label: Text("Acciones",
+                      label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
                 source: CompaniesDTS(companies, context),
                 header: Row(
                   children: [
                     const Text(
-                      "Empresas",
+                      'Empresas',
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -101,7 +103,7 @@ class _CompaniesViewState extends State<CompaniesView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: "Buscar...", icon: Icons.search_outlined),
+                              hint: 'Buscar...', icon: Icons.search_outlined),
                           onSubmitted: (value) {
                             companiesProvider.search = value;
                             companiesProvider.filter();
@@ -135,7 +137,7 @@ class _CompaniesViewState extends State<CompaniesView> {
                 actions: [
                   CustomIconButton(
                     icon: Icons.add_outlined,
-                    text: "Nueva Empresa",
+                    text: 'Nueva Empresa',
                     onPressed: () {
                       showModalBottomSheet(
                         backgroundColor: Colors.transparent,
