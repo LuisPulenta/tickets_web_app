@@ -1,10 +1,12 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/helpers/constants.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/services.dart';
+
+import '../helpers/api_helper.dart';
+import '../helpers/constants.dart';
+import '../models/models.dart';
+import '../services/services.dart';
 
 class TicketCabsProvider extends ChangeNotifier {
   List<TicketCab> ticketCabs = [];
@@ -50,68 +52,6 @@ class TicketCabsProvider extends ChangeNotifier {
     if (userTypeLogged == 0) {
       response = await ApiHelper.getTicketAdminKP();
     }
-
-    if (!response.isSuccess) {
-      NotificationsService.showSnackbarError('Se ha producido un error');
-      showLoader = false;
-      notifyListeners();
-      return;
-    }
-    ticketCabs = response.result;
-
-    ticketCabs.sort((a, b) {
-      return a.id.compareTo(b.id);
-    });
-
-    originalTicketCabs = ticketCabs;
-
-    showLoader = false;
-    notifyListeners();
-  }
-
-  //---------------------------------------------------------------------
-  getTicketOkCabs(int userTypeLogged, String userIdLogged, int companyIdLogged,
-      DateTime desde, DateTime hasta) async {
-    showLoader = true;
-    notifyListeners();
-
-    Map<String, dynamic> request = {
-      'UserType': userTypeLogged,
-      'UserId': userIdLogged,
-      'CompanyId': companyIdLogged,
-      'Desde': desde.toString().substring(0, 10),
-      'Hasta': hasta.toString().substring(0, 10),
-    };
-
-    Response response = await ApiHelper.getTicketsResueltos(
-        '/ticketCabs/GetTicketResueltos', request);
-
-    if (!response.isSuccess) {
-      NotificationsService.showSnackbarError('Se ha producido un error');
-      showLoader = false;
-      notifyListeners();
-      return;
-    }
-    ticketCabs = response.result;
-
-    ticketCabs.sort((a, b) {
-      return a.id.compareTo(b.id);
-    });
-
-    originalTicketCabs = ticketCabs;
-
-    showLoader = false;
-    notifyListeners();
-  }
-
-  //---------------------------------------------------------------------
-  getTicketDerivatedCabs(
-    String userIdLogged,
-  ) async {
-    showLoader = true;
-    notifyListeners();
-
-    Response response = await ApiHelper.getTicketCabParaResolver(userIdLogged);
 
     if (!response.isSuccess) {
       NotificationsService.showSnackbarError('Se ha producido un error');
@@ -182,7 +122,7 @@ class TicketCabsProvider extends ChangeNotifier {
               '/ticketCabs/PostTicketDet', request2);
           if (response2.isSuccess) {
             await getTicketCabs();
-            NotificationsService.showSnackbar("Ticket guardado con éxito");
+            NotificationsService.showSnackbar('Ticket guardado con éxito');
             return nroTicket;
           }
         } catch (e) {
@@ -272,7 +212,7 @@ class TicketCabsProvider extends ChangeNotifier {
 
         if (response.isSuccess) {
           await getTicketCabs();
-          NotificationsService.showSnackbar("Ticket guardado con éxito");
+          NotificationsService.showSnackbar('Ticket guardado con éxito');
         }
       }
     } catch (e) {}
@@ -313,7 +253,7 @@ class TicketCabsProvider extends ChangeNotifier {
 
       return ticketCab;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 }

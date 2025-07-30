@@ -21,23 +21,28 @@ class TicketsView extends StatefulWidget {
 
 class _TicketsViewState extends State<TicketsView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
-  bool showLoader = true;
   late Token token;
   String userTypeLogged = '';
   int companyIdLogged = -1;
+
+  //--------------- getTickets -------------------
+
+  Future<void> getTickets() async {
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
+    var decodedJson = jsonDecode(userBody!);
+    token = Token.fromJson(decodedJson);
+    userTypeLogged = token.user.userTypeName;
+    await Provider.of<TicketCabsProvider>(context, listen: false)
+        .getTicketCabs();
+    setState(() {});
+  }
 
   //-------------------- initState ----------------------------
 
   @override
   void initState() {
     super.initState();
-    final userBody = LocalStorage.prefs.getString('tickets-userBody');
-    var decodedJson = jsonDecode(userBody!);
-    token = Token.fromJson(decodedJson);
-    userTypeLogged = token.user.userTypeName;
-    Provider.of<TicketCabsProvider>(context, listen: false).getTicketCabs();
-    showLoader = false;
-    setState(() {});
+    getTickets();
   }
 
 //-------------------- Pantalla ----------------------------
@@ -46,7 +51,11 @@ class _TicketsViewState extends State<TicketsView> {
     final ticketCabsProvider = Provider.of<TicketCabsProvider>(context);
     List<TicketCab> ticketCabs =
         Provider.of<TicketCabsProvider>(context).ticketCabs;
-    final size = MediaQuery.of(context).size;
+
+    if (ticketCabsProvider.showLoader) {
+      return const Center(child: LoaderComponent(text: 'Cargando Tickets...'));
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView(
@@ -174,14 +183,6 @@ class _TicketsViewState extends State<TicketsView> {
                       : Container(),
                 ],
               ),
-              showLoader
-                  ? Positioned(
-                      left: size.width * 0.5 - 300,
-                      top: size.height * 0.5 - 50,
-                      child: const LoaderComponent(
-                        text: 'Cargando Tickets...',
-                      ))
-                  : Container()
             ],
           ),
         ],

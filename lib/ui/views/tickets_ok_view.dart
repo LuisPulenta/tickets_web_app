@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../datatables/ticket_cabs_datasource.dart';
+
+import '../../datatables/ticket_cabs_ok_datasource.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../services/services.dart';
@@ -19,7 +20,7 @@ class TicketsOkView extends StatefulWidget {
 
 class _TicketsOkViewState extends State<TicketsOkView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
-  bool showLoader = true;
+
   late Token token;
   int companyIdLogged = -1;
   DateTime desde = DateTime.now().add(const Duration(days: -30));
@@ -28,16 +29,17 @@ class _TicketsOkViewState extends State<TicketsOkView> {
 
   //--------------- getTickets -------------------
 
-  void getTickets() async {
+  Future<void> getTickets() async {
     final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     Token token = Token.fromJson(decodedJson);
     int userTypeLogged = token.user.userTypeId;
     String userIdLogged = token.user.id;
     int companyIdLogged = token.user.companyId;
-    await Provider.of<TicketCabsProvider>(context, listen: false)
+    await Provider.of<TicketCabsOkProvider>(context, listen: false)
         .getTicketOkCabs(
             userTypeLogged, userIdLogged, companyIdLogged, desde, hasta);
+    setState(() {});
   }
 
   //-------------------- initState ----------------------------
@@ -50,17 +52,19 @@ class _TicketsOkViewState extends State<TicketsOkView> {
     );
     hasta = DateTime.now();
     getTickets();
-    showLoader = false;
-    setState(() {});
   }
 
 //-------------------- Pantalla ----------------------------
   @override
   Widget build(BuildContext context) {
-    final ticketCabsProvider = Provider.of<TicketCabsProvider>(context);
-    List<TicketCab> ticketCabs =
-        Provider.of<TicketCabsProvider>(context).ticketCabs;
-    final size = MediaQuery.of(context).size;
+    final ticketCabsOkProvider = Provider.of<TicketCabsOkProvider>(context);
+    List<TicketCab> ticketCabsOk =
+        Provider.of<TicketCabsOkProvider>(context).ticketCabsOk;
+
+    if (ticketCabsOkProvider.showLoader) {
+      return const Center(child: LoaderComponent(text: 'Cargando Tickets...'));
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView(
@@ -70,8 +74,8 @@ class _TicketsOkViewState extends State<TicketsOkView> {
             children: [
               PaginatedDataTable(
                 columnSpacing: 10.0,
-                sortAscending: ticketCabsProvider.ascending,
-                sortColumnIndex: ticketCabsProvider.sortColumnIndex,
+                sortAscending: ticketCabsOkProvider.ascending,
+                sortColumnIndex: ticketCabsOkProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(
                       label: Text('ID',
@@ -80,60 +84,60 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                       label: const Text('Empresa',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsOkProvider.sortColumnIndex = colIndex;
+                        ticketCabsOkProvider
                             .sort<String>((item) => item.companyName);
                       }),
                   DataColumn(
                       label: const Text('Fecha y Usuario Alta',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsOkProvider.sortColumnIndex = colIndex;
+                        ticketCabsOkProvider
                             .sort<String>((item) => item.createDate.toString());
                       }),
                   DataColumn(
                       label: const Text('Categoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsOkProvider.sortColumnIndex = colIndex;
+                        ticketCabsOkProvider
                             .sort<String>((item) => item.categoryName);
                       }),
                   DataColumn(
                       label: const Text('Subcategoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsOkProvider.sortColumnIndex = colIndex;
+                        ticketCabsOkProvider
                             .sort<String>((item) => item.subcategoryName);
                       }),
                   DataColumn(
                       label: const Text('Asunto',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider.sort<String>((item) => item.title);
+                        ticketCabsOkProvider.sortColumnIndex = colIndex;
+                        ticketCabsOkProvider.sort<String>((item) => item.title);
                       }),
                   DataColumn(
                       label: const Text('Estado',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider.sort<String>((item) => item.title);
+                        ticketCabsOkProvider.sortColumnIndex = colIndex;
+                        ticketCabsOkProvider.sort<String>((item) => item.title);
                       }),
                   DataColumn(
                       label: const Text('Registros',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider.sort<String>((item) => item.title);
+                        ticketCabsOkProvider.sortColumnIndex = colIndex;
+                        ticketCabsOkProvider.sort<String>((item) => item.title);
                       }),
                   const DataColumn(
                       label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
-                source: TicketCabsDTS(ticketCabs, context),
+                source: TicketCabsOkDTS(ticketCabsOk, context),
                 header: Row(
                   children: [
                     const Text(
@@ -156,8 +160,8 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                           decoration: CustomInput.searchInputDecoration(
                               hint: 'Buscar...', icon: Icons.search_outlined),
                           onSubmitted: (value) {
-                            ticketCabsProvider.search = value;
-                            ticketCabsProvider.filter();
+                            ticketCabsOkProvider.search = value;
+                            ticketCabsOkProvider.filter();
                           },
                         ),
                       ),
@@ -210,14 +214,6 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                   setState(() {});
                 },
               ),
-              showLoader
-                  ? Positioned(
-                      left: size.width * 0.5 - 300,
-                      top: size.height * 0.5 - 50,
-                      child: const LoaderComponent(
-                        text: 'Cargando Tickets...',
-                      ))
-                  : Container()
             ],
           ),
         ],

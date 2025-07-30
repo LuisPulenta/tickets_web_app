@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/providers.dart';
 
-import 'package:tickets_web_app/router/router.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/layouts/layouts.dart';
+import 'providers/providers.dart';
+import 'router/router.dart';
+import 'services/services.dart';
+import 'ui/layouts/layouts.dart';
 
 void main() async {
   await LocalStorage.configurePrefs();
@@ -61,6 +61,12 @@ class AppState extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => TicketCabsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TicketCabsOkProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TicketCabsDerivatedProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => TicketFormProvider(),

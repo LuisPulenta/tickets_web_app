@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../datatables/ticket_cabs_datasource.dart';
+import '../../datatables/ticket_cabs_derivated_datasource.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../services/services.dart';
@@ -21,20 +21,20 @@ class TicketsDerivatedView extends StatefulWidget {
 
 class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
-  bool showLoader = true;
   late Token token;
   String userTypeLogged = '';
   int companyIdLogged = -1;
 
 //--------------- getTickets -------------------
 
-  void getTickets() async {
+  Future<void> getTickets() async {
     final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     Token token = Token.fromJson(decodedJson);
     String userIdLogged = token.user.id;
-    await Provider.of<TicketCabsProvider>(context, listen: false)
+    await Provider.of<TicketCabsDerivatedProvider>(context, listen: false)
         .getTicketDerivatedCabs(userIdLogged);
+    setState(() {});
   }
 
   //-------------------- initState ----------------------------
@@ -43,17 +43,20 @@ class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
   void initState() {
     super.initState();
     getTickets();
-    showLoader = false;
-    setState(() {});
   }
 
 //-------------------- Pantalla ----------------------------
   @override
   Widget build(BuildContext context) {
-    final ticketCabsProvider = Provider.of<TicketCabsProvider>(context);
-    List<TicketCab> ticketCabs =
-        Provider.of<TicketCabsProvider>(context).ticketCabs;
-    final size = MediaQuery.of(context).size;
+    final ticketCabsDerivatedProvider =
+        Provider.of<TicketCabsDerivatedProvider>(context);
+    List<TicketCab> ticketCabsDerivated =
+        Provider.of<TicketCabsDerivatedProvider>(context).ticketCabsDerivated;
+
+    if (ticketCabsDerivatedProvider.showLoader) {
+      return const Center(child: LoaderComponent(text: 'Cargando Tickets...'));
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView(
@@ -63,8 +66,8 @@ class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
             children: [
               PaginatedDataTable(
                 columnSpacing: 10.0,
-                sortAscending: ticketCabsProvider.ascending,
-                sortColumnIndex: ticketCabsProvider.sortColumnIndex,
+                sortAscending: ticketCabsDerivatedProvider.ascending,
+                sortColumnIndex: ticketCabsDerivatedProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(
                       label: Text('ID',
@@ -73,60 +76,63 @@ class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
                       label: const Text('Empresa',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsDerivatedProvider.sortColumnIndex = colIndex;
+                        ticketCabsDerivatedProvider
                             .sort<String>((item) => item.companyName);
                       }),
                   DataColumn(
                       label: const Text('Fecha y Usuario Alta',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsDerivatedProvider.sortColumnIndex = colIndex;
+                        ticketCabsDerivatedProvider
                             .sort<String>((item) => item.createDate.toString());
                       }),
                   DataColumn(
                       label: const Text('Categoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsDerivatedProvider.sortColumnIndex = colIndex;
+                        ticketCabsDerivatedProvider
                             .sort<String>((item) => item.categoryName);
                       }),
                   DataColumn(
                       label: const Text('Subcategoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider
+                        ticketCabsDerivatedProvider.sortColumnIndex = colIndex;
+                        ticketCabsDerivatedProvider
                             .sort<String>((item) => item.subcategoryName);
                       }),
                   DataColumn(
                       label: const Text('Asunto',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider.sort<String>((item) => item.title);
+                        ticketCabsDerivatedProvider.sortColumnIndex = colIndex;
+                        ticketCabsDerivatedProvider
+                            .sort<String>((item) => item.title);
                       }),
                   DataColumn(
                       label: const Text('Estado',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider.sort<String>((item) => item.title);
+                        ticketCabsDerivatedProvider.sortColumnIndex = colIndex;
+                        ticketCabsDerivatedProvider
+                            .sort<String>((item) => item.title);
                       }),
                   DataColumn(
                       label: const Text('Registros',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsProvider.sortColumnIndex = colIndex;
-                        ticketCabsProvider.sort<String>((item) => item.title);
+                        ticketCabsDerivatedProvider.sortColumnIndex = colIndex;
+                        ticketCabsDerivatedProvider
+                            .sort<String>((item) => item.title);
                       }),
                   const DataColumn(
                       label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
-                source: TicketCabsDTS(ticketCabs, context),
+                source: TicketCabsDerivatedDTS(ticketCabsDerivated, context),
                 header: Row(
                   children: [
                     const Text(
@@ -149,8 +155,8 @@ class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
                           decoration: CustomInput.searchInputDecoration(
                               hint: 'Buscar...', icon: Icons.search_outlined),
                           onSubmitted: (value) {
-                            ticketCabsProvider.search = value;
-                            ticketCabsProvider.filter();
+                            ticketCabsDerivatedProvider.search = value;
+                            ticketCabsDerivatedProvider.filter();
                           },
                         ),
                       ),
@@ -180,14 +186,6 @@ class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
                       : Container(),
                 ],
               ),
-              showLoader
-                  ? Positioned(
-                      left: size.width * 0.5 - 300,
-                      top: size.height * 0.5 - 50,
-                      child: const LoaderComponent(
-                        text: 'Cargando Tickets...',
-                      ))
-                  : Container()
             ],
           ),
         ],
