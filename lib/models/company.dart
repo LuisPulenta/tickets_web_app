@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tickets_web_app/models/models.dart';
+import 'models.dart';
 
 Company companyFromJson(String str) => Company.fromJson(json.decode(str));
 
@@ -38,38 +38,38 @@ class Company {
   });
 
   factory Company.fromJson(Map<String, dynamic> json) => Company(
-        id: json["id"],
-        name: json["name"],
-        createDate: json["createDate"],
-        createUserId: json["createUserId"],
-        createUserName: json["createUserName"],
-        lastChangeDate: json["lastChangeDate"],
-        lastChangeUserId: json["lastChangeUserId"],
-        lastChangeUserName: json["lastChangeUserName"],
-        active: json["active"],
-        photo: json["photo"],
-        photoFullPath: json["photoFullPath"],
-        users: json["users"] != null
-            ? List<User>.from(json["users"].map((x) => User.fromJson(x)))
+        id: json['id'],
+        name: json['name'],
+        createDate: json['createDate'],
+        createUserId: json['createUserId'],
+        createUserName: json['createUserName'],
+        lastChangeDate: json['lastChangeDate'],
+        lastChangeUserId: json['lastChangeUserId'],
+        lastChangeUserName: json['lastChangeUserName'],
+        active: json['active'],
+        photo: json['photo'],
+        photoFullPath: json['photoFullPath'],
+        users: json['users'] != null
+            ? List<User>.from(json['users'].map((x) => User.fromJson(x)))
             : [],
-        usersNumber: json["usersNumber"] ?? 0,
+        usersNumber: json['usersNumber'] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "createDate": createDate,
-        "createUserId": createUserId,
-        "createUserName": createUserName,
-        "lastChangeDate": lastChangeDate,
-        "lastChangeUserId": lastChangeUserId,
-        "lastChangeUserName": lastChangeUserName,
-        "active": active,
-        "photo": photo,
-        "photoFullPath": photoFullPath,
-        "users": users != null
+        'id': id,
+        'name': name,
+        'createDate': createDate,
+        'createUserId': createUserId,
+        'createUserName': createUserName,
+        'lastChangeDate': lastChangeDate,
+        'lastChangeUserId': lastChangeUserId,
+        'lastChangeUserName': lastChangeUserName,
+        'active': active,
+        'photo': photo,
+        'photoFullPath': photoFullPath,
+        'users': users != null
             ? List<dynamic>.from(users!.map((x) => x.toJson()))
             : [],
-        "usersNumber": usersNumber,
+        'usersNumber': usersNumber,
       };
 }
