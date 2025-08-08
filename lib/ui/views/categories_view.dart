@@ -89,7 +89,14 @@ class _CategoriesViewState extends State<CategoriesView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: 'Buscar...', icon: Icons.search_outlined),
+                            hint: 'Buscar...',
+                            icon: Icons.search_outlined,
+                            onClear: () {
+                              categoriesProvider.search = '';
+                              categoriesProvider.filter();
+                              categoriesProvider.notify();
+                            },
+                          ),
                           onSubmitted: (value) {
                             categoriesProvider.search = value;
                             categoriesProvider.filter();

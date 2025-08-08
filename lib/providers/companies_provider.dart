@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/notifications_service.dart';
+import '../helpers/api_helper.dart';
+import '../models/models.dart';
+import '../services/notifications_service.dart';
 
 class CompaniesProvider extends ChangeNotifier {
   List<Company> companies = [];
@@ -71,7 +71,7 @@ class CompaniesProvider extends ChangeNotifier {
       Response response = await ApiHelper.post('/companies', request);
       if (response.isSuccess) {
         getCompanies();
-        NotificationsService.showSnackbar("Empresa guardada con éxito");
+        NotificationsService.showSnackbar('Empresa guardada con éxito');
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');
       }
@@ -102,7 +102,7 @@ class CompaniesProvider extends ChangeNotifier {
           await ApiHelper.put('/companies', id.toString(), request);
       if (response.isSuccess) {
         getCompanies();
-        NotificationsService.showSnackbar("Cambios guardados con éxito");
+        NotificationsService.showSnackbar('Cambios guardados con éxito');
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');
       }
@@ -129,7 +129,7 @@ class CompaniesProvider extends ChangeNotifier {
         return;
       }
       getCompanies();
-      NotificationsService.showSnackbar("Empresa borrada con éxito");
+      NotificationsService.showSnackbar('Empresa borrada con éxito');
     } catch (e) {
       throw ('Error al borrar la Categoría');
     }
@@ -158,6 +158,12 @@ class CompaniesProvider extends ChangeNotifier {
     }
 
     companies = filteredList;
+    notifyListeners();
+  }
+
+  //--------------------------------------------------------------------
+  void notify() {
+    showLoader = false;
     notifyListeners();
   }
 }

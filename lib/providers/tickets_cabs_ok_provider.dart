@@ -77,7 +77,14 @@ class TicketCabsOkProvider extends ChangeNotifier {
               .contains(search.toLowerCase())) ||
           (ticketCab.createUserName
               .toLowerCase()
-              .contains(search.toLowerCase()))) {
+              .contains(search.toLowerCase())) ||
+          (ticketCab.categoryName
+              .toLowerCase()
+              .contains(search.toLowerCase())) ||
+          (ticketCab.subcategoryName
+              .toLowerCase()
+              .contains(search.toLowerCase())) ||
+          (ticketCab.title.toLowerCase().contains(search.toLowerCase()))) {
         filteredList.add(ticketCab);
       }
     }
@@ -97,5 +104,11 @@ class TicketCabsOkProvider extends ChangeNotifier {
     } catch (e) {
       rethrow;
     }
+  }
+
+  //--------------------------------------------------------------------
+  void notify() {
+    showLoader = false;
+    notifyListeners();
   }
 }

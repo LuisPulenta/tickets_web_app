@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/notifications_service.dart';
+
+import '../helpers/api_helper.dart';
+import '../models/models.dart';
+import '../services/notifications_service.dart';
 
 class CategoriesProvider extends ChangeNotifier {
   List<Category> categories = [];
@@ -65,7 +66,7 @@ class CategoriesProvider extends ChangeNotifier {
       Response response = await ApiHelper.post('/categories', request);
       if (response.isSuccess) {
         getCategories();
-        NotificationsService.showSnackbar("Categoría guardada con éxito");
+        NotificationsService.showSnackbar('Categoría guardada con éxito');
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');
       }
@@ -92,7 +93,7 @@ class CategoriesProvider extends ChangeNotifier {
           await ApiHelper.put('/categories', id.toString(), request);
       if (response.isSuccess) {
         getCategories();
-        NotificationsService.showSnackbar("Cambios guardados con éxito");
+        NotificationsService.showSnackbar('Cambios guardados con éxito');
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');
       }
@@ -120,7 +121,7 @@ class CategoriesProvider extends ChangeNotifier {
         return;
       }
       getCategories();
-      NotificationsService.showSnackbar("Categoría borrada con éxito");
+      NotificationsService.showSnackbar('Categoría borrada con éxito');
     } catch (e) {
       throw ('Error al borrar la Categoría');
     }
@@ -153,7 +154,13 @@ class CategoriesProvider extends ChangeNotifier {
 
       return category;
     } catch (e) {
-      throw e;
+      rethrow;
     }
+  }
+
+  //--------------------------------------------------------------------
+  void notify() {
+    showLoader = false;
+    notifyListeners();
   }
 }

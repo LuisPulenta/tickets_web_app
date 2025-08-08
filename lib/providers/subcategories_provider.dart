@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/notifications_service.dart';
+
+import '../helpers/api_helper.dart';
+import '../models/models.dart';
+import '../services/notifications_service.dart';
 
 class SubcategoriesProvider extends ChangeNotifier {
   Category? category;
@@ -70,7 +71,7 @@ class SubcategoriesProvider extends ChangeNotifier {
       Response response = await ApiHelper.post('/subcategories', request);
       if (response.isSuccess) {
         getSubcategories(categoryId);
-        NotificationsService.showSnackbar("Subcategoría guardada con éxito");
+        NotificationsService.showSnackbar('Subcategoría guardada con éxito');
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');
       }
@@ -100,7 +101,7 @@ class SubcategoriesProvider extends ChangeNotifier {
           await ApiHelper.put('/subcategories', id.toString(), request);
       if (response.isSuccess) {
         getSubcategories(categoryId);
-        NotificationsService.showSnackbar("Cambios guardados con éxito");
+        NotificationsService.showSnackbar('Cambios guardados con éxito');
       } else {
         NotificationsService.showSnackbarError('$name ya existe!!');
       }
@@ -128,7 +129,7 @@ class SubcategoriesProvider extends ChangeNotifier {
         return;
       }
       getSubcategories(categoryId);
-      NotificationsService.showSnackbar("Subcategoría borrada con éxito");
+      NotificationsService.showSnackbar('Subcategoría borrada con éxito');
     } catch (e) {
       throw ('Error al borrar la Subcategoría');
     }
@@ -154,6 +155,12 @@ class SubcategoriesProvider extends ChangeNotifier {
 
   //--------------------------------------------------------------------
   void refresh() {
+    notifyListeners();
+  }
+
+  //--------------------------------------------------------------------
+  void notify() {
+    showLoader = false;
     notifyListeners();
   }
 }

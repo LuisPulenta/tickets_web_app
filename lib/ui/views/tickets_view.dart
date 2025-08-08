@@ -149,7 +149,14 @@ class _TicketsViewState extends State<TicketsView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: 'Buscar...', icon: Icons.search_outlined),
+                            hint: 'Buscar...',
+                            icon: Icons.search_outlined,
+                            onClear: () {
+                              ticketCabsProvider.search = '';
+                              ticketCabsProvider.filter();
+                              ticketCabsProvider.notify();
+                            },
+                          ),
                           onSubmitted: (value) {
                             ticketCabsProvider.search = value;
                             ticketCabsProvider.filter();

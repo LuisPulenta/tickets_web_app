@@ -121,7 +121,14 @@ class _UsersViewState extends State<UsersView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: 'Buscar...', icon: Icons.search_outlined),
+                            hint: 'Buscar...',
+                            icon: Icons.search_outlined,
+                            onClear: () {
+                              usersProvider.search = '';
+                              usersProvider.filter();
+                              usersProvider.notify();
+                            },
+                          ),
                           onSubmitted: (value) {
                             usersProvider.search = value;
                             usersProvider.filter();

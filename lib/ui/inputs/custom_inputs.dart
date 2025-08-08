@@ -30,10 +30,10 @@ class CustomInput {
   }
 
   //-----------------------------------------------------
-  static InputDecoration searchInputDecoration({
-    required String hint,
-    required IconData icon,
-  }) {
+  static InputDecoration searchInputDecoration(
+      {required String hint,
+      required IconData icon,
+      required VoidCallback onClear}) {
     return InputDecoration(
       border: InputBorder.none,
       enabledBorder: InputBorder.none,
@@ -42,6 +42,12 @@ class CustomInput {
         icon,
         color: Colors.grey,
       ),
+      suffixIcon: IconButton(
+          onPressed: onClear,
+          icon: const Icon(
+            Icons.close,
+            color: Colors.grey,
+          )),
       labelStyle: const TextStyle(color: Colors.grey),
       hintStyle: const TextStyle(color: Colors.grey),
     );

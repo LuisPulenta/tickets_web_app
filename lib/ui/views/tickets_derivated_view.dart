@@ -153,7 +153,14 @@ class _TicketsDerivatedViewState extends State<TicketsDerivatedView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: 'Buscar...', icon: Icons.search_outlined),
+                            hint: 'Buscar...',
+                            icon: Icons.search_outlined,
+                            onClear: () {
+                              ticketCabsDerivatedProvider.search = '';
+                              ticketCabsDerivatedProvider.filter();
+                              ticketCabsDerivatedProvider.notify();
+                            },
+                          ),
                           onSubmitted: (value) {
                             ticketCabsDerivatedProvider.search = value;
                             ticketCabsDerivatedProvider.filter();

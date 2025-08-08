@@ -103,7 +103,14 @@ class _CompaniesViewState extends State<CompaniesView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: 'Buscar...', icon: Icons.search_outlined),
+                            hint: 'Buscar...',
+                            icon: Icons.search_outlined,
+                            onClear: () {
+                              companiesProvider.search = '';
+                              companiesProvider.filter();
+                              companiesProvider.notify();
+                            },
+                          ),
                           onSubmitted: (value) {
                             companiesProvider.search = value;
                             companiesProvider.filter();

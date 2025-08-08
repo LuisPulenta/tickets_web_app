@@ -1,15 +1,16 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/datatables/subcategories_datasource.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/local_storage.dart';
-import 'package:tickets_web_app/ui/buttons/custom_icon_button.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
-import 'package:tickets_web_app/ui/modals/subcategory_modal.dart';
 
+import '../../datatables/subcategories_datasource.dart';
 import '../../models/models.dart';
+import '../../providers/providers.dart';
+import '../../services/local_storage.dart';
+import '../buttons/custom_icon_button.dart';
+import '../inputs/custom_inputs.dart';
+import '../layouts/shared/widgets/loader_component.dart';
+import '../modals/subcategory_modal.dart';
 
 class CategoryView extends StatefulWidget {
   final String id;
@@ -24,7 +25,7 @@ class _CategoryViewState extends State<CategoryView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool showLoader = false;
   late Token token;
-  String userTypeLogged = "";
+  String userTypeLogged = '';
 
   //----------------------------------------------------------------------
   @override
@@ -81,17 +82,17 @@ class _CategoryViewState extends State<CategoryView> {
                 sortColumnIndex: subcategoriesProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(
-                      label: Text("ID",
+                      label: Text('ID',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: const Text("Nombre",
+                      label: const Text('Nombre',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
                         subcategoriesProvider.sortColumnIndex = colIndex;
                         subcategoriesProvider.sort<String>((user) => user.name);
                       }),
                   const DataColumn(
-                      label: Text("Acciones",
+                      label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
                 source: SubcategoriesDTS(subcategories, context, widget.id,
@@ -99,7 +100,7 @@ class _CategoryViewState extends State<CategoryView> {
                 header: Row(
                   children: [
                     Text(
-                      "Categoría: ${subcategoriesProvider.category!.name}",
+                      'Categoría: ${subcategoriesProvider.category!.name}',
                       style: const TextStyle(
                           color: Colors.black,
                           fontSize: 28,
@@ -109,7 +110,7 @@ class _CategoryViewState extends State<CategoryView> {
                       width: 50,
                     ),
                     const Text(
-                      "Subcategorías",
+                      'Subcategorías',
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -126,7 +127,14 @@ class _CategoryViewState extends State<CategoryView> {
                         ),
                         child: TextField(
                           decoration: CustomInput.searchInputDecoration(
-                              hint: "Buscar...", icon: Icons.search_outlined),
+                            hint: 'Buscar...',
+                            icon: Icons.search_outlined,
+                            onClear: () {
+                              categoriesProvider.search = '';
+                              categoriesProvider.filter();
+                              categoriesProvider.notify();
+                            },
+                          ),
                           onSubmitted: (value) {
                             categoriesProvider.search = value;
                             categoriesProvider.filter();
@@ -147,7 +155,7 @@ class _CategoryViewState extends State<CategoryView> {
                 actions: [
                   CustomIconButton(
                     icon: Icons.add_outlined,
-                    text: "Nueva Subcategoría",
+                    text: 'Nueva Subcategoría',
                     onPressed: () async {
                       await showModalBottomSheet(
                         backgroundColor: Colors.transparent,

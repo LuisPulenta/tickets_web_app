@@ -208,4 +208,10 @@ class UsersProvider extends ChangeNotifier {
     showLoader = false;
     notifyListeners();
   }
+
+  //--------------------------------------------------------------------
+  void notify() {
+    showLoader = false;
+    notifyListeners();
+  }
 }
