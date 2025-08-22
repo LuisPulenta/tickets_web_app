@@ -1319,7 +1319,7 @@ class _TicketViewState extends State<TicketView> {
             'TicketN N° $nroTicket ENVIADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 Se ha enviado nuevamente el Ticket N° $nroTicket.<br>
-Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
       //Devuelto
@@ -1330,7 +1330,7 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
             'TicketN N° $nroTicket DEVUELTO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 Se ha devuelto el Ticket N° $nroTicket para su revisión.<br>
-Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
 
@@ -1342,7 +1342,7 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
             'TicketN N° $nroTicket ASIGNADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 Se ha asignado a Keypress el Ticket N° $nroTicket para su resolución<br>
-Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
 
@@ -1355,7 +1355,7 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
         body = '''
 La resolución del Ticket N° $nroTicket se encuentra en curso.<br>
 En breve se comunicará su resolución.<br>
-Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
 
@@ -1367,7 +1367,7 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
             'TicketN N° $nroTicket RESUELTO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 El Ticket N° $nroTicket ha sido resuelto<br>
-Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
 
@@ -1379,7 +1379,7 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
             'TicketN N° $nroTicket DERIVADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 El Ticket N° $nroTicket ha sido derivado a $emailUserSelected para su revisión.<br>
-Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
     }

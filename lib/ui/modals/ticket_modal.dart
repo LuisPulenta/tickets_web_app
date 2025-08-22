@@ -1,18 +1,19 @@
 import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tickets_web_app/helpers/api_helper.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-import 'package:tickets_web_app/ui/cards/white_card.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
+import '../../helpers/api_helper.dart';
 import '../../helpers/constants.dart';
+import '../../models/models.dart';
+import '../../providers/providers.dart';
+import '../../services/services.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../cards/white_card.dart';
+import '../inputs/custom_inputs.dart';
+import '../labels/custom_labels.dart';
 
 class TicketModal extends StatefulWidget {
   final TicketCab? ticketCab;
@@ -148,13 +149,13 @@ class _TicketModalState extends State<TicketModal> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return "Ingrese Asunto";
+                                  return 'Ingrese Asunto';
                                 }
                                 if (value.length < 3) {
-                                  return "Mínimo 3 caracteres";
+                                  return 'Mínimo 3 caracteres';
                                 }
                                 if (value.length > 50) {
-                                  return "Máximo 50 caracteres";
+                                  return 'Máximo 50 caracteres';
                                 }
                                 return null;
                               },
@@ -190,13 +191,13 @@ class _TicketModalState extends State<TicketModal> {
                               companyLogged),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Ingrese Descripción";
+                              return 'Ingrese Descripción';
                             }
                             if (value.length < 3) {
-                              return "Mínimo 3 caracteres";
+                              return 'Mínimo 3 caracteres';
                             }
                             if (value.length > 1000) {
-                              return "Máximo 1000 caracteres";
+                              return 'Máximo 1000 caracteres';
                             }
                             return null;
                           },
@@ -237,7 +238,7 @@ class _TicketModalState extends State<TicketModal> {
                     companyLogged,
                   );
                 },
-                text: "Guardar",
+                text: 'Guardar',
                 color: Colors.white,
               ),
             ),
@@ -252,7 +253,7 @@ class _TicketModalState extends State<TicketModal> {
     Response response = await ApiHelper.getCategoriesCombo();
 
     if (!response.isSuccess) {
-      NotificationsService.showSnackbarError("Error al cargar las Categorías");
+      NotificationsService.showSnackbarError('Error al cargar las Categorías');
       return;
     }
 
@@ -269,7 +270,7 @@ class _TicketModalState extends State<TicketModal> {
           : DropdownButtonFormField(
               validator: (value) {
                 if (value == 0) {
-                  return "Seleccione una Categoría...";
+                  return 'Seleccione una Categoría...';
                 }
                 return null;
               },
@@ -340,7 +341,7 @@ class _TicketModalState extends State<TicketModal> {
 
     if (!response.isSuccess) {
       NotificationsService.showSnackbarError(
-          "Error al cargar las Subcategorías");
+          'Error al cargar las Subcategorías');
       return;
     }
 
@@ -357,7 +358,7 @@ class _TicketModalState extends State<TicketModal> {
           : DropdownButtonFormField(
               validator: (value) {
                 if (value == 0) {
-                  return "Seleccione una Subcategoría...";
+                  return 'Seleccione una Subcategoría...';
                 }
                 return null;
               },
@@ -460,7 +461,7 @@ class _TicketModalState extends State<TicketModal> {
           final companyLoggedId =
               Provider.of<AuthProvider>(context, listen: false).user!.companyId;
 
-          String toEmail = "";
+          String toEmail = '';
 
           try {
             Response response = await ApiHelper.getMailsAdmin(companyLoggedId);
@@ -477,7 +478,7 @@ class _TicketModalState extends State<TicketModal> {
                 'Nuevo Ticket N° $newTicketCab creado por $userLogged - Categoría: ${ticketFormProvider.categoryName} - Subcategoría: ${ticketFormProvider.subcategoryName}',
             'body': '''
 Se ha creado el Ticket N° $newTicketCab <br>
-Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="color: blue;">Ir al ticket</a>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''',
           };
 
@@ -490,7 +491,7 @@ Haga clic aquí --> <a href="https://keypress.serveftp.net/TicketsWeb" style="co
           Navigator.of(context).pop();
         }
       } catch (e) {
-        NotificationsService.showSnackbarError("No se pudo guardar el Ticket");
+        NotificationsService.showSnackbarError('No se pudo guardar el Ticket');
       }
     }
   }
@@ -597,7 +598,7 @@ class _AvatarContainerState extends State<_AvatarContainer> {
         Positioned(
           bottom: 10,
           left: 10,
-          child: Container(
+          child: SizedBox(
             width: 45,
             height: 45,
             child: FloatingActionButton(
@@ -645,7 +646,7 @@ class _AvatarContainerState extends State<_AvatarContainer> {
         Positioned(
           bottom: 10,
           right: 10,
-          child: Container(
+          child: SizedBox(
             width: 45,
             height: 45,
             child: FloatingActionButton(

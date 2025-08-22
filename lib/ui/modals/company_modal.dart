@@ -1,16 +1,18 @@
 import 'dart:convert';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/company.dart';
-import 'package:tickets_web_app/models/token.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-import 'package:tickets_web_app/ui/cards/white_card.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
+
+import '../../models/company.dart';
+import '../../models/token.dart';
+import '../../providers/providers.dart';
+import '../../services/services.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../cards/white_card.dart';
+import '../inputs/custom_inputs.dart';
+import '../labels/custom_labels.dart';
 
 class CompanyModal extends StatefulWidget {
   final Company? company;
@@ -94,13 +96,13 @@ class _CompanyModalState extends State<CompanyModal> {
                         onFormSubmit(companyFormProvider, token, userLoggedId),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Ingrese Nombre de Empresa";
+                        return 'Ingrese Nombre de Empresa';
                       }
                       if (value.length < 3) {
-                        return "Mínimo 3 caracteres";
+                        return 'Mínimo 3 caracteres';
                       }
                       if (value.length > 50) {
-                        return "Máximo 50 caracteres";
+                        return 'Máximo 50 caracteres';
                       }
                       return null;
                     },
@@ -143,7 +145,7 @@ class _CompanyModalState extends State<CompanyModal> {
                 onPressed: () async {
                   onFormSubmit(companyFormProvider, token, userLoggedId);
                 },
-                text: "Guardar",
+                text: 'Guardar',
                 color: Colors.white,
               ),
             ),
@@ -184,7 +186,7 @@ class _CompanyModalState extends State<CompanyModal> {
               .then((value) => Navigator.of(context).pop());
         }
       } catch (e) {
-        NotificationsService.showSnackbarError("No se pudo guardar la Empresa");
+        NotificationsService.showSnackbarError('No se pudo guardar la Empresa');
       }
     }
   }
