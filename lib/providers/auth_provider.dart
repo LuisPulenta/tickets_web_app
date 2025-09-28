@@ -117,7 +117,7 @@ class AuthProvider extends ChangeNotifier {
 
   //---------------------------------------------------------------
   logout() {
-    LocalStorage.prefs.remove('tickets-token');
+    LocalStorage.prefs.clear();
     authStatus = AuthStatus.notAuthenticated;
     notifyListeners();
   }
