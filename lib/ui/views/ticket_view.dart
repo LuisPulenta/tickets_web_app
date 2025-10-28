@@ -1017,7 +1017,8 @@ class _TicketViewState extends State<TicketView> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    child: SizedBox(
+                                    child: Container(
+                                      color: Colors.white,
                                       height: 100,
                                       child: TextFormField(
                                         keyboardType: TextInputType.multiline,
@@ -1029,14 +1030,16 @@ class _TicketViewState extends State<TicketView> {
                                               value;
                                         },
                                         initialValue: '',
+                                        cursorColor: Colors.black,
                                         decoration:
                                             CustomInput.loginInputDecoration(
-                                          hint: 'Descripción',
-                                          label: 'Descripción',
+                                          hint: '',
+                                          label: 'Escriba un mensaje',
                                           icon: Icons.comment,
+                                          iconColor: Colors.black,
                                         ),
                                         style: const TextStyle(
-                                            color: Colors.white),
+                                            color: Colors.black),
                                       ),
                                     ),
                                   ),

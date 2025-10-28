@@ -6,6 +6,7 @@ class CustomInput {
     required String hint,
     required String label,
     required IconData icon,
+    Color? iconColor,
   }) {
     return InputDecoration(
       border: OutlineInputBorder(
@@ -22,10 +23,10 @@ class CustomInput {
       labelText: label,
       prefixIcon: Icon(
         icon,
-        color: Colors.grey,
+        color: iconColor ?? Colors.grey,
       ),
-      labelStyle: const TextStyle(color: Colors.grey),
-      hintStyle: const TextStyle(color: Colors.grey),
+      labelStyle: TextStyle(color: iconColor ?? Colors.grey),
+      hintStyle: TextStyle(color: iconColor ?? Colors.grey),
     );
   }
 
