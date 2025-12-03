@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/ui/layouts/auth/widgets/background.dart';
-import 'package:tickets_web_app/ui/layouts/auth/widgets/custom_title.dart';
-import 'package:tickets_web_app/ui/layouts/auth/widgets/links_bar.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
+
+import '../../../providers/auth_provider.dart';
+import '../shared/widgets/loader_component.dart';
+import 'widgets/background.dart';
+import 'widgets/custom_title.dart';
+import 'widgets/links_bar.dart';
 
 class AuthLayout extends StatelessWidget {
   final Widget child;

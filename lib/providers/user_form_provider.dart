@@ -13,6 +13,9 @@ class UserFormProvider extends ChangeNotifier {
   int idUserType = -1;
   bool active = false;
   bool isResolver = false;
+  bool isBoss = false;
+  String bossAsign = '';
+  String bossAsignName = '';
 
   //----------------------------------------------------------------
   bool validateForm() {

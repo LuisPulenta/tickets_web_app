@@ -36,6 +36,9 @@ class AppState extends StatelessWidget {
           create: (_) => CompaniesProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => BranchesProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => UsersProvider(),
         ),
         ChangeNotifierProvider(
@@ -49,6 +52,9 @@ class AppState extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => CompanyFormProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BranchFormProvider(),
         ),
         ChangeNotifierProvider(
           create: (_) => UserFormProvider(),

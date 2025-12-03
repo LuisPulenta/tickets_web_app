@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tickets_web_app/models/user.dart';
+import 'user.dart';
 
 AuthResponse authResponseFromJson(String str) =>
     AuthResponse.fromJson(json.decode(str));
@@ -19,14 +19,14 @@ class AuthResponse {
   });
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) => AuthResponse(
-        token: json["token"],
-        expiration: DateTime.parse(json["expiration"]),
-        user: User.fromJson(json["user"]),
+        token: json['token'],
+        expiration: DateTime.parse(json['expiration']),
+        user: User.fromJson(json['user']),
       );
 
   Map<String, dynamic> toJson() => {
-        "token": token,
-        "expiration": expiration.toIso8601String(),
-        "user": user.toJson(),
+        'token': token,
+        'expiration': expiration.toIso8601String(),
+        'user': user.toJson(),
       };
 }

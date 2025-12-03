@@ -70,6 +70,24 @@ class UsersDTS extends DataTableSource {
                   color: user.isResolver == 1 ? Colors.green : Colors.red)),
         ),
         DataCell(
+          Text(user.isBoss == 1 ? 'Sí' : 'No',
+              style: TextStyle(
+                  fontSize: 12,
+                  color: user.isBoss == 1 ? Colors.green : Colors.red)),
+        ),
+        DataCell(
+          Text(user.bossAsignName ?? '',
+              style: const TextStyle(
+                fontSize: 12,
+              )),
+        ),
+        DataCell(
+          Text(user.branchName,
+              style: const TextStyle(
+                fontSize: 12,
+              )),
+        ),
+        DataCell(
           Text(user.active ? 'Sí' : 'No',
               style: TextStyle(
                   fontSize: 12,

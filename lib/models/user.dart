@@ -19,6 +19,11 @@ class User {
   String lastChangeUserName;
   bool active;
   int? isResolver;
+  int? isBoss;
+  String bossAsign;
+  String bossAsignName;
+  int? branchId;
+  String branchName;
   List<TicketCab> tickets;
   String fullName;
 
@@ -41,6 +46,11 @@ class User {
     required this.lastChangeUserName,
     required this.active,
     required this.isResolver,
+    required this.isBoss,
+    required this.branchId,
+    required this.branchName,
+    required this.bossAsign,
+    required this.bossAsignName,
     required this.tickets,
     required this.fullName,
   });
@@ -64,6 +74,11 @@ class User {
         lastChangeUserName: json['lastChangeUserName'],
         active: json['active'],
         isResolver: json['isResolver'],
+        isBoss: json['isBoss'],
+        branchId: json['branchId'],
+        branchName: json['branchName'] ?? '',
+        bossAsign: json['bossAsign'] ?? '',
+        bossAsignName: json['bossAsignName'] ?? '',
         tickets: json['tickets'] != null
             ? List<TicketCab>.from(
                 json['tickets'].map((x) => TicketCab.fromJson(x)))
@@ -90,6 +105,11 @@ class User {
         'lastChangeUserName': lastChangeUserName,
         'active': active,
         'isResolver': isResolver,
+        'isBoss': isBoss,
+        'branchId': branchId,
+        'branchName': branchName,
+        'bossAsign': bossAsign,
+        'bossAsignName': bossAsignName,
         'tickets': tickets != null
             ? List<dynamic>.from(tickets.map((x) => x.toJson()))
             : [],

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/categories_provider.dart';
-import 'package:tickets_web_app/services/navigation_services.dart';
-import 'package:tickets_web_app/ui/modals/category_modal.dart';
+
+import '../models/models.dart';
+import '../providers/categories_provider.dart';
+import '../services/navigation_services.dart';
+import '../ui/modals/category_modal.dart';
 
 class CategoriesDTS extends DataTableSource {
   final List<Category> categories;
@@ -63,9 +64,9 @@ class CategoriesDTS extends DataTableSource {
                       tooltip: 'Borrar Categoría',
                       onPressed: () {
                         final dialog = AlertDialog(
-                          title: const Text("Atención!!"),
+                          title: const Text('Atención!!'),
                           content: Text(
-                              "Está seguro de borrar la categoría ${category.name}?"),
+                              'Está seguro de borrar la categoría ${category.name}?'),
                           actions: [
                             TextButton(
                               onPressed: () async {
@@ -76,13 +77,13 @@ class CategoriesDTS extends DataTableSource {
                                     .deleteCategory(category.id.toString());
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("Si"),
+                              child: const Text('Si'),
                             ),
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("No"),
+                              child: const Text('No'),
                             ),
                           ],
                         );

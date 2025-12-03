@@ -2,12 +2,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/providers/login_form_provider.dart';
-import 'package:tickets_web_app/router/router.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-import 'package:tickets_web_app/ui/buttons/link_text.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
+
+import '../../providers/auth_provider.dart';
+import '../../providers/login_form_provider.dart';
+import '../../router/router.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../buttons/link_text.dart';
+import '../inputs/custom_inputs.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -43,10 +44,10 @@ class LoginView extends StatelessWidget {
                             onFormSubmit(loginFormProvider, authProvider),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Ingrese su correo";
+                            return 'Ingrese su correo';
                           }
                           if (!EmailValidator.validate(value)) {
-                            return "El correo no tiene formato válido";
+                            return 'El correo no tiene formato válido';
                           }
                           return null;
                         },
@@ -55,8 +56,8 @@ class LoginView extends StatelessWidget {
                           loginFormProvider.email = value;
                         },
                         decoration: CustomInput.loginInputDecoration(
-                          hint: "Ingrese su correo",
-                          label: "Correo",
+                          hint: 'Ingrese su correo',
+                          label: 'Correo',
                           icon: Icons.email_outlined,
                         ),
                       ),
@@ -68,10 +69,10 @@ class LoginView extends StatelessWidget {
                             onFormSubmit(loginFormProvider, authProvider),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Ingrese su contraseña";
+                            return 'Ingrese su contraseña';
                           }
                           if (value.length < 6) {
-                            return "La contraseña debe tener al menos 6 caracteres";
+                            return 'La contraseña debe tener al menos 6 caracteres';
                           }
                           return null;
                         },
@@ -80,8 +81,8 @@ class LoginView extends StatelessWidget {
                           loginFormProvider.password = value;
                         },
                         decoration: CustomInput.loginInputDecoration(
-                          hint: "**********",
-                          label: "Contraseña",
+                          hint: '**********',
+                          label: 'Contraseña',
                           icon: Icons.lock_outline_rounded,
                         ),
                         obscureText: true,
@@ -90,7 +91,7 @@ class LoginView extends StatelessWidget {
                         height: 10,
                       ),
                       CustomOutlinedButton(
-                        text: "Ingresar",
+                        text: 'Ingresar',
                         onPressed: () {
                           onFormSubmit(loginFormProvider, authProvider);
                         },
@@ -99,7 +100,7 @@ class LoginView extends StatelessWidget {
                         height: 20,
                       ),
                       LinkText(
-                        text: "Olvidé mi contraseña",
+                        text: 'Olvidé mi contraseña',
                         onPressed: () {
                           Navigator.pushReplacementNamed(
                               context, Flurorouter.recoverPasswordRoute);

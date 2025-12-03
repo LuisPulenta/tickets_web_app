@@ -22,7 +22,7 @@ class CustomTitle extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Image.asset(
-                "logo.png",
+                'logo.png',
                 width: 320,
                 height: 50,
               ),
@@ -33,7 +33,7 @@ class CustomTitle extends StatelessWidget {
             FittedBox(
               fit: BoxFit.contain,
               child: Text(
-                "KP Tickets",
+                'KP Tickets',
                 style: GoogleFonts.montserratAlternates(
                     fontSize: 60,
                     color: Colors.white,

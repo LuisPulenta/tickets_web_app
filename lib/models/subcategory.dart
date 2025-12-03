@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tickets_web_app/models/models.dart';
+import 'models.dart';
 
 Subcategory subcategoryFromJson(String str) =>
     Subcategory.fromJson(json.decode(str));
@@ -21,16 +21,16 @@ class Subcategory {
   });
 
   factory Subcategory.fromJson(Map<String, dynamic> json) => Subcategory(
-        id: json["id"],
-        categoryId: json["categoryId"],
-        categoryName: json["categoryName"],
-        name: json["name"],
+        id: json['id'],
+        categoryId: json['categoryId'],
+        categoryName: json['categoryName'],
+        name: json['name'],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "categoryId": categoryId,
-        "categoryName": categoryName,
-        "name": name,
+        'id': id,
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'name': name,
       };
 }

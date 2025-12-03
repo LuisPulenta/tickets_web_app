@@ -1,4 +1,6 @@
 export 'package:tickets_web_app/providers/auth_provider.dart';
+export 'package:tickets_web_app/providers/branch_form_provider.dart';
+export 'package:tickets_web_app/providers/branches_provider.dart';
 export 'package:tickets_web_app/providers/categories_provider.dart';
 export 'package:tickets_web_app/providers/category_form_provider.dart';
 export 'package:tickets_web_app/providers/change_password_form_provider.dart';

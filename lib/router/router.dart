@@ -1,7 +1,8 @@
 import 'package:fluro/fluro.dart';
-import 'package:tickets_web_app/router/admin_handlers.dart';
-import 'package:tickets_web_app/router/dashboard_handler.dart';
-import 'package:tickets_web_app/router/no_page_found_handlers.dart';
+
+import 'admin_handlers.dart';
+import 'dashboard_handler.dart';
+import 'no_page_found_handlers.dart';
 
 class Flurorouter {
   static final FluroRouter router = FluroRouter();
@@ -19,6 +20,7 @@ class Flurorouter {
   static String categoryRoute = '/dashboard/categories/:id';
   static String companiesRoute = '/dashboard/companies';
 
+  static String branchesRoute = '/dashboard/branches';
   static String usersRoute = '/dashboard/users';
   static String ticketsRoute = '/dashboard/tickets';
   static String ticketsOkRoute = '/dashboard/ticketsok';
@@ -72,6 +74,12 @@ class Flurorouter {
     router.define(
       companiesRoute,
       handler: DashboardHandlers.companies,
+      transitionType: TransitionType.fadeIn,
+    );
+
+    router.define(
+      branchesRoute,
+      handler: DashboardHandlers.branches,
       transitionType: TransitionType.fadeIn,
     );
 

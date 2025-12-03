@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../datatables/users_datasource.dart';
+import '../../datatables/branches_datasource.dart';
 import '../../models/models.dart';
-import '../../providers/users_provider.dart';
+import '../../providers/providers.dart';
 import '../buttons/custom_icon_button.dart';
 import '../inputs/custom_inputs.dart';
 import '../layouts/shared/widgets/loader_component.dart';
-import '../modals/user_modal.dart';
+import '../modals/branch_modal.dart';
 
-class UsersView extends StatefulWidget {
-  const UsersView({Key? key}) : super(key: key);
+class BranchesView extends StatefulWidget {
+  const BranchesView({Key? key}) : super(key: key);
 
   @override
-  State<UsersView> createState() => _UsersViewState();
+  State<BranchesView> createState() => _BranchesViewState();
 }
 
-class _UsersViewState extends State<UsersView> {
+class _BranchesViewState extends State<BranchesView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   bool showLoader = true;
 
@@ -25,7 +25,7 @@ class _UsersViewState extends State<UsersView> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UsersProvider>(context, listen: false).getUsers();
+    Provider.of<BranchesProvider>(context, listen: false).getBranches();
     showLoader = false;
     setState(() {});
   }
@@ -33,9 +33,9 @@ class _UsersViewState extends State<UsersView> {
   //-------------------- Pantalla ----------------------------
   @override
   Widget build(BuildContext context) {
-    final usersProvider = Provider.of<UsersProvider>(context);
+    final branchesProvider = Provider.of<BranchesProvider>(context);
     final size = MediaQuery.of(context).size;
-    List<User> users = Provider.of<UsersProvider>(context).users;
+    List<Branch> branches = Provider.of<BranchesProvider>(context).branches;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: ListView(
@@ -45,75 +45,45 @@ class _UsersViewState extends State<UsersView> {
             children: [
               PaginatedDataTable(
                 columnSpacing: 10.0,
-                sortAscending: usersProvider.ascending,
-                sortColumnIndex: usersProvider.sortColumnIndex,
+                sortAscending: branchesProvider.ascending,
+                sortColumnIndex: branchesProvider.sortColumnIndex,
                 columns: [
+                  const DataColumn(
+                      label: Text('ID',
+                          style: TextStyle(fontWeight: FontWeight.bold))),
                   DataColumn(
-                      label: const Text('Empresa',
+                      label: const Text('Nombre',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        usersProvider.sortColumnIndex = colIndex;
-                        usersProvider.sort<String>((user) => user.companyName);
+                        branchesProvider.sortColumnIndex = colIndex;
+                        branchesProvider.sort<String>((user) => user.name);
                       }),
                   DataColumn(
-                      label: const Text('Nombre y Apellido',
+                      label: const Text('Fecha y Usuario Alta',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        usersProvider.sortColumnIndex = colIndex;
-                        usersProvider.sort<String>(
-                            (user) => user.lastName + user.firstName);
+                        branchesProvider.sortColumnIndex = colIndex;
+                        branchesProvider
+                            .sort<String>((user) => user.createDate.toString());
                       }),
-                  DataColumn(
-                      label: const Text('N° Tickets',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      onSort: (colIndex, _) {
-                        usersProvider.sortColumnIndex = colIndex;
-                        usersProvider.sort<String>(
-                            (user) => user.lastName + user.firstName);
-                      }),
-                  DataColumn(
-                      label: const Text('Email',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      onSort: (colIndex, _) {
-                        usersProvider.sortColumnIndex = colIndex;
-                        usersProvider.sort<String>((user) => user.email);
-                      }),
-                  const DataColumn(
-                      label: Text('Email Confirm.',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
-                  const DataColumn(
-                      label: Text('Teléfono',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
-                  const DataColumn(
-                      label: Text('Tipo Usuario',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
-                  const DataColumn(
-                      label: Text('Es Resol.',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
-                  const DataColumn(
-                      label: Text('Es Jefe',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
-                  const DataColumn(
-                      label: Text('Jefe',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
-                  const DataColumn(
-                      label: Text('Sucursal',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
-                  const DataColumn(
-                      label: Text('Activo',
-                          style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
                       label: Text('Fecha y Usuario Ult. Modif.',
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  const DataColumn(
+                      label: Text('Usuarios',
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  const DataColumn(
+                      label: Text('Activa',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                   const DataColumn(
                       label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
-                source: UsersDTS(users, context),
+                source: BranchesDTS(branches, context),
                 header: Row(
                   children: [
                     const Text(
-                      'Usuarios',
+                      'Sucursales',
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -133,14 +103,14 @@ class _UsersViewState extends State<UsersView> {
                             hint: 'Buscar...',
                             icon: Icons.search_outlined,
                             onClear: () {
-                              usersProvider.search = '';
-                              usersProvider.filter();
-                              usersProvider.notify();
+                              branchesProvider.search = '';
+                              branchesProvider.filter();
+                              branchesProvider.notify();
                             },
                           ),
                           onSubmitted: (value) {
-                            usersProvider.search = value;
-                            usersProvider.filter();
+                            branchesProvider.search = value;
+                            branchesProvider.filter();
                           },
                         ),
                       ),
@@ -154,11 +124,11 @@ class _UsersViewState extends State<UsersView> {
                           title: const Text('Sólo Activos',
                               style:
                                   TextStyle(color: Colors.black, fontSize: 16)),
-                          value: usersProvider.onlyActives,
+                          value: branchesProvider.onlyActives,
                           onChanged: (value) {
-                            usersProvider.onlyActives = value!;
+                            branchesProvider.onlyActives = value!;
                             setState(() {});
-                            usersProvider.filter();
+                            branchesProvider.filter();
                           }),
                     )
                   ],
@@ -171,13 +141,13 @@ class _UsersViewState extends State<UsersView> {
                 actions: [
                   CustomIconButton(
                     icon: Icons.add_outlined,
-                    text: 'Nuevo Usuario',
+                    text: 'Nueva Sucursal',
                     onPressed: () {
                       showModalBottomSheet(
                         backgroundColor: Colors.transparent,
                         context: context,
-                        builder: (_) => const UserModal(
-                          user: null,
+                        builder: (_) => const BranchModal(
+                          branch: null,
                         ),
                       );
                     },

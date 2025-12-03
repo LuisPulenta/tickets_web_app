@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/ui/modals/subcategory_modal.dart';
+
+import '../models/models.dart';
+import '../providers/providers.dart';
+import '../ui/modals/subcategory_modal.dart';
 
 class SubcategoriesDTS extends DataTableSource {
   List<Subcategory> subcategories;
@@ -51,9 +52,9 @@ class SubcategoriesDTS extends DataTableSource {
                 tooltip: 'Borrar Subcategoría',
                 onPressed: () async {
                   final dialog = AlertDialog(
-                    title: const Text("Atención!!"),
+                    title: const Text('Atención!!'),
                     content: Text(
-                        "Está seguro de borrar la subcategoría ${subcategory.name}?"),
+                        'Está seguro de borrar la subcategoría ${subcategory.name}?'),
                     actions: [
                       TextButton(
                         onPressed: () async {
@@ -65,13 +66,13 @@ class SubcategoriesDTS extends DataTableSource {
                           Navigator.of(context).pop();
                           await getCategory();
                         },
-                        child: const Text("Si"),
+                        child: const Text('Si'),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: const Text("No"),
+                        child: const Text('No'),
                       ),
                     ],
                   );

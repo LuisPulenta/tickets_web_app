@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tickets_web_app/models/models.dart';
+import 'models.dart';
 
 Token tokenFromJson(String str) => Token.fromJson(json.decode(str));
 
@@ -18,14 +18,14 @@ class Token {
   });
 
   factory Token.fromJson(Map<String, dynamic> json) => Token(
-        token: json["token"],
-        expiration: json["expiration"],
-        user: User.fromJson(json["user"]),
+        token: json['token'],
+        expiration: json['expiration'],
+        user: User.fromJson(json['user']),
       );
 
   Map<String, dynamic> toJson() => {
-        "token": token,
-        "expiration": expiration,
-        "user": user.toJson(),
+        'token': token,
+        'expiration': expiration,
+        'user': user.toJson(),
       };
 }

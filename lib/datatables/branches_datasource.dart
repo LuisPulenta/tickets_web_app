@@ -3,95 +3,85 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/models.dart';
-import '../providers/companies_provider.dart';
-import '../ui/modals/company_modal.dart';
+import '../providers/branches_provider.dart';
+import '../ui/modals/branch_modal.dart';
 
-class CompaniesDTS extends DataTableSource {
-  final List<Company> companies;
+class BranchesDTS extends DataTableSource {
+  final List<Branch> branches;
   final BuildContext context;
 
-  CompaniesDTS(this.companies, this.context);
+  BranchesDTS(this.branches, this.context);
 
   @override
   DataRow getRow(int index) {
-    final company = companies[index];
-
-    final image = FadeInImage.assetNetwork(
-      placeholder: 'loader.gif',
-      image: company.photoFullPath,
-      width: 35,
-      height: 35,
-    );
+    final branch = branches[index];
 
     return DataRow.byIndex(
       index: index,
       cells: [
         DataCell(
-          SizedBox(width: 160, height: 80, child: image),
+          Text(branch.id.toString()),
         ),
         DataCell(
-          Text(company.id.toString()),
-        ),
-        DataCell(
-          Text(company.name,
+          Text(branch.name,
               style: const TextStyle(
                   color: Color.fromARGB(255, 12, 5, 228),
                   fontWeight: FontWeight.bold)),
         ),
         DataCell(
           Text(
-              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.createDate.toString()))}-${company.createUserName}',
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(branch.createDate.toString()))}-${branch.createUserName}',
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
           Text(
-              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(company.lastChangeDate.toString()))}-${company.lastChangeUserName}',
+              '${DateFormat('dd/MM/yyyy').format(DateTime.parse(branch.lastChangeDate.toString()))}-${branch.lastChangeUserName}',
               style: const TextStyle(fontSize: 12)),
         ),
         DataCell(
-          company.usersNumber != 0
-              ? Text(company.usersNumber.toString(),
+          branch.usersNumber != 0
+              ? Text(branch.usersNumber.toString(),
                   style: const TextStyle(fontSize: 12))
               : Container(),
         ),
         DataCell(
-          Text(company.active ? 'Sí' : 'No',
+          Text(branch.active ? 'Sí' : 'No',
               style: TextStyle(
                   fontSize: 12,
-                  color: company.active ? Colors.green : Colors.red)),
+                  color: branch.active ? Colors.green : Colors.red)),
         ),
         DataCell(
           Row(
             children: [
               IconButton(
-                tooltip: 'Editar Empresa',
+                tooltip: 'Editar Sucursal',
                 onPressed: () {
                   showModalBottomSheet(
                     backgroundColor: Colors.transparent,
                     context: context,
-                    builder: (_) => CompanyModal(
-                      company: company,
+                    builder: (_) => BranchModal(
+                      branch: branch,
                     ),
                   );
                 },
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),
-              company.usersNumber == 0
+              branch.usersNumber == 0
                   ? IconButton(
-                      tooltip: 'Borrar Empresa',
+                      tooltip: 'Borrar Sucursal',
                       onPressed: () {
                         final dialog = AlertDialog(
                           title: const Text('Atención!!'),
                           content: Text(
-                              'Está seguro de borrar la empresa ${company.name}?'),
+                              'Está seguro de borrar la Sucursal ${branch.name}?'),
                           actions: [
                             TextButton(
                               onPressed: () async {
                                 final companiesProvider =
-                                    Provider.of<CompaniesProvider>(context,
+                                    Provider.of<BranchesProvider>(context,
                                         listen: false);
                                 await companiesProvider
-                                    .deleteCompany(company.id.toString());
+                                    .deleteBranch(branch.id.toString());
                                 Navigator.of(context).pop();
                               },
                               child: const Text('Si'),
@@ -123,7 +113,7 @@ class CompaniesDTS extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => companies.length;
+  int get rowCount => branches.length;
 
   @override
   int get selectedRowCount => 0;

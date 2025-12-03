@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/providers/side_menu_provider.dart';
-import 'package:tickets_web_app/router/router.dart';
-import 'package:tickets_web_app/services/navigation_services.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/logo.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/menu_item.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/text_separator.dart';
+
+import '../../../providers/auth_provider.dart';
+import '../../../providers/side_menu_provider.dart';
+import '../../../router/router.dart';
+import '../../../services/navigation_services.dart';
+import 'widgets/logo.dart';
+import 'widgets/menu_item.dart';
+import 'widgets/text_separator.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({Key? key}) : super(key: key);
@@ -67,6 +68,15 @@ class Sidebar extends StatelessWidget {
                     isActive: sideMenuProvider.currentPage ==
                         Flurorouter.companiesRoute,
                     onPressed: () => navigateTo(Flurorouter.companiesRoute),
+                  )
+                : Container(),
+            userType == 1
+                ? MenuItem(
+                    text: 'Sucursales',
+                    icon: Icons.gite,
+                    isActive: sideMenuProvider.currentPage ==
+                        Flurorouter.branchesRoute,
+                    onPressed: () => navigateTo(Flurorouter.branchesRoute),
                   )
                 : Container(),
             userType == 0 || userType == 1

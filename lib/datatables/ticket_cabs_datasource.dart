@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tickets_web_app/helpers/constants.dart';
-import 'package:tickets_web_app/models/models.dart';
-import 'package:tickets_web_app/services/services.dart';
+
+import '../helpers/constants.dart';
+import '../models/models.dart';
+import '../services/services.dart';
 
 class TicketCabsDTS extends DataTableSource {
   final List<TicketCab> ticketCabs;

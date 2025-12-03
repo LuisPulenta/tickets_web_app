@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/ui/buttons/link_text.dart';
+
+import '../../../buttons/link_text.dart';
 
 class LinksBar extends StatelessWidget {
   const LinksBar({super.key});

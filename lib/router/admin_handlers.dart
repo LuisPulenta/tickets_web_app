@@ -1,8 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
 
-import 'package:tickets_web_app/ui/views/view.dart';
+import '../providers/auth_provider.dart';
+import '../ui/views/view.dart';
 
 class AdminHandlers {
   static Handler login = Handler(handlerFunc: (context, params) {

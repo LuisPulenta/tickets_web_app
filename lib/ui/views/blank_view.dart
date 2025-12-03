@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/ui/cards/white_card.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
+
+import '../cards/white_card.dart';
+import '../labels/custom_labels.dart';
 
 class BlankView extends StatelessWidget {
   const BlankView({Key? key}) : super(key: key);
@@ -13,14 +14,14 @@ class BlankView extends StatelessWidget {
         physics: const ClampingScrollPhysics(),
         children: [
           Text(
-            "BlankView",
+            'BlankView',
             style: CustomLabels.h1,
           ),
           const SizedBox(
             height: 10,
           ),
           const WhiteCard(
-            title: "Sales Statistics",
+            title: 'Sales Statistics',
             child: Text('Hola Mundo'),
           ),
         ],

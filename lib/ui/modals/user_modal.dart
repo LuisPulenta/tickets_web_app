@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/api_helper.dart';
+import '../../helpers/constants.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../services/services.dart';
@@ -29,6 +31,9 @@ class _UserModalState extends State<UserModal> {
   late User user;
   late User userLogged;
   List<Company> _companies = [];
+  List<User> _bosses = [];
+  String userNameSelected = '';
+  String userIdSelected = '';
 
 //---------------------------------------------------------------------------
   @override
@@ -64,6 +69,11 @@ class _UserModalState extends State<UserModal> {
           lastChangeUserName: '',
           active: false,
           isResolver: 0,
+          isBoss: 0,
+          branchId: 0,
+          branchName: '',
+          bossAsign: '',
+          bossAsignName: '',
           tickets: [],
           fullName: '');
     } else {
@@ -86,6 +96,11 @@ class _UserModalState extends State<UserModal> {
         lastChangeUserName: widget.user!.lastChangeUserName,
         active: widget.user!.active,
         isResolver: widget.user!.isResolver,
+        isBoss: widget.user!.isBoss,
+        branchId: widget.user!.branchId,
+        branchName: widget.user!.branchName,
+        bossAsign: widget.user!.bossAsign,
+        bossAsignName: widget.user!.bossAsignName,
         tickets: widget.user!.tickets,
         fullName: widget.user!.fullName,
       );
@@ -96,6 +111,7 @@ class _UserModalState extends State<UserModal> {
     userFormProvider.lastName = user.lastName;
     userFormProvider.active = user.active;
     userFormProvider.isResolver = user.isResolver == 1 ? true : false;
+    userFormProvider.isBoss = user.isBoss == 1 ? true : false;
     userFormProvider.email = user.email;
     userFormProvider.phoneNumber = user.phoneNumber;
     userFormProvider.company =
@@ -325,7 +341,7 @@ class _UserModalState extends State<UserModal> {
                         child: SwitchListTile(
                             tileColor: Colors.red,
                             title: const Text(
-                              'Resolvedor:',
+                              'Es Resolvedor:',
                               style: TextStyle(color: Colors.white),
                             ),
                             value: userFormProvider.isResolver,
@@ -335,6 +351,39 @@ class _UserModalState extends State<UserModal> {
                             }),
                       )
                     : Container(),
+                const SizedBox(
+                  width: 50,
+                ),
+                userFormProvider.id != ''
+                    ? Container(
+                        padding: const EdgeInsets.only(top: 30),
+                        width: 200,
+                        child: SwitchListTile(
+                            tileColor: Colors.red,
+                            title: const Text(
+                              'Es Jefe:',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            value: userFormProvider.isBoss,
+                            onChanged: (value) {
+                              userFormProvider.isBoss = value;
+                              setState(() {});
+                            }),
+                      )
+                    : Container(),
+                const SizedBox(
+                  width: 50,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: const Text(
+                    'Jefe:  ',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+                Container(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: _showUser()),
                 const SizedBox(
                   width: 50,
                 ),
@@ -371,6 +420,25 @@ class _UserModalState extends State<UserModal> {
     setState(() {
       _companies = response.result;
     });
+
+    await _getBosses();
+  }
+
+  //--------------------------------------------------------------------
+  Future<void> _getBosses() async {
+    final companyLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.companyId;
+
+    Response response = await ApiHelper.getUsersCombo(companyLoggedId);
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError('Error al cargar los Jefes');
+      return;
+    }
+
+    setState(() {
+      _bosses = response.result;
+    });
   }
 
   //--------------------------------------------------------------------
@@ -404,6 +472,14 @@ class _UserModalState extends State<UserModal> {
           //Editar User
           final usersProvider =
               Provider.of<UsersProvider>(context, listen: false);
+
+          if (userFormProvider.id == userFormProvider.bossAsign) {
+            NotificationsService.showSnackbarError(
+                'No puede ser Jefe de si mismo!!');
+
+            return;
+          }
+
           await usersProvider
               .updateUser(
                   userFormProvider.id,
@@ -416,6 +492,9 @@ class _UserModalState extends State<UserModal> {
                   userLoggedId,
                   userFormProvider.active,
                   userFormProvider.isResolver,
+                  userFormProvider.isBoss,
+                  userFormProvider.bossAsign,
+                  userFormProvider.bossAsignName,
                   emailLogged)
               .then((value) => Navigator.of(context).pop());
         }
@@ -564,4 +643,130 @@ class _UserModalState extends State<UserModal> {
               color: Colors.black,
             )
           ]);
+
+//---------------------------------------------------------------------------
+  Widget _showUser() {
+    return SizedBox(
+      width: 300,
+      child: _bosses.isEmpty
+          ? const Text('Cargando Usuarios...')
+          : Row(
+              children: [
+                Expanded(
+                  child: DropdownSearch<String>(
+                    selectedItem: widget.user!.bossAsignName,
+                    items: _getComboBosses(),
+                    popupProps: PopupProps.menu(
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors
+                              .grey.shade200, // Fondo de la caja de búsqueda
+                          hintText: 'Buscar...',
+                          hintStyle: const TextStyle(color: Colors.grey),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                      itemBuilder: (context, item, isSelected) {
+                        return Container(
+                          color: isSelected
+                              ? colorEnviado
+                              : colorEnviado
+                                  .withOpacity(0.5), // fondo de cada opción
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            item,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.blue
+                                  : Colors.black, // color del texto
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                        );
+                      },
+                      menuProps: MenuProps(
+                        backgroundColor:
+                            colorEnviado, // Fondo del menú desplegable
+                      ),
+                    ),
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      baseStyle:
+                          const TextStyle(color: Colors.black, fontSize: 16),
+                      dropdownSearchDecoration: InputDecoration(
+                        fillColor: colorEnviado,
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black,
+                          ),
+                        ),
+                        filled: true,
+                        //isDense: true,
+                        labelStyle:
+                            const TextStyle(color: Colors.black, fontSize: 16),
+
+                        labelText: 'Jefe',
+                        hintText: 'Seleccione un Jefe...',
+                      ),
+                    ),
+                    onChanged: (option) {
+                      setState(() {
+                        userNameSelected = option!;
+
+                        for (User user in _bosses) {
+                          if (userNameSelected == user.fullName) {
+                            userIdSelected = user.id;
+                          }
+                        }
+                        userFormProvider.bossAsign = userIdSelected;
+                        userFormProvider.bossAsignName = userNameSelected;
+                      });
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      // Resetea el valor del DropdownSearch
+                      userNameSelected =
+                          ''; // o el valor por defecto que quieras
+                      userIdSelected = '';
+                      userFormProvider.bossAsign = '';
+                      userFormProvider.bossAsignName = '';
+                      widget.user!.bossAsignName = '';
+                    });
+                  },
+                ),
+              ],
+            ),
+    );
+  }
+
+  //---------------------------------------------------------------------------
+  List<String> _getComboBosses() {
+    List<String> list = [];
+    //list.add('Seleccione un Usuario...');
+
+    for (var user in _bosses) {
+      if (user.isBoss == 1) {
+        list.add(user.fullName);
+      }
+    }
+    return list;
+  }
 }

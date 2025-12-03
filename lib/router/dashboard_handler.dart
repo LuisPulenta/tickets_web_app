@@ -1,15 +1,14 @@
 import 'package:fluro/fluro.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/providers/side_menu_provider.dart';
-import 'package:tickets_web_app/router/router.dart';
-import 'package:tickets_web_app/ui/views/category_view.dart';
-import 'package:tickets_web_app/ui/views/ticket_view.dart';
-import 'package:tickets_web_app/ui/views/tickets_derivated_view.dart';
-import 'package:tickets_web_app/ui/views/users_view.dart';
-import 'package:tickets_web_app/ui/views/view.dart';
 
+import '../providers/auth_provider.dart';
+import '../providers/side_menu_provider.dart';
 import '../ui/views/categories_view.dart';
+import '../ui/views/category_view.dart';
+import '../ui/views/ticket_view.dart';
+import '../ui/views/tickets_derivated_view.dart';
+import '../ui/views/view.dart';
+import 'router.dart';
 
 class DashboardHandlers {
   static Handler dashboard = Handler(handlerFunc: (context, params) {
@@ -56,6 +55,18 @@ class DashboardHandlers {
 
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const CompaniesView();
+    } else {
+      return const LoginView();
+    }
+  });
+
+  static Handler branches = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false)
+        .setCurrentPageUrl(Flurorouter.branchesRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const BranchesView();
     } else {
       return const LoginView();
     }

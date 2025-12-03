@@ -3,29 +3,28 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/models.dart';
+import '../../models/branch.dart';
+import '../../models/token.dart';
 import '../../providers/providers.dart';
 import '../../services/services.dart';
 import '../buttons/custom_outlined_button.dart';
 import '../inputs/custom_inputs.dart';
 import '../labels/custom_labels.dart';
 
-class SubcategoryModal extends StatefulWidget {
-  final Subcategory? subcategory;
-  final Category? category;
+class BranchModal extends StatefulWidget {
+  final Branch? branch;
 
-  const SubcategoryModal({Key? key, this.subcategory, this.category})
-      : super(key: key);
+  const BranchModal({Key? key, this.branch}) : super(key: key);
 
   @override
-  State<SubcategoryModal> createState() => _SubcategoryModalState();
+  State<BranchModal> createState() => _BranchModalState();
 }
 
-class _SubcategoryModalState extends State<SubcategoryModal> {
+class _BranchModalState extends State<BranchModal> {
 //---------------------------------------------------------------------------
   int? id;
   late Token token;
-  late SubcategoryFormProvider subcategoryFormProvider;
+  late BranchFormProvider branchFormProvider;
 
 //---------------------------------------------------------------------------
   @override
@@ -35,16 +34,23 @@ class _SubcategoryModalState extends State<SubcategoryModal> {
     var decodedJson = jsonDecode(userBody!);
     token = Token.fromJson(decodedJson);
 
-    subcategoryFormProvider =
-        Provider.of<SubcategoryFormProvider>(context, listen: false);
+    branchFormProvider =
+        Provider.of<BranchFormProvider>(context, listen: false);
 
-    subcategoryFormProvider.id = widget.subcategory?.id ?? 0;
-    subcategoryFormProvider.name = widget.subcategory?.name ?? '';
+    branchFormProvider.id = widget.branch?.id ?? 0;
+    branchFormProvider.name = widget.branch?.name ?? '';
+    branchFormProvider.active = widget.branch?.active ?? false;
   }
 
 //---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
+    final userLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.id;
+
+    final userCompanyId =
+        Provider.of<AuthProvider>(context, listen: false).user!.companyId;
+
     return Container(
       padding: const EdgeInsets.all(20),
       height: 500,
@@ -52,14 +58,14 @@ class _SubcategoryModalState extends State<SubcategoryModal> {
       decoration: buildBoxDecoration(),
       child: Form(
         autovalidateMode: AutovalidateMode.always,
-        key: subcategoryFormProvider.formKey,
+        key: branchFormProvider.formKey,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.subcategory?.name ?? 'Nueva Subcategoría',
+                  widget.branch?.name ?? 'Nueva Sucursal',
                   style: CustomLabels.h1.copyWith(color: Colors.white),
                 ),
                 IconButton(
@@ -84,11 +90,11 @@ class _SubcategoryModalState extends State<SubcategoryModal> {
                 const Spacer(),
                 Expanded(
                   child: TextFormField(
-                    onFieldSubmitted: (_) =>
-                        onFormSubmit(subcategoryFormProvider, token),
+                    onFieldSubmitted: (_) => onFormSubmit(
+                        branchFormProvider, token, userLoggedId, userCompanyId),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Ingrese Nombre de Subcategoría';
+                        return 'Ingrese Nombre de Sucursal';
                       }
                       if (value.length < 3) {
                         return 'Mínimo 3 caracteres';
@@ -99,18 +105,32 @@ class _SubcategoryModalState extends State<SubcategoryModal> {
                       return null;
                     },
                     onChanged: (value) {
-                      subcategoryFormProvider.name = value;
+                      branchFormProvider.name = value;
                     },
-                    initialValue: widget.subcategory?.name ?? '',
+                    initialValue: widget.branch?.name ?? '',
                     decoration: CustomInput.loginInputDecoration(
-                      hint: 'Nombre de la Subcategoría',
-                      label: 'Subcategoría',
+                      hint: 'Nombre de la Sucursal',
+                      label: 'Sucursal',
                       icon: Icons.category_outlined,
                     ),
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-                subcategoryFormProvider.id > 0 ? const Spacer() : Container(),
+                branchFormProvider.id > 0 ? const Spacer() : Container(),
+                branchFormProvider.id > 0
+                    ? Expanded(
+                        child: SwitchListTile(
+                            title: const Text(
+                              'Activa:',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            value: branchFormProvider.active,
+                            onChanged: (value) {
+                              branchFormProvider.active = value;
+                              setState(() {});
+                            }),
+                      )
+                    : Container(),
                 const Spacer(),
               ],
             ),
@@ -119,7 +139,8 @@ class _SubcategoryModalState extends State<SubcategoryModal> {
               alignment: Alignment.center,
               child: CustomOutlinedButton(
                 onPressed: () async {
-                  onFormSubmit(subcategoryFormProvider, token);
+                  onFormSubmit(
+                      branchFormProvider, token, userLoggedId, userCompanyId);
                 },
                 text: 'Guardar',
                 color: Colors.white,
@@ -132,35 +153,31 @@ class _SubcategoryModalState extends State<SubcategoryModal> {
   }
 
   //--------------------------------------------------------------------
-  void onFormSubmit(
-      SubcategoryFormProvider subcategoryFormProvider, Token token) async {
-    final isValid = subcategoryFormProvider.validateForm();
+  void onFormSubmit(BranchFormProvider branchFormProvider, Token token,
+      String userLoggedId, int userCompanyId) async {
+    final isValid = branchFormProvider.validateForm();
     if (isValid) {
       try {
-        //Nueva Empresa
-        if (subcategoryFormProvider.id == 0) {
-          final subcategoriesProvider =
-              Provider.of<SubcategoriesProvider>(context, listen: false);
-          await subcategoriesProvider
-              .newSubcategory(subcategoryFormProvider.name,
-                  widget.category!.id.toString(), widget.category!.name)
+        //Nueva Sucursal
+        if (branchFormProvider.id == 0) {
+          final branchesProvider =
+              Provider.of<BranchesProvider>(context, listen: false);
+          await branchesProvider
+              .newBranch(
+                  branchFormProvider.name, token, userLoggedId, userCompanyId)
               .then((value) => Navigator.of(context).pop());
         } else {
-          //Editar Empresa
-          final subcategoriesProvider =
-              Provider.of<SubcategoriesProvider>(context, listen: false);
-          await subcategoriesProvider
-              .updateSubcategory(
-                subcategoryFormProvider.id,
-                subcategoryFormProvider.name,
-                widget.category!.id.toString(),
-                widget.category!.name,
-              )
+          //Editar Sucursal
+          final branchesProvider =
+              Provider.of<BranchesProvider>(context, listen: false);
+          await branchesProvider
+              .updateBranch(branchFormProvider.id, branchFormProvider.name,
+                  token, userLoggedId, branchFormProvider.active)
               .then((value) => Navigator.of(context).pop());
         }
       } catch (e) {
         NotificationsService.showSnackbarError(
-            'No se pudo guardar la Subcategoría');
+            'No se pudo guardar la Sucursal');
       }
     }
   }

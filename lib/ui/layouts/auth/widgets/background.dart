@@ -11,7 +11,7 @@ class Background extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Image(
-            image: AssetImage("bg.png"),
+            image: AssetImage('bg.png'),
             fit: BoxFit.contain,
             width: 600,
           ),

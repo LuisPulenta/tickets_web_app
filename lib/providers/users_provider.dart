@@ -106,6 +106,9 @@ class UsersProvider extends ChangeNotifier {
     String userLoggedId,
     bool active,
     bool isResolver,
+    bool isBoss,
+    String bossAsign,
+    String bossAsignName,
     String emailLogged,
   ) async {
     showLoader = true;
@@ -131,6 +134,9 @@ class UsersProvider extends ChangeNotifier {
       'LastChangeUserId': userLoggedId,
       'Active': active,
       'IsResolver': isResolver ? 1 : 0,
+      'IsBoss': isBoss ? 1 : 0,
+      'BossId': bossAsign,
+      'BossName': bossAsignName,
     };
 
     try {
@@ -182,9 +188,9 @@ class UsersProvider extends ChangeNotifier {
   //--------------------------------------------------------------------
   Future deleteUser(
     String id,
-    String LoggedId,
+    String loggedId,
   ) async {
-    if (id == LoggedId) {
+    if (id == loggedId) {
       NotificationsService.showSnackbarError('No puede borrarse a sí mismo');
       return;
     }

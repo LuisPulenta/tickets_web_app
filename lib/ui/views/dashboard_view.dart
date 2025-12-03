@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/ui/cards/white_card.dart';
+
+import '../cards/white_card.dart';
 
 class DashboardView extends StatelessWidget {
   const DashboardView({Key? key}) : super(key: key);

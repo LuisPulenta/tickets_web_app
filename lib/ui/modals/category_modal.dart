@@ -1,14 +1,15 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/models/category.dart';
-import 'package:tickets_web_app/models/token.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/services/services.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
 
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
-import 'package:tickets_web_app/ui/labels/custom_labels.dart';
+import '../../models/category.dart';
+import '../../models/token.dart';
+import '../../providers/providers.dart';
+import '../../services/services.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../inputs/custom_inputs.dart';
+import '../labels/custom_labels.dart';
 
 class CategoryModal extends StatefulWidget {
   final Category? category;
@@ -86,13 +87,13 @@ class _CategoryModalState extends State<CategoryModal> {
                         onFormSubmit(categoryFormProvider, token),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Ingrese Nombre de Categoría";
+                        return 'Ingrese Nombre de Categoría';
                       }
                       if (value.length < 3) {
-                        return "Mínimo 3 caracteres";
+                        return 'Mínimo 3 caracteres';
                       }
                       if (value.length > 50) {
-                        return "Máximo 50 caracteres";
+                        return 'Máximo 50 caracteres';
                       }
                       return null;
                     },
@@ -119,7 +120,7 @@ class _CategoryModalState extends State<CategoryModal> {
                 onPressed: () async {
                   onFormSubmit(categoryFormProvider, token);
                 },
-                text: "Guardar",
+                text: 'Guardar',
                 color: Colors.white,
               ),
             ),
@@ -155,7 +156,7 @@ class _CategoryModalState extends State<CategoryModal> {
         }
       } catch (e) {
         NotificationsService.showSnackbarError(
-            "No se pudo guardar la Categoría");
+            'No se pudo guardar la Categoría');
       }
     }
   }

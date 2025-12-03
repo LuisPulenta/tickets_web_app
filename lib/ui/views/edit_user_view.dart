@@ -51,6 +51,8 @@ class _EditUserViewState extends State<EditUserView> {
     editUserFormProvider.phoneNumber = user.phoneNumber;
     editUserFormProvider.companyId = user.companyId;
     editUserFormProvider.idUserType = user.userTypeId;
+    editUserFormProvider.bossAsign = user.bossAsign;
+    editUserFormProvider.bossAsignName = user.bossAsignName;
   }
 
   //---------------------------------------------------------------------------
@@ -410,6 +412,9 @@ class _EditUserViewState extends State<EditUserView> {
                 userLoggedId,
                 editUserFormProvider.active,
                 editUserFormProvider.isResolver,
+                editUserFormProvider.isBoss,
+                editUserFormProvider.bossAsign,
+                editUserFormProvider.bossAsignName,
                 '')
             .then((value) => Navigator.of(context).pop());
       } catch (e) {

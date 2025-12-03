@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
 
-class EditUserFormProvider extends ChangeNotifier {
+class BranchFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  String id = '';
-  String email = '';
-  String firstName = '';
-  String lastName = '';
-  String phoneNumber = '';
-  int companyId = 0;
-  int idUserType = -1;
+  int id = 0;
+  String name = '';
   bool active = false;
-  bool isResolver = false;
-  bool isBoss = false;
-  String bossAsign = '';
-  String bossAsignName = '';
 
   //----------------------------------------------------------------
   bool validateForm() {

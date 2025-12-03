@@ -22,7 +22,7 @@ class Logo extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Text("TicketsWeb",
+          Text('TicketsWeb',
               style: GoogleFonts.montserratAlternates(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

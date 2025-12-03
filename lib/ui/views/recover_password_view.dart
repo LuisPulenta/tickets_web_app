@@ -2,12 +2,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/auth_provider.dart';
-import 'package:tickets_web_app/providers/login_form_provider.dart';
-import 'package:tickets_web_app/router/router.dart';
-import 'package:tickets_web_app/ui/buttons/custom_outlined_button.dart';
-import 'package:tickets_web_app/ui/buttons/link_text.dart';
-import 'package:tickets_web_app/ui/inputs/custom_inputs.dart';
+
+import '../../providers/auth_provider.dart';
+import '../../providers/login_form_provider.dart';
+import '../../router/router.dart';
+import '../buttons/custom_outlined_button.dart';
+import '../buttons/link_text.dart';
+import '../inputs/custom_inputs.dart';
 
 class RecoverPasswordView extends StatelessWidget {
   const RecoverPasswordView({Key? key}) : super(key: key);
@@ -43,10 +44,10 @@ class RecoverPasswordView extends StatelessWidget {
                             onFormSubmit(loginFormProvider, authProvider),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return "Ingrese su correo";
+                            return 'Ingrese su correo';
                           }
                           if (!EmailValidator.validate(value)) {
-                            return "El correo no tiene formato válido";
+                            return 'El correo no tiene formato válido';
                           }
                           return null;
                         },
@@ -55,8 +56,8 @@ class RecoverPasswordView extends StatelessWidget {
                           loginFormProvider.email = value;
                         },
                         decoration: CustomInput.loginInputDecoration(
-                          hint: "Ingrese su correo",
-                          label: "Correo",
+                          hint: 'Ingrese su correo',
+                          label: 'Correo',
                           icon: Icons.email_outlined,
                         ),
                       ),
@@ -64,7 +65,7 @@ class RecoverPasswordView extends StatelessWidget {
                         height: 20,
                       ),
                       CustomOutlinedButton(
-                        text: "Recuperar Contraseña",
+                        text: 'Recuperar Contraseña',
                         onPressed: () {
                           onFormSubmit(loginFormProvider, authProvider);
                         },
@@ -73,7 +74,7 @@ class RecoverPasswordView extends StatelessWidget {
                         height: 20,
                       ),
                       LinkText(
-                        text: "Volver al Login",
+                        text: 'Volver al Login',
                         onPressed: () {
                           Navigator.pushReplacementNamed(
                               context, Flurorouter.loginRoute);

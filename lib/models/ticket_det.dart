@@ -26,24 +26,24 @@ class TicketDet {
   });
 
   factory TicketDet.fromJson(Map<String, dynamic> json) => TicketDet(
-        id: json["id"],
-        description: json["description"],
-        ticketState: json["ticketState"],
-        stateDate: json["stateDate"],
-        stateUserId: json["stateUserId"],
-        stateUserName: json["stateUserName"],
-        image: json["image"],
-        imageFullPath: json["imageFullPath"],
+        id: json['id'],
+        description: json['description'],
+        ticketState: json['ticketState'],
+        stateDate: json['stateDate'],
+        stateUserId: json['stateUserId'],
+        stateUserName: json['stateUserName'],
+        image: json['image'],
+        imageFullPath: json['imageFullPath'],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "description": description,
-        "ticketState": ticketState,
-        "stateDate": stateDate,
-        "stateUserId": stateUserId,
-        "stateUserName": stateUserName,
-        "image": image,
-        "imageFullPath": imageFullPath,
+        'id': id,
+        'description': description,
+        'ticketState': ticketState,
+        'stateDate': stateDate,
+        'stateUserId': stateUserId,
+        'stateUserName': stateUserName,
+        'image': image,
+        'imageFullPath': imageFullPath,
       };
 }

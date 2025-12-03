@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/providers.dart';
-import 'package:tickets_web_app/ui/layouts/shared/sidebar.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/loader_component.dart';
-import 'package:tickets_web_app/ui/layouts/shared/widgets/navbar.dart';
+
+import '../../../providers/providers.dart';
+import '../shared/sidebar.dart';
+import '../shared/widgets/loader_component.dart';
+import '../shared/widgets/navbar.dart';
 
 class DashboardLayout extends StatefulWidget {
   final Widget child;

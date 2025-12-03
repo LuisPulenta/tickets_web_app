@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tickets_web_app/models/models.dart';
+
+import '../models/models.dart';
 
 class TicketFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();

@@ -1,7 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:provider/provider.dart';
-import 'package:tickets_web_app/providers/side_menu_provider.dart';
-import 'package:tickets_web_app/ui/views/view.dart';
+
+import '../providers/side_menu_provider.dart';
+import '../ui/views/view.dart';
 
 class NoPageFoundHandlers {
   static Handler noPageFound = Handler(handlerFunc: (context, params) {

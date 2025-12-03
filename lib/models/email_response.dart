@@ -13,10 +13,10 @@ class EmailResponse {
   });
 
   factory EmailResponse.fromJson(Map<String, dynamic> json) => EmailResponse(
-        emails: json["emails"],
+        emails: json['emails'],
       );
 
   Map<String, dynamic> toJson() => {
-        "emails": emails,
+        'emails': emails,
       };
 }

@@ -430,7 +430,7 @@ class _TicketModalState extends State<TicketModal> {
     String companyLogged,
   ) async {
     final isValid = ticketFormProvider.validateForm();
-    int newTicketCab;
+
     SideMenuProvider sideMenuProvider2 =
         Provider.of<SideMenuProvider>(context, listen: false);
     if (isValid) {
@@ -483,7 +483,7 @@ Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="co
           };
 
           try {
-            Response response = await ApiHelper.sendMail(request);
+            await ApiHelper.sendMail(request);
           } catch (e) {
             return null;
           }
