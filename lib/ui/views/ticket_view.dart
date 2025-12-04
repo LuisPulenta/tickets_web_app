@@ -34,6 +34,7 @@ class _TicketViewState extends State<TicketView> {
   late List<TicketDet> ticketDets;
   bool showLoader = false;
   late TicketFormProvider ticketFormProvider;
+
   late Token token;
   String userTypeLogged = '';
   List<User> _users = [];
@@ -42,6 +43,12 @@ class _TicketViewState extends State<TicketView> {
   String userLogged = '';
   String companyLogged = '';
   User? userTicket;
+  List<Category> _categories = [];
+  List<Subcategory> _subcategories = [];
+  int categoryId = 0;
+  int subcategoryId = 0;
+
+  bool verCambiarCategoria = false;
 
 //----------------------------------------------------------------------
   @override
@@ -73,6 +80,8 @@ class _TicketViewState extends State<TicketView> {
       setState(
         () {
           ticketCab = ticketCabDB;
+          categoryId = ticketCab!.categoryId;
+          subcategoryId = ticketCab!.subcategoryId;
           ticketDets =
               ticketCab!.ticketDets != null ? ticketCab!.ticketDets! : [];
           if (ticketCab!.ticketState == 0) {
@@ -137,7 +146,7 @@ class _TicketViewState extends State<TicketView> {
       userTicket = response.result;
     });
 
-    var a = 1;
+    await _getCategories();
   }
 
   //---------------------------------------------------------------------------
@@ -236,54 +245,6 @@ class _TicketViewState extends State<TicketView> {
                 });
               },
             ),
-
-      // DropdownButtonFormField(
-      //     // validator: (value) {
-      //     //   if (value == '') {
-      //     //     return "Seleccione un Usuario...";
-      //     //   }
-      //     //   return null;
-      //     // },
-
-      //     dropdownColor: colorDerivado,
-      //     isExpanded: true,
-      //     isDense: true,
-      //     style: const TextStyle(color: Colors.white, fontSize: 16),
-      //     items: _getComboUsers(),
-      //     value: userIdSelected,
-      //     onChanged: (option) {
-      //       setState(() {
-      //         userIdSelected = option!;
-
-      //         for (User user in _users) {
-      //           if (user.id == userIdSelected) {
-      //             userNameSelected = user.fullName;
-      //           }
-      //         }
-      //         ticketFormProvider.userAsign = userIdSelected;
-      //         ticketFormProvider.userAsignName = userNameSelected;
-      //       });
-      //     },
-      //     decoration: InputDecoration(
-      //       fillColor: colorDerivado,
-      //       filled: true,
-      //       contentPadding: const EdgeInsets.all(4),
-      //       prefixIcon: const Icon(Icons.person, color: Colors.white),
-      //       labelStyle: const TextStyle(color: Colors.white),
-      //       hintText: 'Seleccione un Usuario...',
-      //       labelText: 'Usuario',
-      //       border: const OutlineInputBorder(
-      //         borderSide: BorderSide(
-      //           color: Colors.white,
-      //         ),
-      //       ),
-      //       enabledBorder: const OutlineInputBorder(
-      //         borderSide: BorderSide(
-      //           color: Colors.white,
-      //         ),
-      //       ),
-      //     ),
-      //   ),
     );
   }
 
@@ -386,7 +347,10 @@ class _TicketViewState extends State<TicketView> {
   //----------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    return showLoader || userTicket == null
+    return showLoader ||
+            userTicket == null ||
+            _categories.isEmpty ||
+            _subcategories.isEmpty
         ? const Center(child: LoaderComponent(text: 'Por favor espere...'))
         : _getContent();
   }
@@ -425,7 +389,7 @@ class _TicketViewState extends State<TicketView> {
             //------------- CABECERA TICKET ---------------------
             SizedBox(
               width: double.infinity,
-              height: 170,
+              height: 180,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6.0),
@@ -444,7 +408,7 @@ class _TicketViewState extends State<TicketView> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 450,
+                            width: 250,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(
@@ -573,35 +537,94 @@ class _TicketViewState extends State<TicketView> {
                                     ],
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      const Text('Categoría: ',
-                                          style: TextStyle(
-                                              color: Colors.white60,
-                                              fontSize: 14)),
-                                      Text(ticketCab!.categoryName,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14)),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              const Text('Categoría: ',
+                                                  style: TextStyle(
+                                                      color: Colors.white60,
+                                                      fontSize: 14)),
+                                              Text(ticketCab!.categoryName,
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14)),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              const Text('Subcategoría: ',
+                                                  style: TextStyle(
+                                                      color: Colors.white60,
+                                                      fontSize: 14)),
+                                              Text(ticketCab!.subcategoryName,
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      if (!verCambiarCategoria)
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.refresh_outlined,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            verCambiarCategoria = true;
+                                            setState(() {});
+                                          },
+                                        )
                                     ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const Text('Subcategoría: ',
-                                          style: TextStyle(
-                                              color: Colors.white60,
-                                              fontSize: 14)),
-                                      Text(ticketCab!.subcategoryName,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14)),
-                                    ],
-                                  ),
+                                  )
                                 ],
                               ),
                             ),
                           ),
+                          if (verCambiarCategoria)
+                            SizedBox(
+                                width: 250,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 10),
+                                          child: Text(
+                                              'Cambiar Categ. y Subcateg.',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white)),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.save,
+                                              color: Colors.white),
+                                          onPressed: () {
+                                            verCambiarCategoria = false;
+                                            setState(() {});
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                    const Divider(color: Colors.grey),
+                                    _showCategory(),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    _showSubcategory(),
+                                  ],
+                                )),
                           SizedBox(
                             height: 60,
                             child: Center(
@@ -1453,6 +1476,160 @@ Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="co
     } catch (e) {
       return null;
     }
+  }
+
+  //************************************************************************************************
+  //--------------------------------------------------------------------
+  Future<void> _getCategories() async {
+    Response response = await ApiHelper.getCategoriesCombo();
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError('Error al cargar las Categorías');
+      return;
+    }
+
+    setState(() {
+      _categories = response.result;
+    });
+
+    await _getSubcategories(ticketCab!.categoryId);
+  }
+
+//---------------------------------------------------------------------------
+  Widget _showCategory() {
+    return Container(
+      child: _categories.isEmpty
+          ? const Text('Cargando Categorías...')
+          : DropdownButtonFormField(
+              dropdownColor: Colors.grey,
+              isExpanded: true,
+              isDense: true,
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+              items: _getComboCategories(),
+              value: categoryId,
+              onChanged: (option) async {
+                await _getSubcategories(option!);
+
+                categoryId = option;
+                subcategoryId = 0;
+
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
+                prefixIcon: const Icon(Icons.category, color: Colors.white),
+                isDense: true,
+                labelStyle: const TextStyle(color: Colors.white),
+                labelText: 'Categoría',
+                filled: true,
+                fillColor: Colors.grey,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+  //---------------------------------------------------------------------------
+  List<DropdownMenuItem<int>> _getComboCategories() {
+    List<DropdownMenuItem<int>> list = [];
+
+    for (var category in _categories) {
+      list.add(DropdownMenuItem(
+        value: category.id,
+        child: Text(category.name),
+      ));
+    }
+    return list;
+  }
+
+  //--------------------------------------------------------------------
+  Future<void> _getSubcategories(int categoryId) async {
+    Response response = await ApiHelper.getSubcategoriesCombo(categoryId);
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError(
+          'Error al cargar las Subcategorías');
+      return;
+    }
+
+    setState(() {
+      _subcategories = response.result;
+    });
+  }
+
+  //---------------------------------------------------------------------------
+  Widget _showSubcategory() {
+    return Container(
+      child: _subcategories.isEmpty
+          ? const Text('Cargando Subcategorías...')
+          : DropdownButtonFormField(
+              validator: (value) {
+                if (value == 0) {
+                  return 'Seleccione una Subcategoría...';
+                }
+                return null;
+              },
+              dropdownColor: Colors.grey,
+              isExpanded: true,
+              isDense: true,
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+              items: _getComboSubcategories(),
+              value: subcategoryId,
+              onChanged: (option) {
+                subcategoryId = option!;
+                setState(() {});
+              },
+              decoration: InputDecoration(
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10.0),
+                prefixIcon:
+                    const Icon(Icons.category_outlined, color: Colors.white),
+                labelStyle: const TextStyle(color: Colors.white),
+                isDense: true,
+                hintText: 'Seleccione una Subcategoría...',
+                labelText: 'Subcategoría',
+                filled: true,
+                fillColor: Colors.grey,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.3),
+                  ),
+                ),
+              ),
+            ),
+    );
+  }
+
+  //---------------------------------------------------------------------------
+  List<DropdownMenuItem<int>> _getComboSubcategories() {
+    List<DropdownMenuItem<int>> list = [];
+    list.add(const DropdownMenuItem(
+      value: 0,
+      child: Text('Seleccione una Subcategoría...'),
+    ));
+
+    for (var subcategory in _subcategories) {
+      list.add(DropdownMenuItem(
+        value: subcategory.id,
+        child: Text(subcategory.name),
+      ));
+    }
+    return list;
   }
 }
 

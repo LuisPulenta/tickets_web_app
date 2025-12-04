@@ -16,4 +16,19 @@ class CustomLabels {
     fontSize: 12,
     fontWeight: FontWeight.w400,
   );
+
+  static TextStyle title = const TextStyle(
+    fontSize: 50,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle subtitle = const TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle smalltitle = const TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
 }
