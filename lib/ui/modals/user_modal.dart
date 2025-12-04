@@ -31,6 +31,7 @@ class _UserModalState extends State<UserModal> {
   late User user;
   late User userLogged;
   List<Company> _companies = [];
+  List<Branch> _branches = [];
   List<User> _bosses = [];
   String userNameSelected = '';
   String userIdSelected = '';
@@ -117,6 +118,15 @@ class _UserModalState extends State<UserModal> {
     userFormProvider.company =
         widget.user == null ? 'Seleccione una Empresa...' : user.companyName;
     userFormProvider.companyId = widget.user == null ? 0 : user.companyId;
+
+    userFormProvider.branch =
+        widget.user == null ? 'Seleccione una Sucursal...' : user.branchName;
+    userFormProvider.branchId = widget.user == null
+        ? 0
+        : user.branchId != null
+            ? user.branchId!
+            : null;
+
     userFormProvider.idUserType = user.userTypeId;
   }
 
@@ -164,13 +174,10 @@ class _UserModalState extends State<UserModal> {
             const SizedBox(
               height: 20,
             ),
+            //********************************************************************************************************************
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Expanded(
-                  flex: 1,
-                  child: Spacer(),
-                ),
                 Expanded(
                   flex: 2,
                   child: TextFormField(
@@ -265,13 +272,10 @@ class _UserModalState extends State<UserModal> {
             const SizedBox(
               height: 15,
             ),
+            //********************************************************************************************************************
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Expanded(
-                  flex: 1,
-                  child: Spacer(),
-                ),
                 Expanded(
                   flex: 2,
                   child: TextFormField(
@@ -291,26 +295,28 @@ class _UserModalState extends State<UserModal> {
                 const SizedBox(
                   width: 15,
                 ),
-                Expanded(
-                  flex: 2,
-                  child:
-                      userLogged.userTypeId == 0 ? _showCompany() : Container(),
-                ),
+                userLogged.userTypeId == 0
+                    ? Expanded(flex: 2, child: _showCompany())
+                    : const SizedBox(),
+                userLogged.userTypeId == 1 && userFormProvider.id != ''
+                    ? Expanded(flex: 2, child: _showBranch())
+                    : const SizedBox(),
                 const SizedBox(
                   width: 15,
                 ),
-                Expanded(
-                  flex: 2,
-                  child: userLogged.userTypeId == 0
-                      ? _showUserType()
-                      : Container(),
-                ),
+                userLogged.userTypeId == 0
+                    ? Expanded(flex: 2, child: _showUserType())
+                    : const SizedBox(),
                 const Expanded(
-                  flex: 1,
-                  child: Spacer(),
+                  flex: 4,
+                  child: SizedBox(
+                    width: 200,
+                  ),
                 ),
+                const Spacer(),
               ],
             ),
+            //******************************************************************************************************************** */
             Row(
               children: [
                 const Spacer(),
@@ -374,16 +380,20 @@ class _UserModalState extends State<UserModal> {
                 const SizedBox(
                   width: 50,
                 ),
-                Container(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: const Text(
-                    'Jefe:  ',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-                Container(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: _showUser()),
+                userFormProvider.id != ''
+                    ? Container(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: const Text(
+                          'Jefe:  ',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      )
+                    : Container(),
+                userFormProvider.id != ''
+                    ? Container(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: _showUser())
+                    : Container(),
                 const SizedBox(
                   width: 50,
                 ),
@@ -422,6 +432,21 @@ class _UserModalState extends State<UserModal> {
     });
 
     await _getBosses();
+    await _getBranches();
+  }
+
+  //--------------------------------------------------------------------
+  Future<void> _getBranches() async {
+    Response response = await ApiHelper.getBranchesCombo();
+
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError('Error al cargar las Sucursales');
+      return;
+    }
+
+    setState(() {
+      _branches = response.result;
+    });
   }
 
   //--------------------------------------------------------------------
@@ -495,6 +520,7 @@ class _UserModalState extends State<UserModal> {
                   userFormProvider.isBoss,
                   userFormProvider.bossAsign,
                   userFormProvider.bossAsignName,
+                  userFormProvider.branchId,
                   emailLogged)
               .then((value) => Navigator.of(context).pop());
         }
@@ -516,6 +542,23 @@ class _UserModalState extends State<UserModal> {
       list.add(DropdownMenuItem(
         value: company.id,
         child: Text(company.name),
+      ));
+    }
+    return list;
+  }
+
+  //---------------------------------------------------------------------------
+  List<DropdownMenuItem<int>> _getComboBranches() {
+    List<DropdownMenuItem<int>> list = [];
+    list.add(const DropdownMenuItem(
+      value: 0,
+      child: Text('Seleccione una Sucursal...'),
+    ));
+
+    for (var branch in _branches) {
+      list.add(DropdownMenuItem(
+        value: branch.id,
+        child: Text(branch.name),
       ));
     }
     return list;
@@ -588,6 +631,63 @@ class _UserModalState extends State<UserModal> {
                 ),
               ),
             ),
+    );
+  }
+
+  //---------------------------------------------------------------------------
+  Widget _showBranch() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            child: _branches.isEmpty
+                ? const Text('Cargando Sucursales...')
+                : DropdownButtonFormField(
+                    dropdownColor: const Color(0xff0f2041),
+                    isExpanded: true,
+                    isDense: true,
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.5), fontSize: 16),
+                    items: _getComboBranches(),
+                    value: userFormProvider.branchId,
+                    onChanged: (option) {
+                      setState(() {
+                        userFormProvider.branchId = option!;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.storefront,
+                          color: Colors.white.withOpacity(0.5)),
+                      labelStyle:
+                          TextStyle(color: Colors.white.withOpacity(0.5)),
+                      hintText: 'Seleccione una Sucursal...',
+                      labelText: 'Sucursal',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white.withOpacity(0.3),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.white.withOpacity(0.3),
+                        ),
+                      ),
+                    ),
+                  ),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            setState(() {
+              userFormProvider.branchId = null;
+            });
+          },
+        ),
+      ],
     );
   }
 

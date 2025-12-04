@@ -109,6 +109,7 @@ class UsersProvider extends ChangeNotifier {
     bool isBoss,
     String bossAsign,
     String bossAsignName,
+    int? branchId,
     String emailLogged,
   ) async {
     showLoader = true;
@@ -137,6 +138,7 @@ class UsersProvider extends ChangeNotifier {
       'IsBoss': isBoss ? 1 : 0,
       'BossId': bossAsign,
       'BossName': bossAsignName,
+      'BranchId': branchId,
     };
 
     try {

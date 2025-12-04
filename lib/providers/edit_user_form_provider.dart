@@ -15,6 +15,7 @@ class EditUserFormProvider extends ChangeNotifier {
   bool isBoss = false;
   String bossAsign = '';
   String bossAsignName = '';
+  int? branchId;
 
   //----------------------------------------------------------------
   bool validateForm() {

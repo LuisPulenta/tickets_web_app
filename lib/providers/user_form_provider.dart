@@ -10,6 +10,8 @@ class UserFormProvider extends ChangeNotifier {
   String phoneNumber = '';
   int companyId = 0;
   String company = '';
+  int? branchId;
+  String branch = '';
   int idUserType = -1;
   bool active = false;
   bool isResolver = false;

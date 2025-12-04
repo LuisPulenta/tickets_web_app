@@ -41,6 +41,7 @@ class _TicketViewState extends State<TicketView> {
   String userNameSelected = '';
   String userLogged = '';
   String companyLogged = '';
+  User? userTicket;
 
 //----------------------------------------------------------------------
   @override
@@ -118,24 +119,26 @@ class _TicketViewState extends State<TicketView> {
     setState(() {
       _users = response.result;
     });
+
+    await _getUserTicket(ticketCab!.createUserId);
   }
 
-  // //---------------------------------------------------------------------------
-  // List<DropdownMenuItem<String>> _getComboUsers() {
-  //   List<DropdownMenuItem<String>> list = [];
-  //   list.add(const DropdownMenuItem(
-  //     value: '',
-  //     child: Text('Seleccione un Usuario...'),
-  //   ));
+  //--------------------------------------------------------------------
+  Future<void> _getUserTicket(String userId) async {
+    Response response = await ApiHelper.getUser(userId);
 
-  //   for (var user in _users) {
-  //     list.add(DropdownMenuItem(
-  //       value: user.id,
-  //       child: Text(user.fullName),
-  //     ));
-  //   }
-  //   return list;
-  // }
+    if (!response.isSuccess) {
+      NotificationsService.showSnackbarError(
+          'Error buscar el Usuario del Ticket');
+      return;
+    }
+
+    setState(() {
+      userTicket = response.result;
+    });
+
+    var a = 1;
+  }
 
   //---------------------------------------------------------------------------
   List<String> _getComboUsers() {
@@ -383,7 +386,7 @@ class _TicketViewState extends State<TicketView> {
   //----------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    return showLoader
+    return showLoader || userTicket == null
         ? const Center(child: LoaderComponent(text: 'Por favor espere...'))
         : _getContent();
   }
@@ -422,7 +425,7 @@ class _TicketViewState extends State<TicketView> {
             //------------- CABECERA TICKET ---------------------
             SizedBox(
               width: double.infinity,
-              height: 150,
+              height: 170,
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6.0),
@@ -458,6 +461,57 @@ class _TicketViewState extends State<TicketView> {
                                               fontSize: 14)),
                                       Expanded(
                                         child: Text(ticketCab!.createUserName,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Teléfono: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(userTicket!.phoneNumber,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Sucursal: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(userTicket!.branchName,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14)),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      const Text('Jefe: ',
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 14)),
+                                      Expanded(
+                                        child: Text(userTicket!.bossAsignName,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                                 color: Colors.white,
