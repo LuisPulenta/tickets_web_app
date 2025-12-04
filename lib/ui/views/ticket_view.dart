@@ -610,7 +610,38 @@ class _TicketViewState extends State<TicketView> {
                                         IconButton(
                                           icon: const Icon(Icons.save,
                                               color: Colors.white),
-                                          onPressed: () {
+                                          onPressed: () async {
+                                            final ticketsCabsProvider2 =
+                                                Provider.of<TicketCabsProvider>(
+                                                    context,
+                                                    listen: false);
+
+                                            ticketCab!.categoryId = categoryId;
+                                            for (Category c in _categories) {
+                                              if (c.id == categoryId) {
+                                                ticketCab!.categoryName =
+                                                    c.name;
+                                              }
+                                            }
+                                            ticketCab!.subcategoryId =
+                                                subcategoryId;
+                                            for (Subcategory s
+                                                in _subcategories) {
+                                              if (s.id == subcategoryId) {
+                                                ticketCab!.subcategoryName =
+                                                    s.name;
+                                              }
+                                            }
+
+                                            if (subcategoryId == 0) {
+                                              NotificationsService
+                                                  .showSnackbarError(
+                                                      'Debe seleccionar una Subcategoría');
+                                              return;
+                                            }
+
+                                            await ticketsCabsProvider2
+                                                .changeCategory(ticketCab!);
                                             verCambiarCategoria = false;
                                             setState(() {});
                                           },

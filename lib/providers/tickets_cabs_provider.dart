@@ -220,6 +220,46 @@ class TicketCabsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //---------------------------------------------------------------------
+  Future changeCategory(
+    TicketCab ticketCab,
+  ) async {
+    showLoader = true;
+    notifyListeners();
+
+    try {
+      Map<String, dynamic> request = {
+        'Id': ticketCab.id,
+        'UserId': ticketCab.createUserId,
+        'UserName': ticketCab.createUserName,
+        'CompanyId': ticketCab.companyId,
+        'CompanyName': ticketCab.companyName,
+        'Title': ticketCab.title,
+        'CategoryId': ticketCab.categoryId,
+        'CategoryName': ticketCab.categoryName,
+        'SubcategoryId': ticketCab.subcategoryId,
+        'SubcategoryName': ticketCab.subcategoryName,
+        'TicketState': ticketCab.ticketState,
+        'UserAsign': ticketCab.userAsign,
+        'UserAsignName': ticketCab.userAsignName,
+        'AsignDate': ticketCab.asignDate,
+        'InProgressDate': ticketCab.inProgressDate,
+        'FinishDate': ticketCab.finishDate,
+      };
+
+      Response response =
+          await ApiHelper.put('/ticketCabs', ticketCab.id.toString(), request);
+
+      if (response.isSuccess) {
+        NotificationsService.showSnackbar(
+            'Categoría/Subcategoría actualizadas con éxito!!');
+      }
+    } catch (e) {}
+    showLoader = false;
+
+    notifyListeners();
+  }
+
   //--------------------------------------------------------------------
   void filter() {
     ticketCabs = originalTicketCabs;
