@@ -14,6 +14,7 @@ export 'package:tickets_web_app/providers/subcategory_form_provider.dart';
 export 'package:tickets_web_app/providers/ticket_form_provider.dart';
 export 'package:tickets_web_app/providers/tickets_cabs_derivated.dart';
 export 'package:tickets_web_app/providers/tickets_cabs_ok_provider.dart';
+export 'package:tickets_web_app/providers/tickets_cabs_processing.dart';
 export 'package:tickets_web_app/providers/tickets_cabs_provider.dart';
 export 'package:tickets_web_app/providers/user_form_provider.dart';
 export 'package:tickets_web_app/providers/users_provider.dart';

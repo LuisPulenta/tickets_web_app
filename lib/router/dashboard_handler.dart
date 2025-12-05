@@ -6,7 +6,6 @@ import '../providers/side_menu_provider.dart';
 import '../ui/views/categories_view.dart';
 import '../ui/views/category_view.dart';
 import '../ui/views/ticket_view.dart';
-import '../ui/views/tickets_derivated_view.dart';
 import '../ui/views/view.dart';
 import 'router.dart';
 
@@ -115,6 +114,18 @@ class DashboardHandlers {
 
     if (authProvider.authStatus == AuthStatus.authenticated) {
       return const TicketsDerivatedView();
+    } else {
+      return const LoginView();
+    }
+  });
+
+  static Handler ticketsProcessing = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false)
+        .setCurrentPageUrl(Flurorouter.ticketsProcessingRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const TicketsProcessingView();
     } else {
       return const LoginView();
     }
