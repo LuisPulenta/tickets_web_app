@@ -408,7 +408,7 @@ class _TicketViewState extends State<TicketView> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 250,
+                            width: 320,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(

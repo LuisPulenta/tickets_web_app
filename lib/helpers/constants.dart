@@ -8,9 +8,9 @@ Color colorDerivado = const Color.fromARGB(255, 200, 47, 33);
 Color colorResuelto = const Color.fromARGB(255, 145, 228, 109);
 
 class Constants {
-  // static String get apiUrl => 'https://gaos2.keypress.com.ar/TicketsApi/api';
+  static String get apiUrl => 'https://gaos2.keypress.com.ar/TicketsApi/api';
 
-  static String get apiUrl => 'https://keypress.serveftp.net/TicketsApi/api';
+  //static String get apiUrl => 'https://keypress.serveftp.net/TicketsApi/api';
 
   static List<String> estados = [
     'Enviado',
