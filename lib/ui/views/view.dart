@@ -5,6 +5,7 @@ export 'package:tickets_web_app/ui/views/edit_user_view.dart';
 export 'package:tickets_web_app/ui/views/login_view.dart';
 export 'package:tickets_web_app/ui/views/no_page_found_view.dart';
 export 'package:tickets_web_app/ui/views/recover_password_view.dart';
+export 'package:tickets_web_app/ui/views/tickets_authorize_view.dart';
 export 'package:tickets_web_app/ui/views/tickets_derivated_view.dart';
 export 'package:tickets_web_app/ui/views/tickets_ok_view.dart';
 export 'package:tickets_web_app/ui/views/tickets_processing_view.dart';

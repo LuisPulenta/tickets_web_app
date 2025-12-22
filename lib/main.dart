@@ -75,6 +75,9 @@ class AppState extends StatelessWidget {
           create: (_) => TicketCabsDerivatedProvider(),
         ),
         ChangeNotifierProvider(
+          create: (_) => TicketCabsAuthorizeProvider(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => TicketCabsProcessingProvider(),
         ),
         ChangeNotifierProvider(

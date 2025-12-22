@@ -106,6 +106,16 @@ class Sidebar extends StatelessWidget {
                         navigateTo(Flurorouter.ticketsDerivatedRoute),
                   )
                 : Container(),
+            userType == 2
+                ? MenuItem(
+                    text: 'P/Autorizar',
+                    icon: Icons.question_mark_rounded,
+                    isActive: sideMenuProvider.currentPage ==
+                        Flurorouter.ticketsAuthorizeRoute,
+                    onPressed: () =>
+                        navigateTo(Flurorouter.ticketsAuthorizeRoute),
+                  )
+                : Container(),
             userType == 1
                 ? MenuItem(
                     text: 'En Proceso',
@@ -117,7 +127,7 @@ class Sidebar extends StatelessWidget {
                   )
                 : Container(),
             MenuItem(
-              text: 'Resueltos',
+              text: 'Finalizados',
               icon: Icons.verified_outlined,
               isActive:
                   sideMenuProvider.currentPage == Flurorouter.ticketsOkRoute,

@@ -105,6 +105,15 @@ class _TicketViewState extends State<TicketView> {
           if (ticketCab!.ticketState == 5) {
             ticketStateName = 'Derivado';
           }
+          if (ticketCab!.ticketState == 7) {
+            ticketStateName = 'Autorizar';
+          }
+          if (ticketCab!.ticketState == 8) {
+            ticketStateName = 'Autorizado';
+          }
+          if (ticketCab!.ticketState == 9) {
+            ticketStateName = 'Rechazado';
+          }
         },
       );
       _getUsers();
@@ -266,11 +275,24 @@ class _TicketViewState extends State<TicketView> {
 
       Response response = await ApiHelper.getUser(ticketCab!.createUserId);
       User userTicket = response.result;
+      if (estado == 7 && (userTicket.bossAsign == '')) {
+        NotificationsService.showSnackbarError(
+            'El Usuario que generó el Ticket no tiene Jefe asignado para que lo pueda autorizar');
+        return;
+      }
       String emailUserTicket = userTicket.email;
       String emailUserSelected = '';
       if (userIdSelected != '') {
         Response response2 = await ApiHelper.getUser(userIdSelected);
         User userSelected = response2.result;
+        emailUserSelected = userSelected.email;
+      }
+      if (estado == 7) {
+        ticketFormProvider.userAuthorize = userTicket.bossAsign;
+        ticketFormProvider.userAuthorizeName = userTicket.bossAsignName;
+        Response response3 =
+            await ApiHelper.getUser(ticketFormProvider.userAuthorize);
+        User userSelected = response3.result;
         emailUserSelected = userSelected.email;
       }
 
@@ -287,6 +309,8 @@ class _TicketViewState extends State<TicketView> {
         estado,
         ticketFormProvider.userAsign,
         ticketFormProvider.userAsignName,
+        ticketFormProvider.userAuthorize,
+        ticketFormProvider.userAuthorizeName,
         ticketFormProvider.photoChanged ? ticketFormProvider.fileName : '',
         ticketFormProvider.photoChanged ? ticketFormProvider.fileExtension : '',
       )
@@ -324,6 +348,10 @@ class _TicketViewState extends State<TicketView> {
 
                   if (estado == 5) {
                     ticketStateName = 'Derivado';
+                  }
+
+                  if (estado == 7) {
+                    ticketStateName = 'Autorizar';
                   }
 
                   _sendEmail(
@@ -408,7 +436,7 @@ class _TicketViewState extends State<TicketView> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 320,
+                            width: 350,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(
@@ -1093,8 +1121,12 @@ class _TicketViewState extends State<TicketView> {
             //---------- Formulario para generar nuevo Ticket Detalle ----------
             ((userTypeLogged == 'User' &&
                         (ticketCab!.ticketState == 1 ||
+                            ticketCab!.ticketState == 8 ||
                             (ticketCab!.ticketState == 5 &&
                                 ticketCab!.userAsignName == userLogged))) ||
+                    (userTypeLogged == 'User' &&
+                        (ticketCab!.ticketState == 7 &&
+                            ticketCab!.userAuthorize == token.user.id)) ||
                     (userTypeLogged == 'Admin' &&
                         (ticketCab!.ticketState == 0)) ||
                     (userTypeLogged == 'AdminKP' &&
@@ -1189,7 +1221,9 @@ class _TicketViewState extends State<TicketView> {
 
                                   //---------- Botón Devolver ----------
                                   ((userTypeLogged == 'User' &&
-                                              ticketCab!.ticketState == 5) ||
+                                              (ticketCab!.ticketState == 5 ||
+                                                  ticketCab!.ticketState ==
+                                                      8)) ||
                                           (userTypeLogged == 'Admin' &&
                                               ticketCab!.ticketState == 0) ||
                                           (userTypeLogged == 'AdminKP' &&
@@ -1228,7 +1262,8 @@ class _TicketViewState extends State<TicketView> {
 
                                   //---------- Botón Devolver al Admin ----------
                                   (userTypeLogged == 'User' &&
-                                          ticketCab!.ticketState == 5)
+                                          (ticketCab!.ticketState == 5 ||
+                                              ticketCab!.ticketState == 8))
                                       ? SizedBox(
                                           width: 200,
                                           child: Padding(
@@ -1245,6 +1280,94 @@ class _TicketViewState extends State<TicketView> {
                                                     0);
                                               },
                                               text: 'Dev. a Admin',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+
+                                  //---------- Botón Solic. Autoriz ----------
+                                  (userTypeLogged == 'User' &&
+                                          ticketCab!.ticketState == 5)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorAutorizar,
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    7);
+                                              },
+                                              text: 'Solic. Autoriz',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+
+                                  (userTypeLogged == 'Admin' &&
+                                          ticketCab!.ticketState == 0)
+                                      ? const Text('-  ',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold))
+                                      : Container(),
+
+                                  //---------- Botón Autorizar ----------
+                                  (userTypeLogged == 'User' &&
+                                          ticketCab!.ticketState == 7 &&
+                                          ticketCab!.userAuthorize ==
+                                              token.user.id)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorAutorizado,
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    8);
+                                              },
+                                              text: 'Autorizar',
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+
+                                  //---------- Botón Rechazar ----------
+                                  (userTypeLogged == 'User' &&
+                                          ticketCab!.ticketState == 7 &&
+                                          ticketCab!.userAuthorize ==
+                                              token.user.id)
+                                      ? SizedBox(
+                                          width: 200,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 15),
+                                            child: CustomOutlinedButton(
+                                              isFilled: true,
+                                              backGroundColor: colorRechazado,
+                                              onPressed: () async {
+                                                onFormSubmit(
+                                                    ticketFormProvider,
+                                                    userLogged,
+                                                    companyLogged,
+                                                    9);
+                                              },
+                                              text: 'Rechazar',
                                               color: Colors.black,
                                             ),
                                           ),
@@ -1346,7 +1469,9 @@ class _TicketViewState extends State<TicketView> {
                                   //---------- Botón Resuelto ----------
 
                                   ((userTypeLogged == 'User' &&
-                                              ticketCab!.ticketState == 5) ||
+                                              (ticketCab!.ticketState == 5 ||
+                                                  ticketCab!.ticketState ==
+                                                      8)) ||
                                           (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 2) ||
                                           (userTypeLogged == 'AdminKP' &&
@@ -1490,6 +1615,18 @@ Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="co
             'TicketN N° $nroTicket DERIVADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
         body = '''
 El Ticket N° $nroTicket ha sido derivado a $emailUserSelected para su revisión.<br>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+        break;
+
+      //Autorizar
+      case 7:
+        to = emailUserSelected;
+        cc = emailUserTicket;
+        subject =
+            'TicketN N° $nroTicket PARA AUTORIZAR - Categoría: $categoryName - Subcategoría: $subcategoryName';
+        body = '''
+El Ticket N° $nroTicket ha sido derivado a $emailUserSelected para su autorización.<br>
 Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
 ''';
         break;
@@ -1698,7 +1835,13 @@ class CustomChip extends StatelessWidget {
                         ? colorEnCurso
                         : (estado.toLowerCase() == 'derivado')
                             ? colorDerivado
-                            : colorResuelto);
+                            : (estado.toLowerCase() == 'cerrado')
+                                ? colorCerrado
+                                : (estado.toLowerCase() == 'autorizar')
+                                    ? colorAutorizar
+                                    : (estado.toLowerCase() == 'autorizado')
+                                        ? colorAutorizado
+                                        : colorRechazado);
   }
 }
 

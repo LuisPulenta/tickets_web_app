@@ -119,6 +119,18 @@ class DashboardHandlers {
     }
   });
 
+  static Handler ticketsAuthorize = Handler(handlerFunc: (context, params) {
+    final authProvider = Provider.of<AuthProvider>(context!);
+    Provider.of<SideMenuProvider>(context, listen: false)
+        .setCurrentPageUrl(Flurorouter.ticketsAuthorizeRoute);
+
+    if (authProvider.authStatus == AuthStatus.authenticated) {
+      return const TicketsAuthorizeView();
+    } else {
+      return const LoginView();
+    }
+  });
+
   static Handler ticketsProcessing = Handler(handlerFunc: (context, params) {
     final authProvider = Provider.of<AuthProvider>(context!);
     Provider.of<SideMenuProvider>(context, listen: false)

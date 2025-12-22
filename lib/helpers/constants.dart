@@ -6,6 +6,10 @@ Color colorAsignado = const Color.fromARGB(255, 240, 113, 101);
 Color colorEnCurso = const Color.fromARGB(255, 217, 135, 219);
 Color colorDerivado = const Color.fromARGB(255, 200, 47, 33);
 Color colorResuelto = const Color.fromARGB(255, 145, 228, 109);
+Color colorCerrado = const Color.fromARGB(255, 142, 74, 40);
+Color colorAutorizar = const Color.fromARGB(255, 220, 199, 58);
+Color colorAutorizado = const Color.fromARGB(255, 65, 195, 10);
+Color colorRechazado = const Color.fromARGB(255, 247, 67, 211);
 
 class Constants {
   static String get apiUrl => 'https://gaos2.keypress.com.ar/TicketsApi/api';
@@ -18,6 +22,10 @@ class Constants {
     'Asignado',
     'En Curso',
     'Resuelto',
-    'Derivado'
+    'Derivado',
+    'Cerrado',
+    'Autorizar',
+    'Autorizado',
+    'Rechazado'
   ];
 }

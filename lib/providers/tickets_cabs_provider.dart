@@ -153,6 +153,8 @@ class TicketCabsProvider extends ChangeNotifier {
       int estado,
       String userAsign,
       String userAsignName,
+      String userAuthorize,
+      String userAuthorizeName,
       String fileName,
       String fileExtension) async {
     showLoader = true;
@@ -192,8 +194,26 @@ class TicketCabsProvider extends ChangeNotifier {
           'SubcategoryId': ticketCab.subcategoryId,
           'SubcategoryName': ticketCab.subcategoryName,
           'TicketState': estado,
-          'UserAsign': estado == 5 ? userAsign : '',
-          'UserAsignName': estado == 5 ? userAsignName : '',
+          'UserAsign': estado == 5
+              ? userAsign
+              : ticketCab.userAsign != ''
+                  ? ticketCab.userAsign
+                  : '',
+          'UserAsignName': estado == 5
+              ? userAsignName
+              : ticketCab.userAsignName != ''
+                  ? ticketCab.userAsignName
+                  : '',
+          'UserAuthorize': estado == 7
+              ? userAuthorize
+              : ticketCab.userAuthorize != ''
+                  ? ticketCab.userAuthorize
+                  : '',
+          'UserAuthorizeName': estado == 7
+              ? userAuthorizeName
+              : ticketCab.userAuthorizeName != ''
+                  ? ticketCab.userAuthorizeName
+                  : '',
           'AsignDate': (estado == 2)
               ? ahora
               : (estado == 3 || estado == 4 || estado == 5)

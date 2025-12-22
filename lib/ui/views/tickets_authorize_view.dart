@@ -1,44 +1,39 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../datatables/ticket_cabs_ok_datasource.dart';
+import '../../datatables/ticket_cabs_authorize_datasource.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../services/services.dart';
+import '../buttons/custom_icon_button.dart';
 import '../inputs/custom_inputs.dart';
 import '../layouts/shared/widgets/loader_component.dart';
+import '../modals/ticket_modal.dart';
 
-class TicketsOkView extends StatefulWidget {
-  const TicketsOkView({Key? key}) : super(key: key);
+class TicketsAuthorizeView extends StatefulWidget {
+  const TicketsAuthorizeView({Key? key}) : super(key: key);
 
   @override
-  State<TicketsOkView> createState() => _TicketsOkViewState();
+  State<TicketsAuthorizeView> createState() => _TicketsAuthorizeViewState();
 }
 
-class _TicketsOkViewState extends State<TicketsOkView> {
+class _TicketsAuthorizeViewState extends State<TicketsAuthorizeView> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
-
   late Token token;
+  String userTypeLogged = '';
   int companyIdLogged = -1;
-  DateTime desde = DateTime.now().add(const Duration(days: -30));
 
-  DateTime hasta = DateTime.now();
-
-  //--------------- getTickets -------------------
+//--------------- getTickets -------------------
 
   Future<void> getTickets() async {
     final userBody = LocalStorage.prefs.getString('tickets-userBody');
     var decodedJson = jsonDecode(userBody!);
     Token token = Token.fromJson(decodedJson);
-    int userTypeLogged = token.user.userTypeId;
     String userIdLogged = token.user.id;
-    int companyIdLogged = token.user.companyId;
-    await Provider.of<TicketCabsOkProvider>(context, listen: false)
-        .getTicketOkCabs(
-            userTypeLogged, userIdLogged, companyIdLogged, desde, hasta);
+    await Provider.of<TicketCabsAuthorizeProvider>(context, listen: false)
+        .getTicketAuthorizeCabs(userIdLogged);
     setState(() {});
   }
 
@@ -47,21 +42,18 @@ class _TicketsOkViewState extends State<TicketsOkView> {
   @override
   void initState() {
     super.initState();
-    desde = DateTime.now().add(
-      const Duration(days: -30),
-    );
-    hasta = DateTime.now();
     getTickets();
   }
 
 //-------------------- Pantalla ----------------------------
   @override
   Widget build(BuildContext context) {
-    final ticketCabsOkProvider = Provider.of<TicketCabsOkProvider>(context);
-    List<TicketCab> ticketCabsOk =
-        Provider.of<TicketCabsOkProvider>(context).ticketCabsOk;
+    final ticketCabsAuthorizeProvider =
+        Provider.of<TicketCabsAuthorizeProvider>(context);
+    List<TicketCab> ticketCabsAuthorize =
+        Provider.of<TicketCabsAuthorizeProvider>(context).ticketCabsAuthorize;
 
-    if (ticketCabsOkProvider.showLoader) {
+    if (ticketCabsAuthorizeProvider.showLoader) {
       return const Center(child: LoaderComponent(text: 'Cargando Tickets...'));
     }
 
@@ -74,8 +66,8 @@ class _TicketsOkViewState extends State<TicketsOkView> {
             children: [
               PaginatedDataTable(
                 columnSpacing: 10.0,
-                sortAscending: ticketCabsOkProvider.ascending,
-                sortColumnIndex: ticketCabsOkProvider.sortColumnIndex,
+                sortAscending: ticketCabsAuthorizeProvider.ascending,
+                sortColumnIndex: ticketCabsAuthorizeProvider.sortColumnIndex,
                 columns: [
                   const DataColumn(
                       label: Text('ID',
@@ -84,64 +76,67 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                       label: const Text('Empresa',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsOkProvider.sortColumnIndex = colIndex;
-                        ticketCabsOkProvider
+                        ticketCabsAuthorizeProvider.sortColumnIndex = colIndex;
+                        ticketCabsAuthorizeProvider
                             .sort<String>((item) => item.companyName);
                       }),
                   DataColumn(
                       label: const Text('Fecha y Usuario Alta',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsOkProvider.sortColumnIndex = colIndex;
-                        ticketCabsOkProvider
+                        ticketCabsAuthorizeProvider.sortColumnIndex = colIndex;
+                        ticketCabsAuthorizeProvider
                             .sort<String>((item) => item.createDate.toString());
                       }),
                   DataColumn(
                       label: const Text('Categoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsOkProvider.sortColumnIndex = colIndex;
-                        ticketCabsOkProvider
+                        ticketCabsAuthorizeProvider.sortColumnIndex = colIndex;
+                        ticketCabsAuthorizeProvider
                             .sort<String>((item) => item.categoryName);
                       }),
                   DataColumn(
                       label: const Text('Subcategoría',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsOkProvider.sortColumnIndex = colIndex;
-                        ticketCabsOkProvider
+                        ticketCabsAuthorizeProvider.sortColumnIndex = colIndex;
+                        ticketCabsAuthorizeProvider
                             .sort<String>((item) => item.subcategoryName);
                       }),
                   DataColumn(
                       label: const Text('Asunto',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsOkProvider.sortColumnIndex = colIndex;
-                        ticketCabsOkProvider.sort<String>((item) => item.title);
+                        ticketCabsAuthorizeProvider.sortColumnIndex = colIndex;
+                        ticketCabsAuthorizeProvider
+                            .sort<String>((item) => item.title);
                       }),
                   DataColumn(
                       label: const Text('Estado',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsOkProvider.sortColumnIndex = colIndex;
-                        ticketCabsOkProvider.sort<String>((item) => item.title);
+                        ticketCabsAuthorizeProvider.sortColumnIndex = colIndex;
+                        ticketCabsAuthorizeProvider
+                            .sort<String>((item) => item.title);
                       }),
                   DataColumn(
                       label: const Text('Registros',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
-                        ticketCabsOkProvider.sortColumnIndex = colIndex;
-                        ticketCabsOkProvider.sort<String>((item) => item.title);
+                        ticketCabsAuthorizeProvider.sortColumnIndex = colIndex;
+                        ticketCabsAuthorizeProvider
+                            .sort<String>((item) => item.title);
                       }),
                   const DataColumn(
                       label: Text('Acciones',
                           style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
-                source: TicketCabsOkDTS(ticketCabsOk, context),
+                source: TicketCabsAuthorizeDTS(ticketCabsAuthorize, context),
                 header: Row(
                   children: [
                     const Text(
-                      'Tickets Finalizados',
+                      'Tickets p/Autorizar',
                       maxLines: 1,
                     ),
                     const SizedBox(
@@ -161,57 +156,17 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                             hint: 'Buscar...',
                             icon: Icons.search_outlined,
                             onClear: () {
-                              ticketCabsOkProvider.search = '';
-                              ticketCabsOkProvider.filter();
-                              ticketCabsOkProvider.notify();
+                              ticketCabsAuthorizeProvider.search = '';
+                              ticketCabsAuthorizeProvider.filter();
+                              ticketCabsAuthorizeProvider.notify();
                             },
                           ),
                           onSubmitted: (value) {
-                            ticketCabsOkProvider.search = value;
-                            ticketCabsOkProvider.filter();
+                            ticketCabsAuthorizeProvider.search = value;
+                            ticketCabsAuthorizeProvider.filter();
                           },
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    const Text('Desde: '),
-                    Text(
-                      DateFormat('dd/MM/yyyy').format(
-                        DateTime.parse(
-                          desde.toString(),
-                        ),
-                      ),
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 19, 9, 212)),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        desdeFecha();
-                      },
-                      icon: const Icon(Icons.calendar_today_outlined,
-                          color: Color.fromARGB(255, 19, 9, 212)),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    const Text('Hasta: '),
-                    Text(
-                      DateFormat('dd/MM/yyyy').format(
-                        DateTime.parse(
-                          hasta.toString(),
-                        ),
-                      ),
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 19, 9, 212)),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        hastaFecha();
-                      },
-                      icon: const Icon(Icons.calendar_today_outlined,
-                          color: Color.fromARGB(255, 19, 9, 212)),
                     ),
                   ],
                 ),
@@ -220,45 +175,28 @@ class _TicketsOkViewState extends State<TicketsOkView> {
                   _rowsPerPage = value ?? 10;
                   setState(() {});
                 },
+                actions: [
+                  (userTypeLogged == 'User')
+                      ? CustomIconButton(
+                          icon: Icons.add_outlined,
+                          text: 'Nuevo Ticket',
+                          onPressed: () {
+                            showModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (_) => const TicketModal(
+                                ticketCab: null,
+                              ),
+                            );
+                          },
+                        )
+                      : Container(),
+                ],
               ),
             ],
           ),
         ],
       ),
     );
-  }
-
-  //--------------- calendar -------------------
-  desdeFecha() {
-    showDatePicker(
-      context: context,
-      locale: const Locale('es', 'ES'),
-      initialDate: desde,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    ).then((value) {
-      if (value != null) {
-        desde = value;
-        getTickets();
-      }
-      setState(() {});
-    });
-  }
-
-  //--------------- calendar -------------------
-  hastaFecha() {
-    showDatePicker(
-      context: context,
-      locale: const Locale('es', 'ES'),
-      initialDate: hasta,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    ).then((value) {
-      if (value != null) {
-        hasta = value;
-        getTickets();
-      }
-      setState(() {});
-    });
   }
 }

@@ -710,6 +710,43 @@ class ApiHelper {
     return Response(isSuccess: true, result: list);
   }
 
+//--------------------------------------------------------------
+  static Future<Response> getTicketCabParaAutorizar(String id) async {
+    Token token = Token.fromJson(
+        jsonDecode(LocalStorage.prefs.getString('tickets-userBody') ?? ''));
+
+    if (!_validateToken(token)) {
+      return Response(
+          isSuccess: false,
+          message:
+              'Sus credenciales se han vencido, por favor cierre sesión y vuelva a ingresar al sistema.');
+    }
+    var url =
+        Uri.parse('${Constants.apiUrl}/TicketCabs/GetTicketParaAutorizar/$id');
+    var response = await http.post(
+      url,
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'authorization': 'bearer ${token.token}',
+      },
+    );
+    var body = response.body;
+
+    if (response.statusCode >= 400) {
+      return Response(isSuccess: false, message: body);
+    }
+
+    List<TicketCab> list = [];
+    var decodedJson = jsonDecode(body);
+    if (decodedJson != null) {
+      for (var item in decodedJson) {
+        list.add(TicketCab.fromJson(item));
+      }
+    }
+    return Response(isSuccess: true, result: list);
+  }
+
   //--------------------------------------------------------------
   static Future<Response> getTicketCabProcessing() async {
     Token token = Token.fromJson(

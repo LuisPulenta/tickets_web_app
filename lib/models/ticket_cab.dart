@@ -26,6 +26,10 @@ class TicketCab {
   String userAsignName;
   dynamic inProgressDate;
   dynamic finishDate;
+  dynamic authorizingDate;
+  String userAuthorize;
+  String userAuthorizeName;
+  dynamic lastDate;
   List<TicketDet>? ticketDets;
   int ticketDetsNumber;
 
@@ -47,6 +51,10 @@ class TicketCab {
     required this.userAsignName,
     required this.inProgressDate,
     required this.finishDate,
+    required this.authorizingDate,
+    required this.userAuthorize,
+    required this.userAuthorizeName,
+    required this.lastDate,
     required this.ticketDets,
     required this.ticketDetsNumber,
   });
@@ -69,6 +77,10 @@ class TicketCab {
         userAsignName: json['userAsignName'] ?? '',
         inProgressDate: json['inProgressDate'],
         finishDate: json['finishDate'],
+        authorizingDate: json['authorizingDate'] ?? '',
+        userAuthorize: json['userAuthorize'] ?? '',
+        userAuthorizeName: json['userAuthorizeName'] ?? '',
+        lastDate: json['lastDate'] ?? '',
         ticketDets: json['ticketDets'] != null
             ? List<TicketDet>.from(
                 json['ticketDets'].map((x) => TicketDet.fromJson(x)))
@@ -94,6 +106,10 @@ class TicketCab {
         'userAsignName': userAsignName,
         'inProgressDate': inProgressDate,
         'finishDate': finishDate,
+        'authorizingDate': authorizingDate,
+        'userAuthorize': userAuthorize,
+        'userAuthorizeName': userAuthorizeName,
+        'lastDate': lastDate,
         'ticketDets': ticketDets != null
             ? List<TicketDet>.from(ticketDets!.map((x) => x.toJson()))
             : [],

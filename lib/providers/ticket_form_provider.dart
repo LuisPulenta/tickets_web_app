@@ -18,6 +18,8 @@ class TicketFormProvider extends ChangeNotifier {
   String categoryName = '';
   int subcategoryId = 0;
   String subcategoryName = '';
+  String userAuthorize = '';
+  String userAuthorizeName = '';
 
   TicketCab ticketCab = TicketCab(
       id: 0,
@@ -36,6 +38,10 @@ class TicketFormProvider extends ChangeNotifier {
       userAsign: '',
       userAsignName: '',
       finishDate: '',
+      authorizingDate: '',
+      userAuthorize: '',
+      userAuthorizeName: '',
+      lastDate: '',
       inProgressDate: '',
       ticketDets: [],
       ticketDetsNumber: 0);

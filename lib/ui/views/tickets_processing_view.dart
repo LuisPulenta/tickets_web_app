@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../datatables/ticket_cabs_processing_datasource.dart';
+import '../../helpers/helpers.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
 import '../../services/services.dart';
+import '../buttons/custom_icon_button.dart';
 import '../inputs/custom_inputs.dart';
 import '../layouts/shared/widgets/loader_component.dart';
 
@@ -119,6 +121,14 @@ class _TicketsProcessingViewState extends State<TicketsProcessingView> {
                             .sort<String>((item) => item.title);
                       }),
                   DataColumn(
+                      label: const Text('Fec. Ult.Modif.',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onSort: (colIndex, _) {
+                        ticketCabsProcessingProvider.sortColumnIndex = colIndex;
+                        ticketCabsProcessingProvider
+                            .sort<String>((item) => item.title);
+                      }),
+                  DataColumn(
                       label: const Text('Registros',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       onSort: (colIndex, _) {
@@ -166,6 +176,46 @@ class _TicketsProcessingViewState extends State<TicketsProcessingView> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    const Icon(
+                      Icons.watch_later,
+                      color: Colors.red,
+                      size: 18,
+                    ),
+                    const Text(': Tickets devueltos hace más de 15 días  -->  ',
+                        style: TextStyle(
+                          color: Colors.red,
+                        )),
+                    CustomIconButton(
+                      icon: Icons.close,
+                      color: Colors.red,
+                      text: 'Cerrarlos',
+                      onPressed: () {
+                        final dialog = AlertDialog(
+                          title: const Text('Atención!!'),
+                          content: const Text(
+                              'Está seguro de cerrar todos los Tickets devueltos hace al menos 15 días?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                _cerrarTickets();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Si'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('No'),
+                            ),
+                          ],
+                        );
+                        showDialog(context: context, builder: (_) => dialog);
+                      },
+                    )
                   ],
                 ),
                 rowsPerPage: _rowsPerPage,
@@ -179,5 +229,132 @@ class _TicketsProcessingViewState extends State<TicketsProcessingView> {
         ],
       ),
     );
+  }
+
+  //-----------------------------------------------------------
+  void _cerrarTickets() {
+    List<TicketCab> ticketCabsProcessing =
+        Provider.of<TicketCabsProcessingProvider>(context, listen: false)
+            .ticketCabsProcessing;
+
+    for (TicketCab ticket in ticketCabsProcessing) {
+      if (DateTime.parse(ticket.lastDate)
+          .add(const Duration(days: 7))
+          .isBefore(DateTime.now())) {
+        onFormSubmit(
+            ticket,
+            Provider.of<TicketFormProvider>(context, listen: false),
+            Provider.of<AuthProvider>(context, listen: false).user!.fullName,
+            Provider.of<AuthProvider>(context, listen: false).user!.companyName,
+            6);
+      }
+    }
+  }
+
+//---------------------------------------------------------------------------------------
+  void onFormSubmit(
+    TicketCab ticketCab,
+    TicketFormProvider ticketFormProvider,
+    String userLogged,
+    String companyLogged,
+    int estado,
+  ) async {
+    try {
+      final ticketsCabsProvider2 =
+          Provider.of<TicketCabsProvider>(context, listen: false);
+
+      Response response = await ApiHelper.getUser(ticketCab.createUserId);
+      User userTicket = response.result;
+      String emailUserTicket = userTicket.email;
+      String emailUserSelected = '';
+
+      ticketFormProvider.userAsign == '';
+      ticketFormProvider.userAsignName == '';
+
+      await ticketsCabsProvider2.newTicketDet(
+        ticketCab,
+        userLogged,
+        companyLogged,
+        ticketFormProvider.description,
+        ticketFormProvider.photoChanged ? ticketFormProvider.base64Image : '',
+        estado,
+        ticketFormProvider.userAsign,
+        ticketFormProvider.userAsignName,
+        ticketFormProvider.userAuthorize,
+        ticketFormProvider.userAuthorizeName,
+        ticketFormProvider.photoChanged ? ticketFormProvider.fileName : '',
+        ticketFormProvider.photoChanged ? ticketFormProvider.fileExtension : '',
+      );
+
+      String ticketStateName = 'Cerrado';
+
+      await Provider.of<TicketCabsProcessingProvider>(context, listen: false)
+          .getTicketProcessingCabs(
+              Provider.of<AuthProvider>(context, listen: false).user!.id);
+
+      _sendEmail(
+          estado,
+          ticketCab.id,
+          emailUserTicket,
+          emailUserSelected,
+          ticketCab.companyId,
+          ticketCab.categoryName,
+          ticketCab.subcategoryName);
+      ticketFormProvider.description = '';
+    } catch (e) {
+      NotificationsService.showSnackbarError('No se pudo guardar el Ticket');
+    }
+  }
+
+  //---------------------------------------------------------------------------------------
+  void _sendEmail(
+      int estado,
+      int nroTicket,
+      String emailUserTicket,
+      String emailUserSelected,
+      int companyTicketId,
+      String categoryName,
+      String subcategoryName) async {
+    String emailUserLogged =
+        Provider.of<AuthProvider>(context, listen: false).user!.email;
+    int companyLoggedId =
+        Provider.of<AuthProvider>(context, listen: false).user!.companyId;
+
+    Response response = await ApiHelper.getMailsAdmin(companyTicketId);
+    EmailResponse emailResponse = response.result;
+
+    String emailsAdmin = emailResponse.emails;
+
+    Response response2 = await ApiHelper.getMailsAdminKP();
+    EmailResponse emailResponse2 = response2.result;
+
+    String emailsAdminKP = emailResponse2.emails;
+
+    String to = '';
+    String cc = '';
+    String subject = '';
+    String body = '';
+
+    to = emailUserTicket;
+    cc = emailUserLogged;
+    subject =
+        'TicketN N° $nroTicket CERRADO - Categoría: $categoryName - Subcategoría: $subcategoryName';
+    body = '''
+Se ha cerrado el Ticket N° $nroTicket que estaba como devuelto hace más de 15 días.<br>
+Haga clic aquí --> <a href="https://gaos2.keypress.com.ar/TicketsWeb" style="color: blue;">Ir al ticket</a>
+''';
+
+    Map<String, dynamic> request = {
+      'to': to,
+      'cc': cc,
+      'subject': subject,
+      'body': body,
+    };
+
+    try {
+      await ApiHelper.sendMail(request);
+    } catch (e) {
+      return null;
+    }
   }
 }
