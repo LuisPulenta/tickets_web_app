@@ -238,9 +238,10 @@ class _TicketsProcessingViewState extends State<TicketsProcessingView> {
             .ticketCabsProcessing;
 
     for (TicketCab ticket in ticketCabsProcessing) {
-      if (DateTime.parse(ticket.lastDate)
-          .add(const Duration(days: 7))
-          .isBefore(DateTime.now())) {
+      if (ticket.lastDate != null &&
+          (DateTime.parse(ticket.lastDate)
+              .add(const Duration(days: 7))
+              .isBefore(DateTime.now()))) {
         onFormSubmit(
             ticket,
             Provider.of<TicketFormProvider>(context, listen: false),

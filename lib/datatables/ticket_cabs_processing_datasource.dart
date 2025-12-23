@@ -63,16 +63,19 @@ class TicketCabsProcessingDTS extends DataTableSource {
         DataCell(
           Row(
             children: [
-              Text(
-                  DateFormat('dd/MM/yyyy')
-                      .format(DateTime.parse(ticketCab.lastDate.toString())),
-                  style: const TextStyle(fontSize: 12)),
+              ticketCab.lastDate != ''
+                  ? Text(
+                      DateFormat('dd/MM/yyyy').format(
+                          DateTime.parse(ticketCab.lastDate.toString())),
+                      style: const TextStyle(fontSize: 12))
+                  : Container(),
               const SizedBox(
                 width: 10,
               ),
-              (DateTime.parse(ticketCab.lastDate)
-                      .add(const Duration(days: 7))
-                      .isBefore(DateTime.now()))
+              (ticketCab.lastDate != '' &&
+                      (DateTime.parse(ticketCab.lastDate.toString())
+                          .add(const Duration(days: 7))
+                          .isBefore(DateTime.now())))
                   ? const Icon(
                       Icons.watch_later,
                       color: Colors.red,
@@ -99,9 +102,10 @@ class TicketCabsProcessingDTS extends DataTableSource {
                 },
                 icon: const Icon(Icons.edit_outlined, color: Colors.orange),
               ),
-              if (DateTime.parse(ticketCab.lastDate)
-                  .add(const Duration(days: 7))
-                  .isBefore(DateTime.now()))
+              if (ticketCab.lastDate != '' &&
+                  (DateTime.parse(ticketCab.lastDate.toString())
+                      .add(const Duration(days: 7))
+                      .isBefore(DateTime.now())))
                 IconButton(
                   tooltip: 'Cerrar Ticket',
                   onPressed: () {
