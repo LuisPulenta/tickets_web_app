@@ -241,6 +241,38 @@ class TicketCabsProvider extends ChangeNotifier {
   }
 
   //---------------------------------------------------------------------
+  Future putTicketDet(
+    int id,
+    String description,
+  ) async {
+    showLoader = true;
+    notifyListeners();
+
+    final userBody = LocalStorage.prefs.getString('tickets-userBody');
+    var decodedJson = jsonDecode(userBody!);
+    Token token = Token.fromJson(decodedJson);
+    User userLogged = token.user;
+    String ahora = DateTime.now().toString().substring(0, 10);
+
+    Map<String, dynamic> request = {
+      'Id': id,
+      'Description': description,
+    };
+
+    try {
+      Response response =
+          await ApiHelper.postTicketDet('/ticketCabs/PutTicketDet', request);
+
+      if (response.isSuccess) {
+        await getTicketCabs();
+        NotificationsService.showSnackbar('Detalle Ticket guardado con éxito');
+      }
+    } catch (e) {}
+    showLoader = false;
+    notifyListeners();
+  }
+
+  //---------------------------------------------------------------------
   Future changeCategory(
     TicketCab ticketCab,
   ) async {

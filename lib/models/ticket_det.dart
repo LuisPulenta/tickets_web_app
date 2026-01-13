@@ -6,6 +6,7 @@ String ticketDetToJson(TicketDet data) => json.encode(data.toJson());
 
 class TicketDet {
   int id;
+  int ticketCabId;
   String description;
   String ticketState;
   String stateDate;
@@ -16,6 +17,7 @@ class TicketDet {
 
   TicketDet({
     required this.id,
+    required this.ticketCabId,
     required this.description,
     required this.ticketState,
     required this.stateDate,
@@ -27,6 +29,7 @@ class TicketDet {
 
   factory TicketDet.fromJson(Map<String, dynamic> json) => TicketDet(
         id: json['id'],
+        ticketCabId: json['ticketCabId'],
         description: json['description'],
         ticketState: json['ticketState'],
         stateDate: json['stateDate'],
@@ -38,6 +41,7 @@ class TicketDet {
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'ticketCabId': ticketCabId,
         'description': description,
         'ticketState': ticketState,
         'stateDate': stateDate,

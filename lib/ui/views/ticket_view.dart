@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/api_helper.dart';
+import '../../helpers/colors.dart';
 import '../../helpers/constants.dart';
 import '../../models/models.dart';
 import '../../providers/providers.dart';
@@ -16,6 +17,7 @@ import '../buttons/custom_outlined_button.dart';
 import '../cards/white_card.dart';
 import '../inputs/custom_inputs.dart';
 import '../labels/custom_labels.dart';
+import '../layouts/layouts.dart';
 import '../layouts/shared/widgets/loader_component.dart';
 
 class TicketView extends StatefulWidget {
@@ -41,6 +43,7 @@ class _TicketViewState extends State<TicketView> {
   String userIdSelected = '';
   String userNameSelected = '';
   String userLogged = '';
+  String userIdLogged = '';
   String companyLogged = '';
   User? userTicket;
   List<Category> _categories = [];
@@ -57,6 +60,7 @@ class _TicketViewState extends State<TicketView> {
 
     userLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.fullName;
+    userIdLogged = Provider.of<AuthProvider>(context, listen: false).user!.id;
     companyLogged =
         Provider.of<AuthProvider>(context, listen: false).user!.companyName;
 
@@ -436,7 +440,7 @@ class _TicketViewState extends State<TicketView> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 350,
+                            width: 400,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(
@@ -964,6 +968,119 @@ class _TicketViewState extends State<TicketView> {
                                                       color: Colors.black,
                                                       fontSize: 12)),
                                             ),
+                                            if (userIdLogged == e.stateUserId &&
+                                                userTypeLogged == 'AdminKP' &&
+                                                e.stateDate.substring(0, 10) ==
+                                                    DateTime.now()
+                                                        .toString()
+                                                        .substring(0, 10))
+                                              IconButton(
+                                                tooltip: 'Editar',
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return Center(
+                                                        child: SizedBox(
+                                                          height: 330,
+                                                          width: 800,
+                                                          child: WindowModal(
+                                                            title:
+                                                                'Editar Detalle de Ticket',
+                                                            widget: Center(
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                children: [
+                                                                  const SizedBox(
+                                                                    height: 50,
+                                                                  ),
+                                                                  TextFormField(
+                                                                    initialValue:
+                                                                        e.description,
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .black),
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      e.description =
+                                                                          value;
+                                                                    },
+                                                                    decoration:
+                                                                        CustomInput
+                                                                            .editInputDecoration(
+                                                                      hint:
+                                                                          'Detalle del Ticket',
+                                                                      label:
+                                                                          'Detalle del Ticket',
+                                                                      icon: Icons
+                                                                          .comment,
+                                                                    ),
+                                                                    maxLines:
+                                                                        null,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 50,
+                                                                  ),
+                                                                  CustomOutlinedButton(
+                                                                    color:
+                                                                        primaryColor,
+                                                                    text:
+                                                                        'Guardar',
+                                                                    onPressed:
+                                                                        () async {
+                                                                      final ticketCabsProvider = Provider.of<
+                                                                              TicketCabsProvider>(
+                                                                          context,
+                                                                          listen:
+                                                                              false);
+                                                                      await ticketCabsProvider.putTicketDet(
+                                                                          e.id,
+                                                                          e.description);
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop();
+
+                                                                      ticketCabsProvider
+                                                                          .getTicketCabById(widget
+                                                                              .id)
+                                                                          .then(
+                                                                              (ticketCabDB) {
+                                                                        setState(
+                                                                          () {
+                                                                            ticketCab =
+                                                                                ticketCabDB;
+                                                                            categoryId =
+                                                                                ticketCab!.categoryId;
+                                                                            subcategoryId =
+                                                                                ticketCab!.subcategoryId;
+                                                                            ticketDets = ticketCab!.ticketDets != null
+                                                                                ? ticketCab!.ticketDets!
+                                                                                : [];
+                                                                          },
+                                                                        );
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 10,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                icon: const Icon(
+                                                    Icons.edit_outlined,
+                                                    color: Colors.orange),
+                                              ),
                                           ],
                                         ),
                                       ],
@@ -1213,7 +1330,7 @@ class _TicketViewState extends State<TicketView> {
                                                     0);
                                               },
                                               text: 'Enviar',
-                                              color: Colors.white,
+                                              color: Colors.black,
                                             ),
                                           ),
                                         )
