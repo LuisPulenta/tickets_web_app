@@ -12,6 +12,8 @@ class UsersProvider extends ChangeNotifier {
   bool showLoader = false;
   String search = '';
   bool onlyActives = false;
+  bool onlyBosses = false;
+  bool onlyResolvers = false;
 
   //---------------------------------------------------------------
   void sort<T>(Comparable<T> Function(User user) getField) {
@@ -162,24 +164,20 @@ class UsersProvider extends ChangeNotifier {
     users = originalUsers;
 
     List<User> filteredList = [];
-    if (!onlyActives) {
-      for (var user in users) {
-        if (user.firstName.toLowerCase().contains(search.toLowerCase()) ||
-            user.lastName.toLowerCase().contains(search.toLowerCase()) ||
-            user.companyName.toLowerCase().contains(search.toLowerCase())) {
-          filteredList.add(user);
-        }
-      }
-    } else {
-      for (var user in users) {
-        if ((user.firstName.toLowerCase().contains(search.toLowerCase()) ||
-                user.lastName.toLowerCase().contains(search.toLowerCase()) ||
-                user.companyName
-                    .toLowerCase()
-                    .contains(search.toLowerCase())) &&
-            user.active) {
-          filteredList.add(user);
-        }
+
+    for (var user in users) {
+      final matchesSearch =
+          user.firstName.toLowerCase().contains(search.toLowerCase()) ||
+              user.lastName.toLowerCase().contains(search.toLowerCase()) ||
+              user.companyName.toLowerCase().contains(search.toLowerCase());
+
+      final matchesActive = !onlyActives || user.active;
+      final matchesBoss = !onlyBosses || user.isBoss == 1; // ajustar nombre
+      final matchesResolver =
+          !onlyResolvers || user.isResolver == 1; // ajustar nombre
+
+      if (matchesSearch && matchesActive && matchesBoss && matchesResolver) {
+        filteredList.add(user);
       }
     }
 

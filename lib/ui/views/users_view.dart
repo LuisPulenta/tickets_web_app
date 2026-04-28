@@ -160,7 +160,39 @@ class _UsersViewState extends State<UsersView> {
                             setState(() {});
                             usersProvider.filter();
                           }),
-                    )
+                    ),
+
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: CheckboxListTile(
+                        title: const Text('Sólo Resolvedores'),
+                        value: usersProvider.onlyResolvers,
+                        onChanged: (value) {
+                          usersProvider.onlyResolvers = value!;
+                          setState(() {});
+                          usersProvider.filter();
+                        },
+                      ),
+                    ),
+
+                    const SizedBox(
+                      width: 50,
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: CheckboxListTile(
+                        title: const Text('Sólo Jefes'),
+                        value: usersProvider.onlyBosses,
+                        onChanged: (value) {
+                          usersProvider.onlyBosses = value!;
+                          setState(() {});
+                          usersProvider.filter();
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 rowsPerPage: _rowsPerPage,

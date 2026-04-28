@@ -440,7 +440,7 @@ class _TicketViewState extends State<TicketView> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 400,
+                            width: 470,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                               child: Column(
@@ -1246,6 +1246,8 @@ class _TicketViewState extends State<TicketView> {
                             ticketCab!.userAuthorize == token.user.id)) ||
                     (userTypeLogged == 'Admin' &&
                         (ticketCab!.ticketState == 0)) ||
+                    (userTypeLogged == 'Admin' &&
+                        (ticketCab!.ticketState == 8)) ||
                     (userTypeLogged == 'AdminKP' &&
                         (ticketCab!.ticketState == 2 ||
                             ticketCab!.ticketState == 3)))
@@ -1343,6 +1345,8 @@ class _TicketViewState extends State<TicketView> {
                                                       8)) ||
                                           (userTypeLogged == 'Admin' &&
                                               ticketCab!.ticketState == 0) ||
+                                          (userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 8) ||
                                           (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 2) ||
                                           (userTypeLogged == 'AdminKP' &&
@@ -1369,7 +1373,9 @@ class _TicketViewState extends State<TicketView> {
                                         )
                                       : Container(),
                                   (userTypeLogged == 'Admin' &&
-                                          ticketCab!.ticketState == 0)
+                                              ticketCab!.ticketState == 0 ||
+                                          userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 8)
                                       ? const Text('-',
                                           style: TextStyle(
                                               color: Colors.white,
@@ -1404,8 +1410,10 @@ class _TicketViewState extends State<TicketView> {
                                       : Container(),
 
                                   //---------- Botón Solic. Autoriz ----------
-                                  (userTypeLogged == 'User' &&
-                                          ticketCab!.ticketState == 5)
+                                  ((userTypeLogged == 'User' &&
+                                              ticketCab!.ticketState == 5) ||
+                                          (userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 0))
                                       ? SizedBox(
                                           width: 200,
                                           child: Padding(
@@ -1493,7 +1501,9 @@ class _TicketViewState extends State<TicketView> {
 
                                   //---------- Botón Asignar ----------
                                   (userTypeLogged == 'Admin' &&
-                                          ticketCab!.ticketState == 0)
+                                              ticketCab!.ticketState == 0) ||
+                                          (userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 8)
                                       ? SizedBox(
                                           width: 200,
                                           child: Padding(
@@ -1517,7 +1527,9 @@ class _TicketViewState extends State<TicketView> {
                                       : Container(),
 
                                   (userTypeLogged == 'Admin' &&
-                                          ticketCab!.ticketState == 0)
+                                              ticketCab!.ticketState == 0) ||
+                                          (userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 8)
                                       ? const Text('-  ',
                                           style: TextStyle(
                                               color: Colors.white,
@@ -1528,14 +1540,18 @@ class _TicketViewState extends State<TicketView> {
 
                                   SizedBox(
                                     width: 300,
-                                    child: userTypeLogged == 'Admin' &&
-                                            ticketCab!.ticketState == 0
+                                    child: (userTypeLogged == 'Admin' &&
+                                                ticketCab!.ticketState == 0) ||
+                                            (userTypeLogged == 'Admin' &&
+                                                ticketCab!.ticketState == 8)
                                         ? _showUser()
                                         : Container(),
                                   ),
 
                                   (userTypeLogged == 'Admin' &&
-                                          ticketCab!.ticketState == 0)
+                                              ticketCab!.ticketState == 0 ||
+                                          userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 8)
                                       ? SizedBox(
                                           width: 200,
                                           child: Padding(
@@ -1556,6 +1572,17 @@ class _TicketViewState extends State<TicketView> {
                                             ),
                                           ),
                                         )
+                                      : Container(),
+
+                                  (userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 0 ||
+                                          userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 8)
+                                      ? const Text('-  ',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold))
                                       : Container(),
 
                                   //---------- Botón En Curso ----------
@@ -1594,7 +1621,9 @@ class _TicketViewState extends State<TicketView> {
                                           (userTypeLogged == 'AdminKP' &&
                                               ticketCab!.ticketState == 3) ||
                                           (userTypeLogged == 'Admin' &&
-                                              ticketCab!.ticketState == 0))
+                                              ticketCab!.ticketState == 0) ||
+                                          (userTypeLogged == 'Admin' &&
+                                              ticketCab!.ticketState == 8))
                                       ? SizedBox(
                                           width: 200,
                                           child: Padding(
